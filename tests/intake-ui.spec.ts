@@ -21,7 +21,9 @@ for(const english of [false,true])test(`configured form acknowledges only a conf
  await expect(page.getByRole('status')).toContainText(english?'Inquiry received':'Solicitação recebida');
  expect(submissions).toHaveLength(1);expect(submissions[0].locale).toBe(english?'en-US':'pt-BR');expect(submissions[0].email).toBe('visitor@example.invalid');
  await expect(page.locator('#lesson-name')).toHaveValue('');
- await expect(page.locator('[data-form-fields]')).toBeDisabled();
+ await expect(page.locator('[data-form-fields]')).toHaveAttribute('disabled','');
+ await expect(page.locator('#lesson-name')).toBeDisabled();
+ await expect(page.getByRole('button',{name:english?'Send inquiry':'Enviar solicitação'})).toBeDisabled();
  expect(await page.evaluate(()=>localStorage.length+sessionStorage.length)).toBe(0);
 });
 test('failure preserves answers, reuses ID on retry and rejects contradictory evidence',async({page})=>{

@@ -41,6 +41,12 @@ and time zone. No employer name, budget, résumé, audio, file upload, identity
 document or payment is required. No marketing enrolment. PT/EN questions are
 original writing. No guarantee of interviews, employment or fluency.
 
+Visual QA also reproduced a nested-form language-switch issue: a sticky-header
+focus change could replace the form fragment with its parent section. The
+navigation enhancement now preserves an explicit marked nested fragment while
+its parent remains the current section. The configured-form browser regression
+checks the equivalent form route in English.
+
 ## Data flow
 
 GitHub Pages form -> Cloudflare Worker -> private D1 record -> optional Meta
