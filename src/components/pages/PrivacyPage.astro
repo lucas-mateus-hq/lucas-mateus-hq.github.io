@@ -1,4 +1,5 @@
 ---
+import {lessonIntake} from '../../config/lesson-intake';
 import SocialMeta from '../SocialMeta.astro';
 import NavigationEnhancements from '../NavigationEnhancements.astro';
 import '../../styles/identity.css';
@@ -57,13 +58,15 @@ const updated=en?'October 21, 2026':'21 de outubro de 2026';
       <a class="back" href={portfolio}>{t("← Professional portfolio")}</a>
       <p class="eyebrow">{t("Lucas Mateus · Privacy")}</p>
       <h1>{t("Privacy Policy")}</h1>
-      <p class="lead">{t("This notice explains how the personal portfolio works, what the hosting provider processes and what happens when you use its contact links.")}</p>
+      <p class="lead">{lessonIntake.active?(en?"This notice explains browsing, lesson inquiries and the providers involved in responding to them.":"Este aviso explica a navegação, as solicitações de aulas e os provedores envolvidos no atendimento."):t("This notice explains how the personal portfolio works, what the hosting provider processes and what happens when you use its contact links.")}</p>
       <p class="updated"><strong>{t("Last updated:")}</strong> {updated}</p>
 
       {privacySections.map(section=><section id={section.id}><h2>{t(section.title)}</h2><p>{t(section.text)}</p>{section.id==='contact'||section.id==='rights'?<p class="policy-link"><a href="https://www.linkedin.com/in/lucasmateus/">{t("Contact Lucas on LinkedIn")} ↗</a></p>:null}</section>)}
       <section id="references"><h2>{t("Provider policies and your rights")}</h2><ul>
         <li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages">{t("GitHub Pages hosting")}</a></li>
         <li><a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">{t("GitHub privacy statement")}</a></li>
+        {lessonIntake.active && <li><a href="https://www.cloudflare.com/privacypolicy/">{en?'Cloudflare privacy policy':'Política de privacidade da Cloudflare'}</a></li>}
+        {lessonIntake.active && <li><a href="https://www.whatsapp.com/legal/business-data-processing-terms">{en?'WhatsApp Business data processing terms':'Termos de tratamento de dados do WhatsApp Business'}</a></li>}
         <li><a href="https://www.gov.br/anpd/pt-br/assuntos/titular-de-dados/direito-dos-titulares">{t("Your rights under the LGPD (ANPD)")}</a></li>
       </ul></section>
     </main>

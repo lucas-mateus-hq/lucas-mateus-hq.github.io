@@ -88,7 +88,7 @@ test('navigation order, destination cues and touch targets match the visitor jou
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('./');
   const nav = page.getByRole('navigation', { name: 'Navegação principal' });
-  await expect(nav.getByRole('link')).toHaveText(['Trabalho', 'Criações', 'Sobre', 'Contato']);
+  await expect(nav.getByRole('link')).toHaveText(['Trabalho', 'Aulas', 'Criações', 'Sobre', 'Contato']);
   await expect(page.locator('.destination-note, .section-aside')).toHaveCount(0);
   expect(await page.locator('#trabalho').evaluate(el => Boolean(el.compareDocumentPosition(document.querySelector('#criacoes')!) & Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true);
   for (const link of await page.locator('.site-header nav a, .actions a, .text-link, .footer-links a').all()) {
@@ -187,4 +187,17 @@ test('portfolio title has a readable scale and reduced motion suppresses transit
   await expect(page.locator('.hero .button')).toHaveCSS('transform','none');
   await page.getByRole('link',{name:'Entrar em contato',exact:true}).click();
   await expect(page).toHaveURL(/#contato$/);
+});
+
+
+test('English lessons are discoverable in both languages without collecting data before activation',async({page})=>{
+ for(const [route,label,title] of [['./','Aulas','Entrevistas em inglês'],['en/','Lessons','Job interviews in English']] as const){
+  await page.goto(route);
+  await page.locator('.primary-navigation').getByRole('link',{name:label,exact:true}).click();
+  await expect(page).toHaveURL(/#aulas$/);
+  await expect(page.locator('#aulas')).toContainText(title);
+  const active=Boolean(process.env.PUBLIC_LESSON_API_URL && process.env.PUBLIC_TURNSTILE_SITE_KEY);
+  await expect(page.locator('#aulas form')).toHaveCount(active?1:0);
+  await expect(page.locator('#aulas a.button')).toHaveAttribute('href',active?'#pedido-aulas':'https://www.linkedin.com/in/lucasmateus/');
+ }
 });

@@ -1,0 +1,39 @@
+---
+interface Props {lang: 'pt-BR'|'en-US';api:string;siteKey:string;privacy:string}
+const {lang,api,siteKey,privacy}=Astro.props;
+const en=lang==='en-US';
+const options={
+ goal: en? [['interview','Job interview preparation'],['business','English for work'],['both','Both'],['not_sure','I’m not sure yet']]:[['interview','Preparação para entrevista'],['business','Inglês para o trabalho'],['both','As duas opções'],['not_sure','Ainda não sei']],
+ speaking:en?[['starting','I’m starting or returning to the basics'],['simple','I can give short, simple answers'],['needs_support','I can hold a conversation, but need support'],['comfortable','I speak comfortably and want to work on specific situations'],['not_sure','I’m not sure how to describe it']]:[['starting','Estou começando ou retomando o básico'],['simple','Consigo responder com frases simples'],['needs_support','Consigo conversar, mas preciso de apoio'],['comfortable','Converso com facilidade e quero trabalhar situações específicas'],['not_sure','Ainda não sei descrever']],
+ timeframe:en?[['week','Within the next 7 days'],['month','Within the next month'],['later','Later than that'],['exploring','I’m exploring options; no set date']]:[['week','Nos próximos 7 dias'],['month','No próximo mês'],['later','Mais adiante'],['exploring','Estou pesquisando, sem data definida']],
+};
+---
+<div class="lesson-request" id="pedido-aulas">
+  <h3>{en?'Tell me a little about your goal':'Me conte um pouco sobre seu objetivo'}</h3>
+  <p id="request-intro">{en?'This is an initial inquiry, not a booking or an English test. Required fields are marked with *.':'Este é um primeiro contato, não uma reserva de aula ou um teste de inglês. Os campos com * são obrigatórios.'}</p>
+  <noscript><p>{en?'Enable JavaScript to send this form, or contact me on LinkedIn.':'Ative o JavaScript para enviar o formulário ou fale comigo pelo LinkedIn.'}</p></noscript>
+  <form class="lesson-form" data-lesson-form data-api={api} data-site-key={siteKey} data-locale={lang} aria-describedby="request-intro request-privacy" novalidate>
+    <fieldset disabled data-form-fields><legend class="screen-reader-only">{en?'Lesson inquiry':'Consulta sobre aulas'}</legend>
+      <div class="form-grid">
+        <div class="form-field"><label for="lesson-name">{en?'What should I call you? *':'Como posso chamar você? *'}</label><input id="lesson-name" name="name" autocomplete="given-name" maxlength="80" required /></div>
+        <div class="form-field"><label for="lesson-email">{en?'What’s the best email to reach you? *':'Qual é o melhor e-mail para retornar? *'}</label><input id="lesson-email" name="email" type="email" autocomplete="email" maxlength="254" required /><p class="field-hint">{en?'Only to respond to this inquiry.':'Usado apenas para responder à sua solicitação.'}</p></div>
+        <div class="form-field"><label for="lesson-goal">{en?'What would you like help with? *':'Com o que você gostaria de ajuda? *'}</label><select id="lesson-goal" name="goal" required><option value="">{en?'Choose an option':'Selecione uma opção'}</option>{options.goal.map(([value,label])=><option value={value}>{label}</option>)}</select></div>
+        <div class="form-field"><label for="lesson-speaking">{en?'How would you describe speaking English today? *':'Como você descreveria sua fala em inglês hoje? *'}</label><select id="lesson-speaking" name="speaking" required><option value="">{en?'Choose an option':'Selecione uma opção'}</option>{options.speaking.map(([value,label])=><option value={value}>{label}</option>)}</select></div>
+        <div class="form-field"><label for="lesson-timeframe">{en?'When would you like to prepare for this? *':'Para quando você precisa se preparar? *'}</label><select id="lesson-timeframe" name="timeframe" required><option value="">{en?'Choose an option':'Selecione uma opção'}</option>{options.timeframe.map(([value,label])=><option value={value}>{label}</option>)}</select></div>
+        <div class="form-field"><label for="lesson-availability">{en?'Days, times, and time zone (optional)':'Dias, horários e fuso horário (opcional)'}</label><input id="lesson-availability" name="availability" maxlength="160" placeholder={en?'For example: weekday evenings, São Paulo time':'Ex.: noites durante a semana, horário de São Paulo'} /></div>
+        <div class="form-field form-wide"><label for="lesson-context">{en?'What situation would you like to work on? *':'Qual situação você gostaria de trabalhar? *'}</label><textarea id="lesson-context" name="context" required minlength="10" maxlength="800" rows="4" aria-describedby="context-hint" placeholder={en?'For example: explaining my experience in an interview or presenting a project to my team.':'Ex.: explicar minha experiência em uma entrevista ou apresentar um projeto para minha equipe.'}></textarea><p class="field-hint" id="context-hint">{en?'10–800 characters. No résumé, documents, or confidential information needed.':'De 10 a 800 caracteres. Não envie currículo, documentos ou informações confidenciais.'}</p></div>
+      </div>
+      <div class="form-trap" aria-hidden="true"><label for="lesson-website">Website</label><input id="lesson-website" name="website" tabindex="-1" autocomplete="off" /></div>
+      <p class="field-hint" id="request-privacy">{en?'Your answers will be used to assess and respond to your inquiry. No marketing sign-up. ':'Suas respostas serão usadas para avaliar e responder à solicitação. Sem inscrição em marketing. '}<a href={privacy}>{en?'How your data is handled':'Como seus dados são tratados'}</a></p>
+      <label class="form-ack"><input type="checkbox" name="privacyAcknowledged" required /><span>{en?'I understand my answers will be used to respond to this inquiry. *':'Entendo que minhas respostas serão usadas para retornar esta solicitação. *'}</span></label>
+      <div data-challenge></div>
+      <div class="form-submit"><button class="button primary" type="submit">{en?'Send inquiry':'Enviar solicitação'}<span aria-hidden="true">↗</span></button><span class="field-hint">{en?'No payment or commitment at this stage.':'Sem pagamento ou compromisso nesta etapa.'}</span></div>
+    </fieldset>
+    <p class="form-status" role="status" aria-live="polite" tabindex="-1" data-form-status></p>
+    <p class="field-hint">{en?'Prefer another way? ':'Prefere outro caminho? '}<a href="https://www.linkedin.com/in/lucasmateus/">{en?'Contact me on LinkedIn':'Fale comigo pelo LinkedIn'}</a>.</p>
+  </form>
+</div>
+<script>
+  import {initLessonForms} from '../scripts/lesson-form';
+  initLessonForms();
+</script>

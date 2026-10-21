@@ -3,20 +3,25 @@ import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 
 const prefix = '/';
+const intakeConfigured=Boolean(process.env.PUBLIC_LESSON_API_URL && process.env.PUBLIC_TURNSTILE_SITE_KEY);
 const origin = 'https://lucas-mateus-hq.github.io';
 const routes = ['', 'en/', 'portfolio/', 'portfolio/pt/', 'criacoes/reta-final/', 'en/criacoes/reta-final/', 'privacy/', 'privacidade/'];
 const fileFor = (path) => `dist/${path}${path.endsWith('/') || !path ? 'index.html' : ''}`;
 const html = (route) => readFileSync(fileFor(route), 'utf8');
 
-test('publication keeps LinkedIn-only contact, describes actual privacy boundaries and retires dashboard assets', () => {
-  for(const route of routes) assert.doesNotMatch(html(route),/mailto:|<input\b|<form\b/);
+test('unconfigured publication keeps LinkedIn contact, accurate privacy and retired dashboard assets', () => {
+  for(const route of routes) {
+    assert.doesNotMatch(html(route),/mailto:|wa\.me|META_ACCESS_TOKEN|WHATSAPP_TO/);
+    if(intakeConfigured && ['', 'en/'].includes(route))assert.match(html(route),/<form\b/);
+    else assert.doesNotMatch(html(route),/<input\b|<form\b/);
+  }
   for(const route of ['privacidade/','privacy/']){
     const source=html(route);
     for(const id of ['responsibility','hosting','browsing','contact','publishing','rights','changes'])assert.ok(source.includes(`id="${id}"`),route+': '+id);
     assert.ok(source.includes('https://www.linkedin.com/in/lucasmateus/'));
     assert.ok(source.includes('https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement'));
     assert.ok(source.includes('2026'));
-    assert.match(source,/GitHub Pages/);assert.doesNotMatch(source,/WhatsApp|wa\.me|id="relay"/);assert.match(source,/LGPD/);
+    assert.match(source,/GitHub Pages/);assert.doesNotMatch(source,/wa\.me|id="relay"/);if(!intakeConfigured)assert.doesNotMatch(source,/WhatsApp/);else assert.match(source,/id="lesson-inquiries"/);assert.match(source,/LGPD/);
   }
   for(const path of ['live-telemetry.js','telemetry.json','responsive-guard.css'])assert.equal(existsSync('dist/'+path),false,path);
 });
@@ -139,4 +144,14 @@ test('home creations focus on Reta Final without the technical implementation ca
       assert.ok(page.includes(`id="${section}"`));
     }
   }
+});
+
+
+test('lessons expose both offers and keep the owner phone and inactive collection out of public pages',()=>{
+ for(const route of ['', 'en/']){
+  const page=html(route);
+  for(const content of ['id="aulas"','Business English','id="reta-final"'])assert.ok(page.includes(content));
+  assert.doesNotMatch(page,/wa\.me|api\.whatsapp\.com|META_ACCESS_TOKEN|WHATSAPP_TO|R\$\s*550/);
+  if(!intakeConfigured)assert.doesNotMatch(page,/<form\b/);else assert.match(page,/data-lesson-form/);
+ }
 });

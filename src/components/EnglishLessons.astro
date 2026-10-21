@@ -1,0 +1,22 @@
+---
+import {lessonIntake} from '../config/lesson-intake';
+import LessonRequestForm from './LessonRequestForm.astro';
+interface Props {lang: 'pt-BR'|'en-US'}
+const {lang}=Astro.props;
+const en=lang==='en-US';
+const {active,api,siteKey}=lessonIntake;
+const privacy=en?'/privacy/':'/privacidade/';
+---
+<section class="band lessons-band" id="aulas" aria-labelledby="lessons-title">
+  <div class="wrap">
+    <header class="section-heading"><div><p class="section-number">{en?'02 / English lessons':'02 / Aulas de inglês'}</p><h2 id="lessons-title">{en?'English for interviews':'Inglês para entrevistas'}<br/><em>{en?'and everyday work.':'e situações reais de trabalho.'}</em></h2></div></header>
+    <p class="lessons-intro">{en?'More than five years teaching English, with experience in international recruiting and corporate learning. Practice and feedback focused on what you need to communicate.':'Mais de cinco anos ensinando inglês, com experiência em recrutamento internacional e aprendizagem corporativa. Prática e feedback voltados ao que você precisa comunicar.'}</p>
+    <div class="lesson-options">
+      <article class="lesson-option lesson-interviews"><p class="label">{en?'Preparing for an opportunity':'Preparação para uma oportunidade'}</p><h3>{en?'Job interviews in English':'Entrevistas em inglês'}</h3><p>{en?'Practice introducing yourself, talking about your experience, and answering follow-up questions. Preparation draws on your background and the role you are applying for.':'Pratique sua apresentação profissional, como contar suas experiências e responder a perguntas de acompanhamento. A preparação considera sua trajetória e a vaga que você está buscando.'}</p><ul><li>{en?'Mock interviews and feedback':'Simulações e feedback'}</li><li>{en?'Clear answers in your own words':'Respostas claras, com suas palavras'}</li></ul></article>
+      <article class="lesson-option"><p class="label">Business English</p><h3>{en?'English for work':'Inglês para o trabalho'}</h3><p>{en?'Work on a situation from your professional life: a meeting, a presentation, a conversation with coworkers, or international customer support.':'Trabalhe uma situação da sua vida profissional: uma reunião, uma apresentação, uma conversa com colegas ou atendimento internacional.'}</p><ul><li>{en?'Vocabulary in context':'Vocabulário aplicado ao seu contexto'}</li><li>{en?'Practice speaking and responding':'Prática de fala e interação'}</li></ul></article>
+    </div>
+    <div class="lesson-next"><div><h3>{en?'What would you like to prepare for?':'O que você precisa preparar?'}</h3><p>{en?'Tell me your goal and time frame. We can discuss an approach, availability, and pricing before you decide.':'Me conte seu objetivo e prazo. Conversamos sobre a abordagem, a disponibilidade e os valores antes de você decidir.'}</p></div>{active?<a class="button primary" href="#pedido-aulas">{en?'Ask about lessons':'Consultar aulas'}<span aria-hidden="true">↓</span></a>:<a class="button primary" href="https://www.linkedin.com/in/lucasmateus/">{en?'Ask about lessons on LinkedIn':'Consultar aulas pelo LinkedIn'}<span aria-hidden="true">↗</span></a>}</div>
+    <p class="lesson-separation">{en?'Lessons involve working directly with me. For self-guided interview preparation, explore the separate Reta Final toolkit below.':'Nas aulas, você trabalha diretamente comigo. Para preparação autônoma, conheça a proposta do toolkit Reta Final na próxima seção.'}</p>
+    {active && <LessonRequestForm lang={lang} api={api} siteKey={siteKey} privacy={privacy} />}
+  </div>
+</section>
