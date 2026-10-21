@@ -127,10 +127,16 @@ test('locale pairs have reciprocal language links and preserve assets and eviden
 });
 
 
-test('site evidence links retain repository-qualified GitHub addresses after root migration', () => {
+test('home creations focus on Reta Final without the technical implementation card', () => {
   for(const route of ['', 'en/']) {
-    assert.ok(html(route).includes('href="https://github.com/lucas-mateus-hq/lucas-capability-os-pages/pull/28"'));
-    assert.ok(html(route).includes('href="https://github.com/lucas-mateus-hq/lucas-mateus-hq.github.io/actions/workflows/pages.yml"'));
-    assert.doesNotMatch(html(route), /github\.com\/lucas-mateus-hq\/(?:pull|actions)\//);
+    const page = html(route);
+    const productRoute = route ? 'en/criacoes/reta-final/' : 'criacoes/reta-final/';
+    assert.match(page, /<article class="feature" id="reta-final">/);
+    assert.ok(page.includes(`href="${prefix}${productRoute}"`));
+    assert.doesNotMatch(page, /public-case|case-links|Este portfólio, por dentro|This portfolio, from the inside/);
+    assert.doesNotMatch(page, /github\.com\/lucas-mateus-hq\/lucas-capability-os-pages\/pull\/28|actions\/workflows\/pages\.yml/);
+    for(const section of ['trabalho', 'criacoes', 'sobre', 'contato']) {
+      assert.ok(page.includes(`id="${section}"`));
+    }
   }
 });
