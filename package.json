@@ -10,8 +10,9 @@
     "test:fresh-eyes": "playwright test tests/fresh-eyes.spec.ts",
     "test:relay": "playwright test tests/relay-zero-cost.spec.ts",
     "test:static": "node --test tests/static.test.mjs",
-    "test:intake": "node --test tests/intake.test.mjs",
-    "test:intake-ui": "playwright test tests/intake-ui.spec.ts"
+    "test:intake": "node --test tests/intake.test.mjs tests/intake-config.test.mjs",
+    "test:intake-ui": "playwright test tests/intake-ui.spec.ts",
+    "test:email-ui": "playwright test tests/email-intake-ui.spec.ts"
   },
   "engines": {
     "node": ">=22"

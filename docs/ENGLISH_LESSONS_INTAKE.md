@@ -1,5 +1,15 @@
 # English lessons: screening and private WhatsApp alerts
 
+## Decisão posterior: receber por e-mail
+
+O Founder escolheu e-mail enquanto o acesso à Meta impede a ativação do
+WhatsApp. A rota atual e seus critérios estão em
+[EMAIL_INTAKE_ACTIVATION.md](EMAIL_INTAKE_ACTIVATION.md).
+O formulário existente foi adaptado para Formspree Free, sem publicar o
+destinatário. A confirmação da conta e uma entrega real ainda são necessárias;
+o site continua com LinkedIn até a ativação explícita. O runbook Cloudflare
+abaixo fica preservado como alternativa técnica, não é requisito desta rota.
+
 ## Decisão vigente: R$ 0 por mês (21 de outubro de 2026)
 
 O Founder fixou o orçamento dos avisos em **R$ 0/mês**. Não habilitar cobrança,

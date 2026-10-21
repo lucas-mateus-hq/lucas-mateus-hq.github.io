@@ -65,8 +65,9 @@ const updated=en?'October 21, 2026':'21 de outubro de 2026';
       <section id="references"><h2>{t("Provider policies and your rights")}</h2><ul>
         <li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages">{t("GitHub Pages hosting")}</a></li>
         <li><a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">{t("GitHub privacy statement")}</a></li>
-        {lessonIntake.active && <li><a href="https://www.cloudflare.com/privacypolicy/">{en?'Cloudflare privacy policy':'Política de privacidade da Cloudflare'}</a></li>}
-        {lessonIntake.active && <li><a href="https://www.whatsapp.com/legal/business-data-processing-terms">{en?'WhatsApp Business data processing terms':'Termos de tratamento de dados do WhatsApp Business'}</a></li>}
+        {lessonIntake.mode==='email' && <li><a href="https://formspree.io/legal/privacy-policy/">{en?'Formspree privacy policy':'Política de privacidade do Formspree'}</a></li>}
+        {lessonIntake.mode==='worker' && <li><a href="https://www.cloudflare.com/privacypolicy/">{en?'Cloudflare privacy policy':'Política de privacidade da Cloudflare'}</a></li>}
+        {lessonIntake.mode==='worker' && <li><a href="https://www.whatsapp.com/legal/business-data-processing-terms">{en?'WhatsApp Business data processing terms':'Termos de tratamento de dados do WhatsApp Business'}</a></li>}
         <li><a href="https://www.gov.br/anpd/pt-br/assuntos/titular-de-dados/direito-dos-titulares">{t("Your rights under the LGPD (ANPD)")}</a></li>
       </ul></section>
     </main>
