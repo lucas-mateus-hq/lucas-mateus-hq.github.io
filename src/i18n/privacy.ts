@@ -1,3 +1,4 @@
+import {lessonIntake} from '../config/lesson-intake';
 export const privacyCopy:Record<string,string>={
   "Privacy Policy — Lucas Mateus": "Política de Privacidade · Lucas Mateus",
   "Privacy notice for Lucas Mateus’s personal website, hosting.": "Aviso de privacidade do site pessoal de Lucas Mateus, da hospedagem.",
@@ -65,3 +66,28 @@ export const privacySections=[
     "text": "This notice will be reviewed if the site’s collection, hosting or integrations change. The revision date identifies this version. A future purchase or product registration will be governed by the notice shown at that destination; no purchase or payment is processed by the current portfolio."
   }
 ];
+
+
+if (lessonIntake.active) {
+  const replacements: Record<string, [string, string]> = {
+    browsing: [
+      "Browsing this site does not require registration. The site has no advertising pixels, audience analytics or embedded social feeds. Local fonts and images are served by this site. The lesson inquiry form loads Cloudflare Turnstile only when you interact with it, to help prevent automated abuse. Cloudflare may process technical connection and device information for this verification. The site does not save form answers in your browser storage.",
+      "A navegação não exige cadastro. O site não tem pixels publicitários, análise de audiência ou feeds de redes sociais incorporados. Fontes e imagens são servidas pelo próprio site. O formulário de aulas carrega o Cloudflare Turnstile quando você interage com ele, para ajudar a evitar envios automatizados abusivos. A Cloudflare pode tratar informações técnicas de conexão e dispositivo nessa verificação. O site não salva as respostas no armazenamento do navegador."
+    ],
+    contact: [
+      "You can contact Lucas through LinkedIn or the lesson inquiry form. The form asks for your name, email, learning goal, description of your spoken English, time frame, a short description of your needs and optional availability. These answers are used to assess and respond to the inquiry and discuss a possible service, as preliminary steps requested by you. They are not used to enroll you in marketing. Do not submit confidential information, résumés, documents, passwords or access credentials.",
+      "Você pode falar com Lucas pelo LinkedIn ou pelo formulário de aulas. O formulário pede nome, e-mail, objetivo, descrição da sua fala em inglês, prazo, um resumo da necessidade e disponibilidade opcional. As respostas são usadas para avaliar e retornar a solicitação e conversar sobre um possível serviço, como procedimentos preliminares solicitados por você. Elas não geram inscrição em marketing. Não envie informações confidenciais, currículos, documentos, senhas ou credenciais de acesso."
+    ]
+  };
+  for (const section of privacySections) {
+    const replacement=replacements[section.id];
+    if (replacement) {
+      const [english, portuguese]=replacement;
+      section.text=english;privacyCopy[english]=portuguese;
+    }
+  }
+  const text="Lesson inquiries are sent over HTTPS to a Cloudflare Worker and stored in a private Cloudflare D1 database. Only Lucas and operators he authorizes should have access. Live intake records are scheduled for deletion after 30 days; provider backups and technical records follow the provider’s own retention rules. If a service is agreed, any records needed for that relationship require separate handling. An operational WhatsApp alert may contain only the inquiry reference, not your answers or email. A messaging provider accepting an alert is not proof it was delivered or read. Providers may process information outside Brazil. No inquiry data is stored in the public GitHub repository or published on this website.";
+  privacyCopy["Lesson inquiries and retention"]="Solicitações de aulas e retenção";
+  privacyCopy[text]="As solicitações são enviadas por HTTPS para um Cloudflare Worker e guardadas em uma base privada Cloudflare D1. O acesso deve ficar restrito a Lucas e operadores autorizados por ele. Os registros ativos de triagem têm exclusão programada após 30 dias; cópias de segurança e registros técnicos seguem as regras próprias do provedor. Se houver contratação, registros necessários a essa relação exigem tratamento separado. Um aviso operacional pelo WhatsApp poderá conter apenas o protocolo, sem suas respostas ou e-mail. A aceitação de um aviso pelo provedor não comprova entrega ou leitura. Os provedores podem tratar informações fora do Brasil. As solicitações não são armazenadas no repositório público do GitHub nem publicadas neste site.";
+  privacySections.splice(4,0,{id:'lesson-inquiries',title:'Lesson inquiries and retention',text});
+}

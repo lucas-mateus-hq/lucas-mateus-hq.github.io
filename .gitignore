@@ -5,3 +5,9 @@ artifacts/fresh-eyes/
 artifacts/lighthouse/
 artifacts/playwright-report/
 test-results/
+.env
+.env.*
+!.env.example
+.dev.vars*
+.wrangler/
+backend/lesson-intake/wrangler.toml

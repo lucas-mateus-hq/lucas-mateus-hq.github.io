@@ -10,6 +10,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+env:
+  PUBLIC_LESSON_API_URL: ${{ vars.PUBLIC_LESSON_API_URL }}
+  PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
+
 permissions:
   contents: read
   pages: write
@@ -41,6 +45,8 @@ jobs:
           fi
       - name: Install dependencies from lock
         run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Intake contracts and local SQL regression
+        run: npm run test:intake
       - name: Astro type and build gate
         run: npm run build
       - name: Public identity, links, content and contrast contracts
@@ -83,7 +89,7 @@ jobs:
 
   deploy:
     if: github.event_name != 'pull_request'
-    needs: validate
+    needs: [validate, intake-ui]
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -123,3 +129,21 @@ jobs:
           path: artifacts/publication-receipt.json
           if-no-files-found: warn
           retention-days: 14
+
+
+  intake-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      PUBLIC_LESSON_API_URL: https://intake-test.example.workers.dev/v1/lesson-requests
+      PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Configured form UI with intercepted external providers; no real submissions
+        run: npm run test:intake-ui

@@ -23,7 +23,10 @@
         catch { /* A malformed fragment is not a valid section. */ }
         const rect = target?.getBoundingClientRect();
         const explicit = rect && rect.top >= offset - 24 && rect.top < offset + 80;
-        const hash = explicit ? fragment : (window.scrollY < 100 ? '' : (visible[0] ? `#${visible[0].el.id}` : ''));
+        // A nested inquiry remains the locale destination while its parent section
+        // is current, including focus-induced scrolling of the sticky header.
+        const nested = target?.matches('[data-locale-section]') && visible[0]?.el.contains(target);
+        const hash = explicit || nested ? fragment : (window.scrollY < 100 ? '' : (visible[0] ? `#${visible[0].el.id}` : ''));
         links.forEach(link => link.setAttribute('href', link.dataset.localeHref + hash));
       };
       let scheduled = false;

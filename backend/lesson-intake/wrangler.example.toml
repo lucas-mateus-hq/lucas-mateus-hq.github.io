@@ -1,0 +1,29 @@
+# Copy to untracked wrangler.toml and bind a real database before deployment.
+name = "lucas-lessons-intake"
+main = "worker.mjs"
+compatibility_date = "2026-10-21"
+workers_dev = true
+
+[observability]
+enabled = false
+
+[vars]
+INTAKE_ENABLED = "false"
+WHATSAPP_ENABLED = "false"
+WHATSAPP_BILLING_APPROVED = "false"
+# Confirm a supported Graph version and an approved template before enabling.
+META_GRAPH_VERSION = ""
+META_TEMPLATE_NAME = ""
+META_TEMPLATE_LANGUAGE = "pt_BR"
+
+[[d1_databases]]
+binding = "LEADS_DB"
+database_name = "lucas-lessons-intake"
+database_id = "REPLACE_WITH_REAL_DATABASE_ID"
+migrations_dir = "migrations"
+
+[triggers]
+crons = ["17 3 * * *"]
+
+# Secret bindings, never vars: TURNSTILE_SECRET_KEY, META_ACCESS_TOKEN,
+# META_PHONE_NUMBER_ID and WHATSAPP_TO. Do not put values in this repository.
