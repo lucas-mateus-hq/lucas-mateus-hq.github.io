@@ -1,9 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
+import {resolveLessonIntake} from '../src/config/lesson-intake-policy.mjs';
 
 const prefix = '/';
-const intakeConfigured=Boolean(process.env.PUBLIC_LESSON_API_URL && process.env.PUBLIC_TURNSTILE_SITE_KEY);
+const intake=resolveLessonIntake(process.env);
+const intakeConfigured=intake.active;
 const origin = 'https://lucas-mateus-hq.github.io';
 const routes = ['', 'en/', 'portfolio/', 'portfolio/pt/', 'criacoes/reta-final/', 'en/criacoes/reta-final/', 'privacy/', 'privacidade/'];
 const fileFor = (path) => `dist/${path}${path.endsWith('/') || !path ? 'index.html' : ''}`;
@@ -152,6 +154,6 @@ test('lessons expose both offers and keep the owner phone and inactive collectio
   const page=html(route);
   for(const content of ['id="aulas"','Business English','id="reta-final"'])assert.ok(page.includes(content));
   assert.doesNotMatch(page,/wa\.me|api\.whatsapp\.com|META_ACCESS_TOKEN|WHATSAPP_TO|R\$\s*550/);
-  if(!intakeConfigured)assert.doesNotMatch(page,/<form\b/);else assert.match(page,/data-lesson-form/);
+  if(!intakeConfigured)assert.doesNotMatch(page,/<form\b/);else assert.match(page,/data-(?:lesson|email)-form/);
  }
 });

@@ -1,7 +1,8 @@
 ---
-interface Props {lang: 'pt-BR'|'en-US';api:string;siteKey:string;privacy:string}
-const {lang,api,siteKey,privacy}=Astro.props;
+interface Props {lang: 'pt-BR'|'en-US';api:string;siteKey:string;privacy:string;mode:string}
+const {lang,api,siteKey,privacy,mode}=Astro.props;
 const en=lang==='en-US';
+const email=mode==='email';
 const options={
  goal: en? [['interview','Job interview preparation'],['business','English for work'],['both','Both'],['not_sure','I’m not sure yet']]:[['interview','Preparação para entrevista'],['business','Inglês para o trabalho'],['both','As duas opções'],['not_sure','Ainda não sei']],
  speaking:en?[['starting','I’m starting or returning to the basics'],['simple','I can give short, simple answers'],['needs_support','I can hold a conversation, but need support'],['comfortable','I speak comfortably and want to work on specific situations'],['not_sure','I’m not sure how to describe it']]:[['starting','Estou começando ou retomando o básico'],['simple','Consigo responder com frases simples'],['needs_support','Consigo conversar, mas preciso de apoio'],['comfortable','Converso com facilidade e quero trabalhar situações específicas'],['not_sure','Ainda não sei descrever']],
@@ -11,9 +12,10 @@ const options={
 <div class="lesson-request" id="pedido-aulas" data-locale-section>
   <h3>{en?'Tell me a little about your goal':'Me conte um pouco sobre seu objetivo'}</h3>
   <p id="request-intro">{en?'This is an initial inquiry, not a booking or an English test. Required fields are marked with *.':'Este é um primeiro contato, não uma reserva de aula ou um teste de inglês. Os campos com * são obrigatórios.'}</p>
-  <noscript><p>{en?'Enable JavaScript to send this form, or contact me on LinkedIn.':'Ative o JavaScript para enviar o formulário ou fale comigo pelo LinkedIn.'}</p></noscript>
-  <form class="lesson-form" data-lesson-form data-api={api} data-site-key={siteKey} data-locale={lang} aria-describedby="request-intro request-privacy" novalidate>
-    <fieldset disabled data-form-fields><legend class="screen-reader-only">{en?'Lesson inquiry':'Consulta sobre aulas'}</legend>
+  {!email && <noscript><p>{en?'Enable JavaScript to send this form, or contact me on LinkedIn.':'Ative o JavaScript para enviar o formulário ou fale comigo pelo LinkedIn.'}</p></noscript>}
+  <form class="lesson-form" data-lesson-form={email?undefined:''} data-email-form={email?'':undefined} action={email?api:undefined} method={email?'post':undefined} data-api={email?undefined:api} data-site-key={email?undefined:siteKey} data-locale={lang} aria-describedby="request-intro request-privacy" novalidate={!email}>
+    {email && <input type="hidden" name="locale" value={lang} />}
+    <fieldset disabled={!email} data-form-fields><legend class="screen-reader-only">{en?'Lesson inquiry':'Consulta sobre aulas'}</legend>
       <div class="form-grid">
         <div class="form-field"><label for="lesson-name">{en?'What should I call you? *':'Como posso chamar você? *'}</label><input id="lesson-name" name="name" autocomplete="given-name" maxlength="80" required /></div>
         <div class="form-field"><label for="lesson-email">{en?'What’s the best email to reach you? *':'Qual é o melhor e-mail para retornar? *'}</label><input id="lesson-email" name="email" type="email" autocomplete="email" maxlength="254" required /><p class="field-hint">{en?'Only to respond to this inquiry.':'Usado apenas para responder à sua solicitação.'}</p></div>
@@ -23,10 +25,10 @@ const options={
         <div class="form-field"><label for="lesson-availability">{en?'Days, times, and time zone (optional)':'Dias, horários e fuso horário (opcional)'}</label><input id="lesson-availability" name="availability" maxlength="160" placeholder={en?'For example: weekday evenings, São Paulo time':'Ex.: noites durante a semana, horário de São Paulo'} /></div>
         <div class="form-field form-wide"><label for="lesson-context">{en?'What situation would you like to work on? *':'Qual situação você gostaria de trabalhar? *'}</label><textarea id="lesson-context" name="context" required minlength="10" maxlength="800" rows="4" aria-describedby="context-hint" placeholder={en?'For example: explaining my experience in an interview or presenting a project to my team.':'Ex.: explicar minha experiência em uma entrevista ou apresentar um projeto para minha equipe.'}></textarea><p class="field-hint" id="context-hint">{en?'10–800 characters. No résumé, documents, or confidential information needed.':'De 10 a 800 caracteres. Não envie currículo, documentos ou informações confidenciais.'}</p></div>
       </div>
-      <div class="form-trap" aria-hidden="true"><label for="lesson-website">Website</label><input id="lesson-website" name="website" tabindex="-1" autocomplete="off" /></div>
+      {!email && <div class="form-trap" aria-hidden="true"><label for="lesson-website">Website</label><input id="lesson-website" name="website" tabindex="-1" autocomplete="off" /></div>}
       <p class="field-hint" id="request-privacy">{en?'Your answers will be used to assess and respond to your inquiry. No marketing sign-up. ':'Suas respostas serão usadas para avaliar e responder à solicitação. Sem inscrição em marketing. '}<a href={privacy}>{en?'How your data is handled':'Como seus dados são tratados'}</a></p>
       <label class="form-ack"><input type="checkbox" name="privacyAcknowledged" required /><span>{en?'I understand my answers will be used to respond to this inquiry. *':'Entendo que minhas respostas serão usadas para retornar esta solicitação. *'}</span></label>
-      <div data-challenge></div>
+      {email?<p class="field-hint" data-email-handoff>{en?'Sending opens Formspree’s verification and confirmation page. Formspree forwards your answers to my email. You can also contact me on LinkedIn.':'O envio abre a página de verificação e confirmação do Formspree, que encaminha suas respostas ao meu e-mail. Você também pode falar comigo pelo LinkedIn.'}</p>:<div data-challenge></div>}
       <div class="form-submit"><button class="button primary" type="submit">{en?'Send inquiry':'Enviar solicitação'}<span aria-hidden="true">↗</span></button><span class="field-hint">{en?'No payment or commitment at this stage.':'Sem pagamento ou compromisso nesta etapa.'}</span></div>
     </fieldset>
     <p class="form-status" role="status" aria-live="polite" tabindex="-1" data-form-status></p>
