@@ -10,6 +10,9 @@ enabled = false
 [vars]
 INTAKE_ENABLED = "false"
 WHATSAPP_ENABLED = "false"
+# Owner decision: R$0/month. Blocks the billable adapter even with stale approval.
+# Do not change to billable_approved without a new explicit cost authorization.
+WHATSAPP_COST_POLICY = "zero"
 WHATSAPP_BILLING_APPROVED = "false"
 # Confirm a supported Graph version and an approved template before enabling.
 META_GRAPH_VERSION = ""

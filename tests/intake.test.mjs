@@ -19,7 +19,9 @@ function fixture(overrides={}){
  return {store,env,calls,fetcher};
 }
 function request(payload,options={}){return new Request(url,{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(payload),...options});}
-const configured={WHATSAPP_ENABLED:'true',WHATSAPP_BILLING_APPROVED:'true',META_ACCESS_TOKEN:'synthetic-private-token',META_PHONE_NUMBER_ID:'12345678901234',WHATSAPP_TO:'15555550123',META_GRAPH_VERSION:'v99.0',META_TEMPLATE_NAME:'synthetic_lead_alert',META_TEMPLATE_LANGUAGE:'pt_BR'};
+// Synthetic future billable configuration exercises the existing adapter; this
+// is not the owner's authorized deployment policy and never contacts Meta.
+const configured={WHATSAPP_COST_POLICY:'billable_approved',WHATSAPP_ENABLED:'true',WHATSAPP_BILLING_APPROVED:'true',META_ACCESS_TOKEN:'synthetic-private-token',META_PHONE_NUMBER_ID:'12345678901234',WHATSAPP_TO:'15555550123',META_GRAPH_VERSION:'v99.0',META_TEMPLATE_NAME:'synthetic_lead_alert',META_TEMPLATE_LANGUAGE:'pt_BR'};
 
 test('new request uses real handler and SQL; receipt follows persistence',async()=>{
  const f=fixture(),p=sample();const r=await handleRequest(request(p),f.env,{fetch:f.fetcher,now});assert.equal(r.status,201);assert.deepEqual(await r.json(),{accepted:true,requestId:p.requestId});
@@ -63,6 +65,25 @@ test('private WhatsApp alert contains only a reference and records provider acce
 });
 test('WhatsApp is never called without explicit billing approval',async()=>{
  const f=fixture({...configured,WHATSAPP_BILLING_APPROVED:'false'});await handleRequest(request(sample()),f.env,{fetch:f.fetcher,now});assert.equal(f.calls.length,1);
+});
+for (const policy of ['zero', undefined, '', '0', 'free', 'billable_approved ']) {
+ test(`cost policy ${JSON.stringify(policy)} blocks billable sends despite legacy approval`,async()=>{
+  const f=fixture({...configured,WHATSAPP_COST_POLICY:policy}),p=sample();
+  const result=await handleRequest(request(p),f.env,{fetch:f.fetcher,now});
+  assert.equal(result.status,201);assert.deepEqual(await result.json(),{accepted:true,requestId:p.requestId});
+  const row=f.store.db.prepare('SELECT * FROM lesson_requests').get();
+  assert.equal(row.notification_state,'pending');assert.equal(row.notification_attempted_at,null);
+  assert.equal((await handleRequest(request(p),f.env,{fetch:f.fetcher,now})).status,200);
+  assert.equal(f.calls.length,1);assert.match(f.calls[0].target,/^https:\/\/challenges\.cloudflare\.com\//);
+  assert.equal(f.store.db.prepare('SELECT COUNT(*) AS n FROM lesson_requests').get().n,1);
+ });
+}
+test('tracked deployment example preserves the R$0 decision with intake and sends disabled',()=>{
+ const example=readFileSync('backend/lesson-intake/wrangler.example.toml','utf8');
+ assert.match(example,/^WHATSAPP_COST_POLICY = "zero"$/m);
+ assert.match(example,/^WHATSAPP_BILLING_APPROVED = "false"$/m);
+ assert.match(example,/^WHATSAPP_ENABLED = "false"$/m);
+ assert.match(example,/^INTAKE_ENABLED = "false"$/m);
 });
 for(const [label,send,state] of [
  ['timeout',async()=>{throw new Error('upstream private');},'unknown'],

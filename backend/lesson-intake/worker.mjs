@@ -64,7 +64,11 @@ async function readLimited(request) {
   return JSON.parse(new TextDecoder('utf-8', {fatal: true}).decode(all));
 }
 function notificationConfigured(env) {
-  return env.WHATSAPP_ENABLED === 'true' && env.WHATSAPP_BILLING_APPROVED === 'true' &&
+  // The owner's current budget is R$0. Missing/zero/unknown policies fail closed,
+  // even if legacy billing approval or credentials are accidentally left enabled.
+  // The template adapter has no verified zero-cost send mode.
+  return env.WHATSAPP_COST_POLICY === 'billable_approved' &&
+    env.WHATSAPP_ENABLED === 'true' && env.WHATSAPP_BILLING_APPROVED === 'true' &&
     typeof env.META_ACCESS_TOKEN === 'string' && env.META_ACCESS_TOKEN.length > 10 &&
     /^\d{5,30}$/.test(env.META_PHONE_NUMBER_ID || '') && /^\d{10,15}$/.test(env.WHATSAPP_TO || '') &&
     /^v\d+\.\d+$/.test(env.META_GRAPH_VERSION || '') && /^[a-z0-9_]{1,100}$/.test(env.META_TEMPLATE_NAME || '') &&

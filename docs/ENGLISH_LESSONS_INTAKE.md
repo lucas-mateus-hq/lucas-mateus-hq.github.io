@@ -1,5 +1,49 @@
 # English lessons: screening and private WhatsApp alerts
 
+## Decisão vigente: R$ 0 por mês (21 de outubro de 2026)
+
+O Founder fixou o orçamento dos avisos em **R$ 0/mês**. Não habilitar cobrança,
+upgrade, trial com conversão paga ou fallback para um provedor pago.
+`WHATSAPP_COST_POLICY="zero"` impede o adaptador Meta existente de enviar,
+mesmo com `WHATSAPP_BILLING_APPROVED="true"` e credenciais antigas presentes.
+Política ausente ou desconhecida também bloqueia. Alterar a política para
+`billable_approved` exigiria uma nova autorização explícita; os testes desse
+modo são sintéticos e não representam a configuração autorizada.
+
+**Estado real:** seção publicada; formulário implementado e testado localmente;
+backend, banco, Turnstile e entrega real de WhatsApp ainda não ativados.
+O contato público continua sendo LinkedIn. O número privado não é publicado.
+
+Há uma possibilidade gratuita para avisos ao próprio dono: o tutorial oficial
+do CallMeBot para Shopify descreve expressamente esse uso, incluindo eventos
+de uma loja. Isso corrige a interpretação anterior de que qualquer aviso
+relacionado a um negócio seria excluído pelo termo “personal use”. Não é uma
+permissão para enviar mensagens a clientes, nem comprovação de autorização da
+Meta. Em 21/10/2026 a página de ativação informa que o bot está cheio e esconde
+o telefone; portanto **não há ativação nova disponível demonstrada**.
+
+Fontes verificadas:
+- https://www.callmebot.com/blog/whatsapp-messages-from-shopify/
+- https://www.callmebot.com/blog/free-api-whatsapp-messages/
+- https://www.callmebot.com/terms-of-service/
+- https://www.callmebot.com/privacy-policy/
+
+Não há adaptador CallMeBot implementado nem teste de entrega real. Não tentar
+números antigos encontrados em terceiros. Quando houver vagas, a adesão deve
+ser feita pelo dono no próprio WhatsApp, pelo procedimento publicado no site
+oficial. A chave recebida seria cadastrada como segredo no servidor, nunca no
+chat, GitHub ou HTML. Antes de integrar: verificar novamente condições e
+privacidade, transmitir apenas um aviso mínimo sem nome/e-mail/respostas do
+lead e confirmar uma entrega real ao dono. O provedor conhecerá o telefone de
+destino e a mensagem; “não público no site” não significa invisível ao provedor.
+
+**Próxima ação independente do WhatsApp:** abrir/criar uma conta Cloudflare
+Free em https://dash.cloudflare.com/ e seguir os passos 1–3 abaixo para ativar
+o recebimento privado. Não é necessário comprar domínio. A autenticação deve
+ser feita pelo titular no provedor; não compartilhar senha ou token no chat.
+Se o formulário for ativado antes dos avisos, o dono precisará consultar a
+base privada manualmente. Não anunciar notificações automáticas nessa etapa.
+
 ## Actual release boundary
 
 The PT/EN lessons section is publishable with the existing LinkedIn contact.
@@ -106,14 +150,20 @@ approved template, supported Graph version and cost approval are prerequisites.
 The owner's receiving number is not silently registered/migrated as a sending
 number. Template approval/category and actual delivery remain unverified.
 
-CallMeBot was researched, not integrated: its page limits its free API to
-personal use and reported no new activation slots during this inspection:
-https://www.callmebot.com/blog/free-api-whatsapp-messages/
-Do not relabel a commercial lead workflow as a personal home-automation use.
+The zero-budget decision above supersedes the earlier cost-approval path.
+The Meta template adapter is retained for compatibility but blocked by the
+current policy; no assumption about free service windows or free quotas can
+enable it. A runtime flag cannot verify or control the provider account plan.
 
 ## Activation runbook (owner/account operator)
 
-1. Check the Cloudflare account and Free plan. Create a Worker and private D1
+1. Check that the account is on **Workers Free**, not Workers Paid. Do not
+   upgrade or add a billable fallback. Workers Free currently permits 100,000
+   requests/day; D1 Free permits 5 million rows read/day, 100,000 written/day
+   and 5 GB total storage. D1 rejects operations when its free limits are
+   exhausted instead of silently upgrading. These are shared account limits,
+   not guaranteed capacity for this form. Excess usage may interrupt intake;
+   it does not authorize spending. Create a Worker and private D1
    database in that account; configure Turnstile for the exact portfolio hostname.
    Relevant provider limits:
    https://developers.cloudflare.com/workers/platform/pricing/
@@ -124,15 +174,18 @@ Do not relabel a commercial lead workflow as a personal home-automation use.
    configure `TURNSTILE_SECRET_KEY` with `wrangler secret put`. Account
    authentication must occur privately; do not put tokens in chat or source.
 3. Deploy the backend with `INTAKE_ENABLED=true`, leaving WhatsApp disabled
-   initially. Verify a synthetic request against the real endpoint and check
-   D1 persistence, duplicate protection, Turnstile and retention configuration.
-4. If the Founder approves messaging costs, configure Meta's sending account
-   and a template with one body text parameter: the request UUID. Suggested
+   initially, with `WHATSAPP_COST_POLICY="zero"`. Verify a synthetic request
+   against the real endpoint and check D1 persistence, duplicate protection,
+   Turnstile and retention configuration.
+4. **Do not execute this step under the current R$0 authorization.** Only if
+   the Founder subsequently authorizes billable messaging, configure Meta's
+   sending account and a template with one body text parameter: the request UUID. Suggested
    original template text: “Nova solicitação de aulas recebida. Protocolo: {{1}}.
    Consulte a base privada de solicitações.” Meta decides template approval
    and category. Set supported `META_GRAPH_VERSION`, template name/language;
    put `META_ACCESS_TOKEN`, `META_PHONE_NUMBER_ID` and `WHATSAPP_TO` as secrets.
-   Set both `WHATSAPP_ENABLED` and `WHATSAPP_BILLING_APPROVED` to `true` only
+   Explicitly set `WHATSAPP_COST_POLICY="billable_approved"`, and set both
+   `WHATSAPP_ENABLED` and `WHATSAPP_BILLING_APPROVED` to `true` only
    after these prerequisites are satisfied. Confirm an actual test notification
    on the owner's receiving device before claiming delivery.
 5. Configure repository Actions variables `PUBLIC_LESSON_API_URL` (exact
@@ -140,9 +193,22 @@ Do not relabel a commercial lead workflow as a personal home-automation use.
    `PUBLIC_TURNSTILE_SITE_KEY` (public site key only). Rebuild and publish.
    The Worker secrets are not GitHub Pages build inputs.
 6. Verify PT/EN, phone absent from browser source/network responses, real
-   persistence, inbox access and one actual notification. The live receipt must
-   distinguish accepted, delivered and read. Disable public activation variables
+   persistence and private inbox access. If notifications are later enabled,
+   verify one actual notification separately. The live receipt must distinguish
+   stored, accepted by provider, delivered and read; intake activation alone
+   does not prove notification delivery. Disable public activation variables
    and rebuild if backend intake cannot be supported; LinkedIn stays available.
+
+## Zero-budget regression evidence
+
+Local execution on 21 October 2026: `npm run test:intake` passed 42 tests
+(0 failed, 0 skipped); `npm run build` completed; `npm run test:static` passed
+10 tests (0 failed, 0 skipped). Seven new checks cover the zero/missing/invalid
+policy and the tracked deployment defaults. With stale billing approval and
+synthetic credentials, blocked sends make no Meta request, preserve the stored
+lead and acknowledge a replay without duplicating effects. Existing adapter
+checks remain synthetic and require an explicit test-only billable policy.
+No Cloudflare deployment, real lead or WhatsApp delivery was executed.
 
 ## Reproducible verification
 
