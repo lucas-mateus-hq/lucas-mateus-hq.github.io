@@ -197,7 +197,8 @@ test('English lessons are discoverable in both languages without collecting data
   await expect(page).toHaveURL(/#aulas$/);
   await expect(page.locator('#aulas')).toContainText(title);
   const active=Boolean(process.env.PUBLIC_LESSON_API_URL && process.env.PUBLIC_TURNSTILE_SITE_KEY);
-  await expect(page.locator('#aulas form')).toHaveCount(active?1:0);
-  await expect(page.locator('#aulas a.button')).toHaveAttribute('href',active?'#pedido-aulas':'https://www.linkedin.com/in/lucasmateus/');
+  await expect(page.locator('#aulas form')).toHaveCount(active?2:1);
+  await expect(page.locator('#aulas .mock-offer a.button')).toHaveAttribute('href','#pedido-simulacao');
+  await expect(page.locator('#aulas .lesson-next a.button')).toHaveAttribute('href',active?'#pedido-aulas':'https://www.linkedin.com/in/lucasmateus/');
  }
 });
