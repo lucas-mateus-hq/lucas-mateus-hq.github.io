@@ -12,7 +12,7 @@ const html = (route) => readFileSync(fileFor(route), 'utf8');
 test('unconfigured publication keeps LinkedIn contact, accurate privacy and retired dashboard assets', () => {
   for(const route of routes) {
     assert.doesNotMatch(html(route),/mailto:|wa\.me|META_ACCESS_TOKEN|WHATSAPP_TO/);
-    if(intakeConfigured && ['', 'en/'].includes(route))assert.match(html(route),/<form\b/);
+    if(['', 'en/'].includes(route))assert.match(html(route),/data-mock-form/);
     else assert.doesNotMatch(html(route),/<input\b|<form\b/);
   }
   for(const route of ['privacidade/','privacy/']){
@@ -147,11 +147,14 @@ test('home creations focus on Reta Final without the technical implementation ca
 });
 
 
-test('lessons expose both offers and keep the owner phone and inactive collection out of public pages',()=>{
+test('lessons expose existing and one-off offers and keep the owner phone and inactive collection out of public pages',()=>{
  for(const route of ['', 'en/']){
   const page=html(route);
   for(const content of ['id="aulas"','Business English','id="reta-final"'])assert.ok(page.includes(content));
   assert.doesNotMatch(page,/wa\.me|api\.whatsapp\.com|META_ACCESS_TOKEN|WHATSAPP_TO|R\$\s*550/);
-  if(!intakeConfigured)assert.doesNotMatch(page,/<form\b/);else assert.match(page,/data-lesson-form/);
+  assert.match(page,/data-mock-form/);
+  assert.match(page,/R\$ 149/);
+  if(!intakeConfigured){assert.doesNotMatch(page,/data-lesson-form/);assert.match(page,/data-active="false"/);}
+  else {assert.match(page,/data-lesson-form/);assert.match(page,/data-active="true"/);}
  }
 });
