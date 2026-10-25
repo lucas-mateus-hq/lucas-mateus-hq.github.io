@@ -202,3 +202,21 @@ test('English lessons are discoverable in both languages without collecting data
   await expect(page.locator('#aulas .lesson-next a.button')).toHaveAttribute('href',active?'#pedido-aulas':'https://www.linkedin.com/in/lucasmateus/');
  }
 });
+
+
+test('mock interview prepares an explicit manual handoff when backend is inactive',async({page})=>{
+  await page.goto('./#pedido-simulacao');
+  await expect(page.locator('.mock-offer')).toContainText('R$ 149');
+  await page.locator('#mock-name').fill('Pessoa de teste');
+  await page.locator('#mock-email').fill('example@example.invalid');
+  await page.locator('#mock-role').fill('Customer Success');
+  await page.locator('#mock-speaking').selectOption('needs_support');
+  await page.locator('#mock-timeframe').selectOption('week');
+  await page.locator('#mock-focus').selectOption('behavioral');
+  await page.locator('.mock-form [name=privacyAcknowledged]').check();
+  await page.getByRole('button',{name:'Preparar mensagem'}).click();
+  await expect(page.locator('[data-mock-status]')).toContainText('Nada foi enviado');
+  await expect(page.locator('[data-mock-message]')).toHaveValue(/Customer Success/);
+  await expect(page.locator('[data-mock-handoff] a')).toHaveAttribute('href','https://www.linkedin.com/in/lucasmateus/');
+  expect(await page.evaluate(()=>localStorage.length+sessionStorage.length)).toBe(0);
+});
