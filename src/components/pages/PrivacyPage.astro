@@ -58,7 +58,7 @@ const updated=en?'October 25, 2026':'25 de outubro de 2026';
       <a class="back" href={portfolio}>{t("← Professional portfolio")}</a>
       <p class="eyebrow">{t("Lucas Mateus · Privacy")}</p>
       <h1>{t("Privacy Policy")}</h1>
-      <p class="lead">{lessonIntake.active?(en?"This notice explains browsing, lesson inquiries and the providers involved in responding to them.":"Este aviso explica a navegação, as solicitações de aulas e os provedores envolvidos no atendimento."):(en?"This notice explains hosting, the local mock interview message form and what happens when you choose to contact me.":"Este aviso explica a hospedagem, o formulário local de simulação e o que acontece quando você decide entrar em contato.")}</p>
+      <p class="lead">{lessonIntake.active?(en?"This notice explains browsing, lesson inquiries and the providers involved in responding to them.":"Este aviso explica a navegação, as solicitações de aulas e os provedores envolvidos no atendimento."):(en?"This notice explains hosting, LinkedIn contact and what happens when you choose to reach out.":"Este aviso explica a hospedagem, o contato pelo LinkedIn e o que acontece quando você decide falar comigo.")}</p>
       <p class="updated"><strong>{t("Last updated:")}</strong> {updated}</p>
 
       {privacySections.map(section=><section id={section.id}><h2>{t(section.title)}</h2><p>{t(section.text)}</p>{section.id==='contact'||section.id==='rights'?<p class="policy-link"><a href="https://www.linkedin.com/in/lucasmateus/">{t("Contact Lucas on LinkedIn")} ↗</a></p>:null}</section>)}
