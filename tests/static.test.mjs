@@ -12,12 +12,14 @@ const html = (route) => readFileSync(fileFor(route), 'utf8');
 test('unconfigured publication keeps LinkedIn contact, accurate privacy and retired dashboard assets', () => {
   for(const route of routes) {
     assert.doesNotMatch(html(route),/mailto:|wa\.me|META_ACCESS_TOKEN|WHATSAPP_TO/);
-    if(intakeConfigured && ['', 'en/'].includes(route))assert.match(html(route),/<form\b/);
-    else assert.doesNotMatch(html(route),/<input\b|<form\b/);
+    if(['', 'en/'].includes(route)) {
+      if(intakeConfigured)assert.match(html(route),/data-mock-form/);
+      else { assert.match(html(route),/Agendamento online em preparação|Online booking is being prepared/); assert.doesNotMatch(html(route),/data-mock-form|<form\b/); }
+    } else assert.doesNotMatch(html(route),/<input\b|<form\b/);
   }
   for(const route of ['privacidade/','privacy/']){
     const source=html(route);
-    for(const id of ['responsibility','hosting','browsing','contact','publishing','rights','changes'])assert.ok(source.includes(`id="${id}"`),route+': '+id);
+    for(const id of ['responsibility','hosting','browsing','contact','mock-report','publishing','rights','changes'])assert.ok(source.includes(`id="${id}"`),route+': '+id);
     assert.ok(source.includes('https://www.linkedin.com/in/lucasmateus/'));
     assert.ok(source.includes('https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement'));
     assert.ok(source.includes('2026'));
@@ -81,8 +83,8 @@ test('home is personal, upcoming product is honest, and no data capture or purch
   assert.ok(home.includes(`src="${prefix}lucas-mateus.webp"`), 'serve an optimized copy of the existing public profile portrait');
   assert.ok(existsSync('dist/lucas-mateus.webp'));
   for(const route of ['', 'en/']){assert.doesNotMatch(html(route),/Disponível em português brasileiro|Available in Brazilian Portuguese|Materiais educacionais e projetos|Learning materials and projects/);}
-  for(const route of ['', 'portfolio/pt/']){assert.ok(html(route).includes('produtividade no dia a dia'));assert.doesNotMatch(html(route),/organização de trabalhos complexos/);}
-  for(const route of ['en/', 'portfolio/'])assert.ok(html(route).includes('everyday productivity'));
+  for(const route of ['', 'portfolio/pt/']){assert.ok(html(route).includes('projetos práticos'));assert.doesNotMatch(html(route),/organização de trabalhos complexos/);}
+  for(const route of ['en/', 'portfolio/'])assert.ok(html(route).includes('practical projects'));
 });
 
 test('professional evidence remains present and technical utility files are not published', () => {
@@ -147,11 +149,33 @@ test('home creations focus on Reta Final without the technical implementation ca
 });
 
 
-test('lessons expose both offers and keep the owner phone and inactive collection out of public pages',()=>{
+test('lessons expose existing and one-off offers and keep the owner phone and inactive collection out of public pages',()=>{
  for(const route of ['', 'en/']){
   const page=html(route);
   for(const content of ['id="aulas"','Business English','id="reta-final"'])assert.ok(page.includes(content));
   assert.doesNotMatch(page,/wa\.me|api\.whatsapp\.com|META_ACCESS_TOKEN|WHATSAPP_TO|R\$\s*550/);
-  if(!intakeConfigured)assert.doesNotMatch(page,/<form\b/);else assert.match(page,/data-lesson-form/);
+  if(intakeConfigured)assert.match(page,/data-mock-form/);
+  else { assert.match(page,/Agendamento online em preparação|Online booking is being prepared/);assert.doesNotMatch(page,/data-mock-form/); }
+  assert.match(page,/R\$ 80/);
+  assert.ok(page.includes(route==='en/'?'Practice your next job interview in English':'Treine sua próxima entrevista em inglês'));
+  assert.ok(page.includes(route==='en/'?'within 2 hours of the end of the session':'em até 2 horas após a sessão'));
+  assert.doesNotMatch(page,/R\$ 149|BRL 149|45-minute mock/);
+  assert.ok(page.includes(route==='en/'?'one 60-minute session + written report':'1 hora de prática + relatório'));
+  assert.ok(page.includes(intakeConfigured?(route==='en/'?'Request a session':'Solicitar simulação'):(route==='en/'?'Booking opens soon':'Agendamento em breve')));
+  if(!intakeConfigured){assert.doesNotMatch(page,/data-lesson-form/);assert.match(page,/href="https:\/\/www.linkedin.com\/in\/lucasmateus\/"/);}
+  else {assert.match(page,/data-lesson-form/);assert.match(page,/data-active="true"/);}
+ }
+});
+
+test('portfolio explains AI work to ordinary visitors without internal engineering jargon',()=>{
+ const cases=[
+  {route:'portfolio/',language:'en',nav:'AI projects',heading:'What I’m building and learning with AI.',phrase:'I try practical ways to use AI'},
+  {route:'portfolio/pt/',language:'pt',nav:'Projetos com IA',heading:'O que estou criando e aprendendo com IA.',phrase:'Experimento formas práticas de usar IA'}
+ ];
+ for(const {route,nav,heading,phrase} of cases){
+  const page=html(route);
+  for(const copy of [nav,heading,phrase])assert.ok(page.includes(copy),route+': '+copy);
+  assert.doesNotMatch(page,/AI orchestration literacy|Knowledge & state architecture|Independent Applied R&D|Arquitetura de conhecimento e estado|Conhecimento aplicado de orquestração de IA|Pesquisa aplicada independente/);
+  assert.match(page,/id="rnd"/); // Existing deep links remain valid after changing the visitor-facing label.
  }
 });

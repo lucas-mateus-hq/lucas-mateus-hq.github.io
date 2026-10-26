@@ -1,0 +1,37 @@
+---
+import {lessonIntake} from '../config/lesson-intake';
+interface Props {lang: 'pt-BR'|'en-US'}
+const {lang}=Astro.props;
+const en=lang==='en-US';
+const privacy=en?'/privacy/':'/privacidade/';
+const {active,api,siteKey}=lessonIntake;
+---
+<section class="mock-intake" id="pedido-simulacao" data-locale-section aria-labelledby="mock-form-title">
+  <div class="mock-intake-heading">
+    <p class="label">{en?'Personalized interview practice':'Preparação individual para entrevistas'}</p>
+    <h3 id="mock-form-title">{active?(en?'Request your mock interview':'Solicite sua simulação'):(en?'Online booking is being prepared':'Agendamento online em preparação')}</h3>
+    <p>{active?(en?'Tell me the role you are targeting and when you can meet. I’ll reply by email to arrange a time before any payment.':'Conte qual cargo você busca e quando pode participar. Vou responder por e-mail para combinar o horário antes de qualquer pagamento.'):(en?'This service will be available to request here once the contact form is ready. No inquiry is collected on this page yet.':'A solicitação deste serviço será liberada aqui quando o formulário estiver pronto. Esta página ainda não recebe pedidos.')}</p>
+  </div>
+  {active && <>
+    <noscript><p>{en?'Please enable JavaScript to use this protected form.':'Ative o JavaScript para utilizar este formulário protegido.'}</p></noscript>
+    <form class="lesson-form mock-form" data-mock-form data-api={api} data-site-key={siteKey} data-active="true" data-locale={lang} novalidate aria-describedby="mock-privacy">
+      <fieldset disabled data-mock-fields>
+        <legend class="screen-reader-only">{en?'Mock interview request':'Solicitação de simulação de entrevista'}</legend>
+        <div class="form-grid">
+          <div class="form-field"><label for="mock-name">{en?'Your name *':'Seu nome *'}</label><input id="mock-name" name="name" autocomplete="name" maxlength="80" required /></div>
+          <div class="form-field"><label for="mock-email">{en?'Your email *':'Seu e-mail *'}</label><input id="mock-email" name="email" type="email" autocomplete="email" maxlength="254" required /></div>
+          <div class="form-field"><label for="mock-role">{en?'What role are you applying for? *':'Qual cargo você está buscando? *'}</label><input id="mock-role" name="role" maxlength="90" required placeholder={en?'e.g. Customer Success Specialist':'Ex.: Analista de Customer Success'} /></div>
+          <div class="form-field"><label for="mock-availability">{en?'When are you available? *':'Quando você tem disponibilidade? *'}</label><input id="mock-availability" name="availability" maxlength="160" required placeholder={en?'e.g. evenings, Brasília time':'Ex.: à noite, horário de Brasília'} /></div>
+          <div class="form-field form-wide"><label for="mock-notes">{en?'Anything else you want to practise? (optional)':'Quer contar mais sobre a entrevista? (opcional)'}</label><textarea id="mock-notes" name="notes" maxlength="320" rows="3" placeholder={en?'e.g. a behavioral interview with an international team':'Ex.: entrevista comportamental com equipe internacional'}></textarea><p class="field-hint">{en?'No résumé, documents or confidential details needed.':'Não é necessário enviar currículo, documentos ou informações confidenciais.'}</p></div>
+        </div>
+        <div class="form-trap" aria-hidden="true"><label for="mock-website">Website</label><input id="mock-website" name="website" tabindex="-1" autocomplete="off" /></div>
+        <p class="field-hint" id="mock-privacy">{en?'Your details are used only to respond about this session; no marketing emails. ':'Os dados são usados apenas para responder sobre esta sessão, sem envio de publicidade. '}<a href={privacy}>{en?'Privacy notice':'Aviso de privacidade'}</a>.</p>
+        <label class="form-ack"><input type="checkbox" name="privacyAcknowledged" required /><span>{en?'I agree to the use of these details to respond to my request. *':'Concordo com o uso destes dados para responder à minha solicitação. *'}</span></label>
+        <div data-mock-challenge></div>
+        <div class="form-submit"><button type="submit" class="button primary">{en?'Send request':'Enviar solicitação'} <span aria-hidden="true">↗</span></button><span class="field-hint">{en?'R$ 80 · 60 minutes + written report · No payment yet':'R$ 80 · 60 minutos + relatório escrito · Sem pagamento agora'}</span></div>
+      </fieldset>
+      <p role="status" aria-live="polite" tabindex="-1" class="form-status" data-mock-status></p>
+    </form>
+  </>}
+</section>
+<script>import {initMockInterviewForm} from '../scripts/mock-interview-form';initMockInterviewForm();</script>

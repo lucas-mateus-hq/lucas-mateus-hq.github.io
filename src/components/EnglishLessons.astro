@@ -1,6 +1,7 @@
 ---
 import {lessonIntake} from '../config/lesson-intake';
 import LessonRequestForm from './LessonRequestForm.astro';
+import MockInterviewRequestForm from './MockInterviewRequestForm.astro';
 interface Props {lang: 'pt-BR'|'en-US'}
 const {lang}=Astro.props;
 const en=lang==='en-US';
@@ -11,12 +12,32 @@ const privacy=en?'/privacy/':'/privacidade/';
   <div class="wrap">
     <header class="section-heading"><div><p class="section-number">{en?'02 / English lessons':'02 / Aulas de inglês'}</p><h2 id="lessons-title">{en?'English for interviews':'Inglês para entrevistas'}<br/><em>{en?'and everyday work.':'e situações reais de trabalho.'}</em></h2></div></header>
     <p class="lessons-intro">{en?'More than five years teaching English, with experience in international recruiting and corporate learning. Practice and feedback focused on what you need to communicate.':'Mais de cinco anos ensinando inglês, com experiência em recrutamento internacional e aprendizagem corporativa. Prática e feedback voltados ao que você precisa comunicar.'}</p>
+    <article class="mock-offer" aria-labelledby="mock-offer-title">
+      <div class="mock-offer-content">
+        <p class="label">{en?'Live mock interview · One-on-one':'Simulação de entrevista · Individual e ao vivo'}</p>
+        <h3 id="mock-offer-title">{en?'Practice your next job interview in English.':'Treine sua próxima entrevista em inglês.'}</h3>
+        <p>{en?'Know your job but struggle to talk about your experience in English? Practise answering questions related to the role you want, with feedback informed by international recruitment experience.':'Na hora de falar sobre sua experiência em inglês, as respostas não saem como você gostaria? Pratique perguntas relacionadas à vaga que você busca e receba feedback de quem já trabalhou com recrutamento internacional.'}</p>
+        <ul class="mock-steps">
+          <li>{en?'Before: tell me the role you are applying for and what you want to practise.':'Antes: conte qual cargo você busca e o que quer praticar.'}</li>
+          <li>{en?'During: a 60-minute live session with interview questions and individual feedback.':'Durante: 60 minutos de simulação ao vivo e feedback individual.'}</li>
+          <li>{en?'After: a written report by email within 2 hours of the end of the session, with strengths, areas to improve and practical next steps.':'Depois: relatório escrito por e-mail em até 2 horas após a sessão, com pontos fortes, o que melhorar e próximos passos para treinar.'}</li>
+        </ul>
+        <p class="mock-offer-small">{en?'One session, no subscription. Drawing on my experience teaching English and working in international recruitment.':'Sessão avulsa, sem assinatura. Atendimento que combina minha experiência no ensino de inglês e em recrutamento internacional.'}</p>
+      </div>
+      <div class="mock-offer-action">
+        <p class="mock-price"><strong>R$ 80</strong><span>{en?'one 60-minute session + written report':'1 hora de prática + relatório'}</span></p>
+        <a class="button primary" href="#pedido-simulacao">{active?(en?'Request a session':'Solicitar simulação'):(en?'Booking opens soon':'Agendamento em breve')} <span aria-hidden="true">↓</span></a>
+        <span class="field-hint">{en?'We confirm a time before any payment.':'Combinamos o horário antes do pagamento.'}</span>
+      </div>
+    </article>
+    <p class="lesson-alternatives">{en?'Looking for a different kind of support?':'Busca outro tipo de preparação?'}</p>
     <div class="lesson-options">
-      <article class="lesson-option lesson-interviews"><p class="label">{en?'Preparing for an opportunity':'Preparação para uma oportunidade'}</p><h3>{en?'Job interviews in English':'Entrevistas em inglês'}</h3><p>{en?'Practice introducing yourself, talking about your experience, and answering follow-up questions. Preparation draws on your background and the role you are applying for.':'Pratique sua apresentação profissional, como contar suas experiências e responder a perguntas de acompanhamento. A preparação considera sua trajetória e a vaga que você está buscando.'}</p><ul><li>{en?'Mock interviews and feedback':'Simulações e feedback'}</li><li>{en?'Clear answers in your own words':'Respostas claras, com suas palavras'}</li></ul></article>
+      <article class="lesson-option lesson-interviews"><p class="label">{en?'Ongoing English lessons':'Aulas com acompanhamento'}</p><h3>{en?'English lessons for interviews':'Aulas de inglês para entrevistas'}</h3><p>{en?'Prefer to practise over several sessions? We can work on how to introduce yourself, explain your experience and answer follow-up questions, at a pace that fits your needs.':'Prefere se preparar ao longo de várias aulas? Podemos trabalhar sua apresentação profissional, suas experiências e perguntas de acompanhamento, no ritmo que fizer sentido para você.'}</p><ul><li>{en?'Guided practice across sessions':'Prática orientada ao longo das aulas'}</li><li>{en?'Clearer answers in your own words':'Respostas mais claras, com suas palavras'}</li></ul></article>
       <article class="lesson-option"><p class="label">Business English</p><h3>{en?'English for work':'Inglês para o trabalho'}</h3><p>{en?'Work on a situation from your professional life: a meeting, a presentation, a conversation with coworkers, or international customer support.':'Trabalhe uma situação da sua vida profissional: uma reunião, uma apresentação, uma conversa com colegas ou atendimento internacional.'}</p><ul><li>{en?'Vocabulary in context':'Vocabulário aplicado ao seu contexto'}</li><li>{en?'Practice speaking and responding':'Prática de fala e interação'}</li></ul></article>
     </div>
     <div class="lesson-next"><div><h3>{en?'What would you like to prepare for?':'O que você precisa preparar?'}</h3><p>{en?'Tell me your goal and time frame. We can discuss an approach, availability, and pricing before you decide.':'Me conte seu objetivo e prazo. Conversamos sobre a abordagem, a disponibilidade e os valores antes de você decidir.'}</p></div>{active?<a class="button primary" href="#pedido-aulas">{en?'Ask about lessons':'Consultar aulas'}<span aria-hidden="true">↓</span></a>:<a class="button primary" href="https://www.linkedin.com/in/lucasmateus/">{en?'Ask about lessons on LinkedIn':'Consultar aulas pelo LinkedIn'}<span aria-hidden="true">↗</span></a>}</div>
     <p class="lesson-separation">{en?'Lessons involve working directly with me. For self-guided interview preparation, explore the separate Reta Final toolkit below.':'Nas aulas, você trabalha diretamente comigo. Para preparação autônoma, conheça a proposta do toolkit Reta Final na próxima seção.'}</p>
+    <MockInterviewRequestForm lang={lang} />
     {active && <LessonRequestForm lang={lang} api={api} siteKey={siteKey} privacy={privacy} />}
   </div>
 </section>

@@ -32,3 +32,37 @@ html{scroll-padding-top:0}
 .lessons-band{--section-bg:#0b2429}.lessons-band .section-heading{margin-bottom:24px}.lessons-intro{font-size:19px;line-height:1.7;color:var(--muted);max-width:70ch;margin:0 0 32px}.lesson-options{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:24px}.lesson-option{min-width:0;border:1px solid var(--card-border);border-radius:var(--card-radius);background:var(--card-bg);padding:32px;backdrop-filter:var(--card-blur)}.lesson-interviews{border-top:2px solid var(--gold)}.lesson-option .label{margin:0 0 16px}.lesson-option h3,.lesson-next h3,.lesson-request h3{font-size:28px;line-height:1.25;margin:0 0 16px;letter-spacing:-.02em}.lesson-option p:not(.label),.lesson-option li,.lesson-next p,.lesson-request>p{font-size:18px;line-height:1.7;color:var(--muted)}.lesson-option p:not(.label){margin:0}.lesson-option ul{padding-left:20px;margin:20px 0 0}.lesson-option li+li{margin-top:6px}.lesson-next{display:flex;justify-content:space-between;align-items:center;gap:32px;margin-top:32px}.lesson-next p{margin:0;max-width:58ch}.lesson-next .button{flex:none}.lesson-separation{font-size:14px;line-height:1.7;color:var(--muted);margin:24px 0 0;max-width:84ch}.lesson-request{margin-top:44px;border-top:1px solid var(--line);padding-top:32px}.lesson-form{max-width:880px;margin-top:28px}.lesson-form fieldset{min-width:0;margin:0;padding:0;border:0}.form-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}.form-field{min-width:0}.form-field label{display:block;font-size:16px;font-weight:600;line-height:1.6;margin-bottom:8px}.form-wide{grid-column:1/-1}.lesson-form input:not([type=checkbox]),.lesson-form select,.lesson-form textarea{display:block;width:100%;min-width:0;max-width:100%;font:400 16px/1.6 "Source Sans 3",Arial,sans-serif;background:#103039;color:var(--ink);border:1px solid #69857f;border-radius:10px;padding:12px}.lesson-form select{white-space:normal;min-height:52px}.lesson-form textarea{resize:vertical}.lesson-form input::placeholder,.lesson-form textarea::placeholder{color:var(--muted);opacity:1}.lesson-form :is(input,textarea,select,button):focus-visible{outline:3px solid var(--mint);outline-offset:3px}.field-hint{font-size:14px;line-height:1.7;color:var(--muted);margin:8px 0 0}.form-ack{display:flex;align-items:start;gap:12px;font-size:15px;line-height:1.7;margin:20px 0}.form-ack input{width:20px;height:20px;flex:none;margin:3px 0;accent-color:var(--mint)}.form-submit{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:22px}.lesson-form button{cursor:pointer}.lesson-form button:disabled{cursor:wait;opacity:.65}.form-status{font-size:16px;line-height:1.7;color:var(--mint);overflow-wrap:anywhere}.form-trap,.screen-reader-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}.lesson-form fieldset:disabled{opacity:.7}
 @media(max-width:900px){.lesson-next{align-items:start;flex-direction:column}}
 @media(max-width:700px){.lesson-options,.form-grid{grid-template-columns:minmax(0,1fr)}.lesson-option{padding:26px}.lesson-next{gap:20px}.lesson-option h3,.lesson-next h3,.lesson-request h3{font-size:26px}.lessons-intro{font-size:18px}.lesson-form select{font-size:16px}.form-wide{grid-column:auto}}
+
+/* One-off English interview offer: distinct from ongoing lessons and Reta Final. */
+.mock-offer{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(220px,.75fr);gap:32px;padding:32px;margin:0 0 36px;border:1px solid var(--gold);border-radius:var(--card-radius);background:linear-gradient(135deg,#123438,#0b262b)}
+.mock-offer-content,.mock-offer-action{min-width:0}
+.mock-offer .label{margin:0 0 12px}
+.mock-offer h3{font-size:clamp(26px,3vw,36px);line-height:1.19;letter-spacing:-.03em;margin:0 0 16px}
+.mock-offer-content>p:not(.label){font-size:18px;line-height:1.65;color:var(--ink);margin:0 0 12px}
+.mock-offer .mock-offer-small{font-size:14px!important;color:var(--muted)!important}
+.mock-steps{padding-left:22px;margin:18px 0 16px;color:var(--ink)}
+.mock-steps li{font-size:16px;line-height:1.6;padding-left:3px}
+.mock-steps li+li{margin-top:10px}
+.mock-steps li::marker{color:var(--mint)}
+.mock-offer-action{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:16px}
+.mock-offer-action .button{max-width:100%;text-align:center}
+.mock-price{display:flex;flex-direction:column;margin:0;gap:4px}
+.mock-price strong{font-size:clamp(34px,5vw,46px);line-height:1;font-weight:700;color:var(--ink)}
+.mock-price span{font-size:15px;color:var(--muted)}
+.lesson-alternatives{font-size:17px;line-height:1.5;margin:0 0 18px;color:var(--muted)}
+.mock-intake{margin-top:42px;padding:32px;border:1px solid var(--card-border);border-radius:var(--card-radius);background:var(--card-bg)}
+.mock-intake-heading{max-width:74ch}
+.mock-intake-heading .label{margin:0 0 8px}
+.mock-intake h3{font-size:clamp(26px,3vw,34px);line-height:1.25;margin:0 0 12px}
+.mock-intake-heading>p:not(.label){font-size:16px;line-height:1.65;color:var(--muted);margin:0 0 12px}
+.mock-intake-heading .mock-notice{border-left:3px solid var(--gold);padding:10px 14px;background:rgba(255,255,255,.04);color:var(--ink)!important}
+.mock-direct{display:flex;flex-wrap:wrap;align-items:center;gap:16px 24px;margin-top:20px}
+.mock-direct .button{flex:none;max-width:100%}
+.mock-direct p{flex:1 1 220px;font-size:14px;line-height:1.55;color:var(--muted);margin:0}
+.mock-intake .lesson-form{margin-top:22px}
+.mock-handoff{padding:24px;margin-top:24px;border:1px solid var(--gold);border-radius:12px;background:#123438}
+.mock-handoff[hidden]{display:none}
+.mock-handoff>label{display:block;font-weight:600;margin-bottom:12px}
+.mock-handoff textarea{width:100%;min-height:175px}
+.mock-handoff-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+@media(max-width:700px){.mock-offer{grid-template-columns:minmax(0,1fr);padding:24px;gap:14px}.mock-intake{padding:22px}.mock-offer-action{gap:12px}.mock-handoff{padding:16px}}

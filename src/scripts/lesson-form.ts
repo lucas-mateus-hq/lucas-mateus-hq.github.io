@@ -5,7 +5,7 @@ type Turnstile = {
 };
 declare global { interface Window { turnstile?:Turnstile } }
 let loader:Promise<Turnstile>|undefined;
-function loadChallenge() {
+export function loadChallenge() {
   if(window.turnstile) return Promise.resolve(window.turnstile);
   if(loader) return loader;
   loader=new Promise<Turnstile>((resolve,reject)=>{
