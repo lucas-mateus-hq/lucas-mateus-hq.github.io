@@ -197,29 +197,22 @@ test('English lessons are discoverable in both languages without collecting data
   await expect(page).toHaveURL(/#aulas$/);
   await expect(page.locator('#aulas')).toContainText(title);
   const active=Boolean(process.env.PUBLIC_LESSON_API_URL && process.env.PUBLIC_TURNSTILE_SITE_KEY);
-  await expect(page.locator('#aulas form')).toHaveCount(active?2:1);
+  await expect(page.locator('#aulas form')).toHaveCount(active?2:0);
   await expect(page.locator('#aulas .mock-offer a.button')).toHaveAttribute('href','#pedido-simulacao');
+  await expect(page.locator('#pedido-simulacao')).toContainText(active?(route==='./'?'Conte sobre a entrevista':'Tell me about the interview'):(route==='./'?'Vamos combinar sua simulação':'Let’s arrange your practice session'));
   await expect(page.locator('#aulas .lesson-next a.button')).toHaveAttribute('href',active?'#pedido-aulas':'https://www.linkedin.com/in/lucasmateus/');
  }
 });
 
 
-test('mock interview prepares an explicit manual handoff when backend is inactive',async({page})=>{
+test('offline mock interview displays a direct contact path instead of a dead-end form',async({page})=>{
   await page.goto('./#pedido-simulacao');
   await expect(page.locator('.mock-offer')).toContainText('R$ 80');
   await expect(page.locator('.mock-offer')).toContainText('1 hora');
   await expect(page.locator('.mock-offer')).toContainText('relatório escrito por e-mail em até 2 horas após a sessão');
-  await page.locator('#mock-name').fill('Pessoa de teste');
-  await page.locator('#mock-email').fill('example@example.invalid');
-  await page.locator('#mock-role').fill('Customer Success');
-  await page.locator('#mock-speaking').selectOption('needs_support');
-  await page.locator('#mock-timeframe').selectOption('week');
-  await page.locator('#mock-focus').selectOption('behavioral');
-  await page.locator('.mock-form [name=privacyAcknowledged]').check();
-  await page.getByRole('button',{name:'Preparar mensagem para o LinkedIn'}).click();
-  await expect(page.locator('[data-mock-status]')).toContainText('Nada foi enviado');
-  await expect(page.locator('[data-mock-message]')).toHaveValue(/Customer Success/);
-  await expect(page.locator('[data-mock-message]')).toHaveValue(/R\$ 80, relatório escrito em até 2 horas/);
-  await expect(page.locator('[data-mock-handoff] a')).toHaveAttribute('href','https://www.linkedin.com/in/lucasmateus/');
+  await expect(page.locator('#pedido-simulacao form')).toHaveCount(0);
+  await expect(page.locator('#pedido-simulacao')).toContainText('Ainda não somos conexões?');
+  await expect(page.getByRole('link',{name:'Entrar em contato pelo LinkedIn'})).toHaveAttribute('href','https://www.linkedin.com/in/lucasmateus/');
+  await expect(page.locator('.mock-offer a.button')).toContainText('Como agendar');
   expect(await page.evaluate(()=>localStorage.length+sessionStorage.length)).toBe(0);
 });
