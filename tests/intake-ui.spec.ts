@@ -77,7 +77,7 @@ test('mock interview submits via the unchanged secure lesson endpoint only after
   await page.locator('#mock-availability').fill('Tuesday evening, Brasília time');
   await page.locator('#mock-notes').fill('Interview with an international team.');
   await page.locator('.mock-form [name=privacyAcknowledged]').check();
-  await page.getByRole('button',{name:'Enviar solicitação'}).last().click();
+  await page.locator('.mock-form').getByRole('button',{name:'Enviar solicitação'}).click();
   await expect(page.locator('[data-mock-status]')).toContainText('Solicitação recebida');
   expect(submissions).toHaveLength(1);
   expect(submissions[0].goal).toBe('interview');
