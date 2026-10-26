@@ -43,7 +43,7 @@ const focuses=en?[
   <div class="mock-intake-heading">
     <p class="label">{en?'One-off practice · 60 minutes':'Atendimento avulso · 60 minutos'}</p>
     <h3 id="mock-form-title">{en?'Request a mock interview':'Solicitar uma simulação de entrevista'}</h3>
-    <p>{en?'Share the essentials so I can tailor our practice to the role. The fee is R$80 for 60 minutes, including a personalized written report sent within 2 hours after the session ends. This is an inquiry, not an automatic booking or payment.':'Compartilhe o essencial para adaptar a prática à vaga. O valor é R$ 80 por 60 minutos, com relatório escrito personalizado enviado em até 2 horas após o término. Este é um pedido inicial, não uma reserva nem um pagamento automático.'}</p>
+    <p>{en?'Share the essentials so I can tailor our practice to the role. The fee is R$ 80 for 60 minutes, including a personalized written report sent within 2 hours after the session ends. This is an inquiry, not an automatic booking or payment.':'Compartilhe o essencial para adaptar a prática à vaga. O valor é R$ 80 por 60 minutos, com relatório escrito personalizado enviado em até 2 horas após o término. Este é um pedido inicial, não uma reserva nem um pagamento automático.'}</p>
     {!active && <p class="mock-notice">{en?'The online inbox is not active yet. Fill out the form to prepare a message, then send it yourself through LinkedIn. Your answers are not sent automatically.':'O recebimento online ainda não está ativo. Preencha para preparar uma mensagem e envie você mesmo pelo LinkedIn. Seus dados não serão enviados automaticamente.'}</p>}
   </div>
   <noscript><p>{en?'JavaScript is needed for this form. You can contact me on LinkedIn instead.':'Este formulário precisa de JavaScript. Você também pode falar comigo pelo LinkedIn.'}</p></noscript>
@@ -65,7 +65,7 @@ const focuses=en?[
       <p class="field-hint" id="mock-privacy">{en?'Used only to respond to this request. No mailing list. ':'Usado apenas para responder à solicitação. Sem lista de marketing. '}<a href={privacy}>{en?'Privacy notice':'Aviso de privacidade'}</a>.</p>
       <label class="form-ack"><input type="checkbox" name="privacyAcknowledged" required /><span>{en?'I understand the purpose of using my information above. *':'Entendo a finalidade de uso dos dados acima. *'}</span></label>
       {active && <div data-mock-challenge></div>}
-      <div class="form-submit"><button type="submit" class="button primary">{active?(en?'Request availability':'Solicitar disponibilidade'):(en?'Prepare message':'Preparar mensagem')} <span aria-hidden="true">↗</span></button><span class="field-hint">{en?'R$80 · 60 minutes · no payment now':'R$ 80 · 60 minutos · sem pagamento agora'}</span></div>
+      <div class="form-submit"><button type="submit" class="button primary">{active?(en?'Request availability':'Solicitar disponibilidade'):(en?'Prepare message':'Preparar mensagem')} <span aria-hidden="true">↗</span></button><span class="field-hint">{en?'R$ 80 · 60 minutes · no payment now':'R$ 80 · 60 minutos · sem pagamento agora'}</span></div>
     </fieldset>
     <p role="status" aria-live="polite" tabindex="-1" class="form-status" data-mock-status></p>
     <div class="mock-handoff" data-mock-handoff hidden>
