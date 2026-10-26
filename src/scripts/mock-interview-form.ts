@@ -53,7 +53,7 @@ export function initMockInterviewForm(){
     inform(en?'Please shorten the optional message.':'Reduza a mensagem opcional.',true);return;
    }
    // Keep the existing server contract without collecting unnecessary fields.
-   const payload={name,email,goal:'interview',speaking:'not_sure',timeframe:'exploring',context,availability,locale:form.dataset.locale,privacyAcknowledged:data.get('privacyAcknowledged')==='on',website};
+   const payload={name,email,goal:'interview',speaking:'not_provided',timeframe:'not_provided',context,availability,locale:form.dataset.locale,privacyAcknowledged:data.get('privacyAcknowledged')==='on',website};
    if(!challenge||!widget){
     inform(en?'Preparing verification; your request has not been sent.':'Preparando a verificação; nada foi enviado.');
     await setup();
