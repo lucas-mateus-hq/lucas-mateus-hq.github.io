@@ -191,7 +191,7 @@ test('portfolio title has a readable scale and reduced motion suppresses transit
 
 
 test('English lessons are discoverable in both languages without collecting data before activation',async({page})=>{
- for(const [route,label,title] of [['./','Aulas','Entrevistas em inglês'],['en/','Lessons','Job interviews in English']] as const){
+ for(const [route,label,title] of [['./','Aulas','Treine sua próxima entrevista em inglês'],['en/','Lessons','Practice your next job interview in English']] as const){
   await page.goto(route);
   await page.locator('.primary-navigation').getByRole('link',{name:label,exact:true}).click();
   await expect(page).toHaveURL(/#aulas$/);
@@ -208,7 +208,7 @@ test('mock interview prepares an explicit manual handoff when backend is inactiv
   await page.goto('./#pedido-simulacao');
   await expect(page.locator('.mock-offer')).toContainText('R$ 80');
   await expect(page.locator('.mock-offer')).toContainText('1 hora');
-  await expect(page.locator('.mock-offer')).toContainText('Em até 2 horas após o término da sessão');
+  await expect(page.locator('.mock-offer')).toContainText('relatório escrito por e-mail em até 2 horas após a sessão');
   await page.locator('#mock-name').fill('Pessoa de teste');
   await page.locator('#mock-email').fill('example@example.invalid');
   await page.locator('#mock-role').fill('Customer Success');
@@ -216,7 +216,7 @@ test('mock interview prepares an explicit manual handoff when backend is inactiv
   await page.locator('#mock-timeframe').selectOption('week');
   await page.locator('#mock-focus').selectOption('behavioral');
   await page.locator('.mock-form [name=privacyAcknowledged]').check();
-  await page.getByRole('button',{name:'Preparar mensagem'}).click();
+  await page.getByRole('button',{name:'Preparar mensagem para o LinkedIn'}).click();
   await expect(page.locator('[data-mock-status]')).toContainText('Nada foi enviado');
   await expect(page.locator('[data-mock-message]')).toHaveValue(/Customer Success/);
   await expect(page.locator('[data-mock-message]')).toHaveValue(/R\$ 80, relatório escrito em até 2 horas/);
