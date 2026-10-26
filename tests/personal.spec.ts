@@ -206,7 +206,9 @@ test('English lessons are discoverable in both languages without collecting data
 
 test('mock interview prepares an explicit manual handoff when backend is inactive',async({page})=>{
   await page.goto('./#pedido-simulacao');
-  await expect(page.locator('.mock-offer')).toContainText('R$ 149');
+  await expect(page.locator('.mock-offer')).toContainText('R$ 80');
+  await expect(page.locator('.mock-offer')).toContainText('1 hora');
+  await expect(page.locator('.mock-offer')).toContainText('Em até 2 horas após o término da sessão');
   await page.locator('#mock-name').fill('Pessoa de teste');
   await page.locator('#mock-email').fill('example@example.invalid');
   await page.locator('#mock-role').fill('Customer Success');
@@ -217,6 +219,7 @@ test('mock interview prepares an explicit manual handoff when backend is inactiv
   await page.getByRole('button',{name:'Preparar mensagem'}).click();
   await expect(page.locator('[data-mock-status]')).toContainText('Nada foi enviado');
   await expect(page.locator('[data-mock-message]')).toHaveValue(/Customer Success/);
+  await expect(page.locator('[data-mock-message]')).toHaveValue(/R\$ 80, relatório escrito em até 2 horas/);
   await expect(page.locator('[data-mock-handoff] a')).toHaveAttribute('href','https://www.linkedin.com/in/lucasmateus/');
   expect(await page.evaluate(()=>localStorage.length+sessionStorage.length)).toBe(0);
 });
