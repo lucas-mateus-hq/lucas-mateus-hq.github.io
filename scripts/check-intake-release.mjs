@@ -37,4 +37,4 @@ const check = async (method,headers,body,expectedStatus,expectedError) => {
 await check('OPTIONS',{'Origin':origin,'Access-Control-Request-Method':'POST','Access-Control-Request-Headers':'content-type'},undefined,204);
 await check('POST',{'Origin':origin,'Content-Type':'application/json'},'{}',400,'INVALID_REQUEST');
 console.log('Release endpoint checks passed: responsive configured Worker, origin CORS and enabled validation.');
-console.log('This does NOT prove a successful stored lead: verify a real Turnstile submission and private D1 receipt before setting INTAKE_LIVE_VERIFIED=true.');
+console.log('This does NOT prove a successful stored lead: verify a real Turnstile submission and private D1 receipt immediately after publishing; roll back if it fails.');
