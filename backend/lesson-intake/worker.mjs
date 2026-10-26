@@ -7,8 +7,8 @@ const MAX_BYTES = 8192;
 const DAY = 86400000;
 const ENUMS = {
   goal: ['interview', 'business', 'both', 'not_sure'],
-  speaking: ['starting', 'simple', 'needs_support', 'comfortable', 'not_sure'],
-  timeframe: ['week', 'month', 'later', 'exploring'],
+  speaking: ['starting', 'simple', 'needs_support', 'comfortable', 'not_sure', 'not_provided'],
+  timeframe: ['week', 'month', 'later', 'exploring', 'not_provided'],
   locale: ['pt-BR', 'en-US'],
 };
 const ALLOWED = new Set(['requestId', 'name', 'email', 'goal', 'speaking', 'timeframe', 'context', 'availability', 'locale', 'privacyAcknowledged', 'website', 'turnstileToken']);
