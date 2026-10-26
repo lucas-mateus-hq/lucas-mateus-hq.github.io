@@ -17,13 +17,13 @@ for(const english of [false,true])test(`configured form acknowledges only a conf
  let submissions:any[]=[];
  await page.route(endpoint,async route=>{const body=route.request().postDataJSON();submissions.push(body);await route.fulfill({status:201,headers:{'Access-Control-Allow-Origin':'*'},contentType:'application/json',body:JSON.stringify({accepted:true,requestId:body.requestId})});});
  await prepare(page,english);
- await page.getByRole('button',{name:english?'Send inquiry':'Enviar solicitação'}).click();
+ await page.locator('[data-lesson-form]').getByRole('button',{name:english?'Send inquiry':'Enviar solicitação'}).click();
  await expect(page.locator('[data-lesson-form] [data-form-status]')).toContainText(english?'Inquiry received':'Solicitação recebida');
  expect(submissions).toHaveLength(1);expect(submissions[0].locale).toBe(english?'en-US':'pt-BR');expect(submissions[0].email).toBe('visitor@example.invalid');
  await expect(page.locator('#lesson-name')).toHaveValue('');
  await expect(page.locator('[data-form-fields]')).toHaveAttribute('disabled','');
  await expect(page.locator('#lesson-name')).toBeDisabled();
- await expect(page.getByRole('button',{name:english?'Send inquiry':'Enviar solicitação'})).toBeDisabled();
+ await expect(page.locator('[data-lesson-form]').getByRole('button',{name:english?'Send inquiry':'Enviar solicitação'})).toBeDisabled();
  expect(await page.evaluate(()=>localStorage.length+sessionStorage.length)).toBe(0);
 });
 test('failure preserves answers, reuses ID on retry and rejects contradictory evidence',async({page})=>{
@@ -31,17 +31,17 @@ test('failure preserves answers, reuses ID on retry and rejects contradictory ev
  await page.route(endpoint,async route=>{const body=route.request().postDataJSON();ids.push(body.requestId);await route.fulfill({status:ids.length===1?503:200,headers:{'Access-Control-Allow-Origin':'*'},contentType:'application/json',body:ids.length===2?JSON.stringify({accepted:true,requestId:'wrong-reference'}):JSON.stringify({accepted:ids.length===3,requestId:body.requestId})});});
  await prepare(page);
  for(let i=0;i<2;i++){
-  await page.getByRole('button',{name:'Enviar solicitação'}).click();
+  await page.locator('[data-lesson-form]').getByRole('button',{name:'Enviar solicitação'}).click();
   await expect(page.locator('[data-lesson-form] [data-form-status]')).toContainText('Não foi possível confirmar');
   await expect(page.locator('#lesson-email')).toHaveValue('visitor@example.invalid');
  }
- await page.getByRole('button',{name:'Enviar solicitação'}).click();await expect(page.locator('[data-lesson-form] [data-form-status]')).toContainText('Solicitação recebida');expect(new Set(ids).size).toBe(1);
+ await page.locator('[data-lesson-form]').getByRole('button',{name:'Enviar solicitação'}).click();await expect(page.locator('[data-lesson-form] [data-form-status]')).toContainText('Solicitação recebida');expect(new Set(ids).size).toBe(1);
 });
 test('required and invalid fields never reach the endpoint',async({page})=>{
  let calls=0;await page.route(endpoint,async route=>{calls++;await route.abort();});
  await page.route('https://challenges.cloudflare.com/turnstile/v0/api.js*',route=>route.fulfill({contentType:'application/javascript',body:syntheticChallenge}));
- await page.goto('./#pedido-aulas');await page.getByRole('button',{name:'Enviar solicitação'}).click();expect(calls).toBe(0);
- await prepare(page);await page.locator('#lesson-email').fill('invalid');await page.getByRole('button',{name:'Enviar solicitação'}).click();expect(calls).toBe(0);
+ await page.goto('./#pedido-aulas');await page.locator('[data-lesson-form]').getByRole('button',{name:'Enviar solicitação'}).click();expect(calls).toBe(0);
+ await prepare(page);await page.locator('#lesson-email').fill('invalid');await page.locator('[data-lesson-form]').getByRole('button',{name:'Enviar solicitação'}).click();expect(calls).toBe(0);
 });
 test('verification failure gives an honest fallback without sending answers',async({page})=>{
  await page.route('https://challenges.cloudflare.com/turnstile/v0/api.js*',route=>route.abort());
