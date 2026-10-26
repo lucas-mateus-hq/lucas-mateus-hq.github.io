@@ -163,3 +163,16 @@ test('lessons expose existing and one-off offers and keep the owner phone and in
   else {assert.match(page,/data-lesson-form/);assert.match(page,/data-active="true"/);}
  }
 });
+
+test('portfolio explains AI work to ordinary visitors without internal engineering jargon',()=>{
+ const cases=[
+  {route:'portfolio/',language:'en',nav:'AI projects',heading:'What I’m building and learning with AI.',phrase:'I try practical ways to use AI'},
+  {route:'portfolio/pt/',language:'pt',nav:'Projetos com IA',heading:'O que estou criando e aprendendo com IA.',phrase:'Experimento formas práticas de usar IA'}
+ ];
+ for(const {route,nav,heading,phrase} of cases){
+  const page=html(route);
+  for(const copy of [nav,heading,phrase])assert.ok(page.includes(copy),route+': '+copy);
+  assert.doesNotMatch(page,/AI orchestration literacy|Knowledge & state architecture|Independent Applied R&D|Arquitetura de conhecimento e estado|Conhecimento aplicado de orquestração de IA|Pesquisa aplicada independente/);
+  assert.match(page,/id="rnd"/); // Existing deep links remain valid after changing the visitor-facing label.
+ }
+});
