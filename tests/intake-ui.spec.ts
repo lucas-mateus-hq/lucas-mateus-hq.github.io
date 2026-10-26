@@ -83,8 +83,9 @@ test('mock interview submits via the unchanged secure lesson endpoint only after
   await expect(page.locator('[data-mock-status]')).toContainText('Solicitação recebida');
   expect(submissions).toHaveLength(1);
   expect(submissions[0].goal).toBe('interview');
-  expect(submissions[0].context).toMatch(/Service: 45-minute mock interview \(BRL 149\)/);
+  expect(submissions[0].context).toMatch(/Service: 60-minute mock interview \(BRL 80\)/);
   expect(submissions[0].context).toContain('Recruiting Specialist');
+  expect(submissions[0].context).toContain('personalized written report within 2h after session');
   expect(submissions[0].turnstileToken).toBe('synthetic-no-real-provider');
   await expect(page.locator('#mock-name')).toBeDisabled();
 });
