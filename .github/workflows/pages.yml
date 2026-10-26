@@ -11,8 +11,8 @@ on:
   workflow_dispatch:
 
 env:
-  PUBLIC_LESSON_API_URL: ${{ vars.PUBLIC_LESSON_API_URL }}
-  PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
+  PUBLIC_LESSON_API_URL: ${{ vars.INTAKE_RELEASE_APPROVED == 'true' && vars.PUBLIC_LESSON_API_URL || '' }}
+  PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.INTAKE_RELEASE_APPROVED == 'true' && vars.PUBLIC_TURNSTILE_SITE_KEY || '' }}
 
 permissions:
   contents: read
@@ -88,11 +88,9 @@ jobs:
           retention-days: 14
 
   deploy:
-    # Direct inquiries must be verified end to end BEFORE a commercial page is released.
-    # The owner sets INTAKE_RELEASE_APPROVED=true only after deploying private D1,
-    # configuring real Turnstile and confirming a responsive enabled Worker.
-    # Real browser submission/D1 receipt must be checked immediately after release. Missing config fails closed.
-    if: ${{ github.event_name != 'pull_request' && vars.INTAKE_RELEASE_APPROVED == 'true' && vars.PUBLIC_LESSON_API_URL != '' && vars.PUBLIC_TURNSTILE_SITE_KEY != '' }}
+    # Keep public portfolio deploys operational. Without approved private intake,
+    # the form is not built and the page states that booking is not yet available.
+    if: github.event_name != 'pull_request'
     needs: [validate, intake-ui]
     environment:
       name: github-pages
@@ -109,6 +107,7 @@ jobs:
       - name: Install dependencies from lock
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Verify real form endpoint before publishing
+        if: ${{ vars.INTAKE_RELEASE_APPROVED == 'true' }}
         env:
           PUBLIC_LESSON_API_URL: ${{ vars.PUBLIC_LESSON_API_URL }}
           PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
