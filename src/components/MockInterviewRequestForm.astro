@@ -41,13 +41,16 @@ const focuses=en?[
 ---
 <section class="mock-intake" id="pedido-simulacao" data-locale-section aria-labelledby="mock-form-title">
   <div class="mock-intake-heading">
-    <p class="label">{en?'Individual mock interview · 60 minutes':'Simulação individual · 60 minutos'}</p>
-    <h3 id="mock-form-title">{en?'Tell me about the interview':'Conte sobre a entrevista'}</h3>
-    <p>{en?'Tell me the role you are aiming for and what you would like to practise. I’ll get back to you to arrange a time. The 60-minute session costs R$ 80 and includes written feedback emailed within 2 hours after we finish. No payment at this stage.':'Me conte qual cargo você busca e o que gostaria de treinar. Eu retorno para combinar um horário. A sessão de 1 hora custa R$ 80 e inclui relatório por e-mail em até 2 horas após o término. Sem pagamento nesta etapa.'}</p>
-    {!active && <p class="mock-notice">{en?'For now, this form prepares a message for you to send via LinkedIn. It does not send your details automatically.':'Por enquanto, este formulário prepara uma mensagem para você enviar pelo LinkedIn. Nenhum dado é enviado automaticamente.'}</p>}
+    <p class="label">{en?'One-to-one interview practice':'Simulação individual de entrevista'}</p>
+    <h3 id="mock-form-title">{active?(en?'Tell me about the interview':'Conte sobre a entrevista'):(en?'Let’s arrange your practice session':'Vamos combinar sua simulação')}</h3>
+    <p>{active?(en?'Tell me the role you are aiming for and what you would like to practise. I’ll get back to you to arrange a time. The 60-minute session costs R$ 80 and includes written feedback emailed within 2 hours after we finish. No payment at this stage.':'Me conte qual cargo você busca e o que gostaria de treinar. Eu retorno para combinar um horário. A sessão de 1 hora custa R$ 80 e inclui relatório por e-mail em até 2 horas após o término. Sem pagamento nesta etapa.'):(en?'R$ 80 for one hour of interview practice in English, plus your feedback report by email within two hours after we finish. Contact me on LinkedIn to discuss your target role and find a time.':'R$ 80 por uma hora de entrevista simulada em inglês, com relatório por e-mail em até duas horas após o término. Entre em contato pelo LinkedIn para contar qual vaga você busca e combinar um horário.')}</p>
   </div>
-  <noscript><p>{en?'JavaScript is needed for this form. You can contact me on LinkedIn instead.':'Este formulário precisa de JavaScript. Você também pode falar comigo pelo LinkedIn.'}</p></noscript>
-  <form class="lesson-form mock-form" data-mock-form data-api={api} data-site-key={siteKey} data-active={active?'true':'false'} data-locale={lang} novalidate aria-describedby="mock-privacy">
+  {!active && <div class="mock-direct">
+    <a class="button primary" href="https://www.linkedin.com/in/lucasmateus/" target="_blank" rel="noopener noreferrer">{en?'Contact me on LinkedIn':'Entrar em contato pelo LinkedIn'} <span aria-hidden="true">↗</span></a>
+    <p>{en?'Not connected yet? LinkedIn may require you to send a connection request before you can message me. You don’t need to fill out a form on this website.':'Ainda não somos conexões? O LinkedIn pode exigir um convite de conexão antes de permitir mensagens. Você não precisa preencher um formulário neste site.'}</p>
+  </div>}
+  {active && <noscript><p>{en?'JavaScript is needed for this form. You can contact me on LinkedIn instead.':'Este formulário precisa de JavaScript. Você também pode falar comigo pelo LinkedIn.'}</p></noscript>}
+  {active && <form class="lesson-form mock-form" data-mock-form data-api={api} data-site-key={siteKey} data-active={active?'true':'false'} data-locale={lang} novalidate aria-describedby="mock-privacy">
     <fieldset disabled data-mock-fields>
       <legend class="screen-reader-only">{en?'Mock interview inquiry':'Solicitação de simulação de entrevista'}</legend>
       <div class="form-grid">
@@ -76,6 +79,6 @@ const focuses=en?[
         <a class="button primary" href="https://www.linkedin.com/in/lucasmateus/" target="_blank" rel="noopener noreferrer">{en?'Open LinkedIn':'Abrir LinkedIn'} <span aria-hidden="true">↗</span></a>
       </div>
     </div>
-  </form>
+  </form>}
 </section>
 <script>import {initMockInterviewForm} from '../scripts/mock-interview-form';initMockInterviewForm();</script>
