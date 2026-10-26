@@ -14,6 +14,6 @@ O padrão editorial obrigatório é [docs/PUBLIC_EXPERIENCE_STANDARD.md](docs/PU
 3. Rever alegações factuais, preço, duração, prazo, datas, indisponibilidade, dados, privacidade e estados de compra/contato. Não inventar depoimentos, certificações, disponibilidade ou vendas.
 4. Executar build, testes automatizados e observação em navegador. CI verde **não** aprova comunicação ou viabilidade comercial sozinho.
 5. Criar PR draft e mostrar ao proprietário. **Não fazer merge/deploy de mudança de oferta sem aprovação expressa.** No GitHub Pages, o deploy acontece quando alterações chegam à `main`.
-6. Não recolher dados sem informar; se o backend de captação estiver inativo, mostrar encaminhamento manual de maneira verdadeira e sinalizar como pendência pré-publicação.
+6. Não recolher dados sem informar; se o backend de captação estiver inativo, não exibir formulário sem recebimento; mostrar contato direto e explicar limitações do canal, mantendo a captação real como pendência pré-publicação.
 
 Preservar versões, traduções e conteúdo aprovado; não introduzir complexidade técnica só para descrever o funcionamento. Não usar o portfólio pessoal como painel de governança de outros projetos.
