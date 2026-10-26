@@ -79,7 +79,7 @@ test('mock interview submits via the unchanged secure lesson endpoint only after
   await page.locator('#mock-focus').selectOption('behavioral');
   await page.locator('#mock-notes').fill('Interview with an international team.');
   await page.locator('.mock-form [name=privacyAcknowledged]').check();
-  await page.getByRole('button',{name:'Solicitar disponibilidade'}).click();
+  await page.getByRole('button',{name:'Consultar horários'}).click();
   await expect(page.locator('[data-mock-status]')).toContainText('Solicitação recebida');
   expect(submissions).toHaveLength(1);
   expect(submissions[0].goal).toBe('interview');
