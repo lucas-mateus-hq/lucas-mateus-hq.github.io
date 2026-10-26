@@ -12,8 +12,10 @@ const html = (route) => readFileSync(fileFor(route), 'utf8');
 test('unconfigured publication keeps LinkedIn contact, accurate privacy and retired dashboard assets', () => {
   for(const route of routes) {
     assert.doesNotMatch(html(route),/mailto:|wa\.me|META_ACCESS_TOKEN|WHATSAPP_TO/);
-    if(['', 'en/'].includes(route))assert.match(html(route),/data-mock-form/);
-    else assert.doesNotMatch(html(route),/<input\b|<form\b/);
+    if(['', 'en/'].includes(route)) {
+      if(intakeConfigured)assert.match(html(route),/data-mock-form/);
+      else { assert.match(html(route),/class="mock-direct"/); assert.doesNotMatch(html(route),/data-mock-form|<form\b/); }
+    } else assert.doesNotMatch(html(route),/<input\b|<form\b/);
   }
   for(const route of ['privacidade/','privacy/']){
     const source=html(route);
@@ -152,14 +154,15 @@ test('lessons expose existing and one-off offers and keep the owner phone and in
   const page=html(route);
   for(const content of ['id="aulas"','Business English','id="reta-final"'])assert.ok(page.includes(content));
   assert.doesNotMatch(page,/wa\.me|api\.whatsapp\.com|META_ACCESS_TOKEN|WHATSAPP_TO|R\$\s*550/);
-  assert.match(page,/data-mock-form/);
+  if(intakeConfigured)assert.match(page,/data-mock-form/);
+  else { assert.match(page,/class="mock-direct"/);assert.doesNotMatch(page,/data-mock-form/); }
   assert.match(page,/R\$ 80/);
   assert.ok(page.includes(route==='en/'?'Practice your next job interview in English':'Treine sua próxima entrevista em inglês'));
   assert.ok(page.includes(route==='en/'?'within 2 hours of the end of the session':'em até 2 horas após a sessão'));
   assert.doesNotMatch(page,/R\$ 149|BRL 149|45-minute mock/);
   assert.ok(page.includes(route==='en/'?'one 60-minute session + written report':'1 hora de prática + relatório'));
   assert.ok(page.includes(route==='en/'?'Check availability':'Consultar disponibilidade'));
-  if(!intakeConfigured){assert.doesNotMatch(page,/data-lesson-form/);assert.match(page,/data-active="false"/);}
+  if(!intakeConfigured){assert.doesNotMatch(page,/data-lesson-form/);assert.match(page,/href="https:\/\/www.linkedin.com\/in\/lucasmateus\/"/);}
   else {assert.match(page,/data-lesson-form/);assert.match(page,/data-active="true"/);}
  }
 });
