@@ -55,4 +55,4 @@ Arquitetura apenas proposta: plataforma da chamada → bot de reunião autorizad
 
 ## Critério de aceite
 
-Com pessoa de teste fictícia e sem meios de pagamento: verificar formulário PT e EN, texto da oferta (R$80 / 60 min / relatório em até 2 h após a sessão), encaminhamento manual quando Cloudflare não está ativo e teste sintético do endpoint quando configurado. A PR deve permanecer **Draft**, sem merge/deploy, até aprovação.
+Com pessoa de teste fictícia e sem meios de pagamento: verificar formulário PT e EN, texto da oferta (R$80 / 60 min / relatório em até 2 h após a sessão), ausência de captação quando Cloudflare não está ativo e teste sintético do endpoint quando configurado. O merge da oferta foi autorizado em 26/10/2026, mas o deploy permanece bloqueado até os gates descritos em docs/GO_LIVE_INTERVIEW.md.
