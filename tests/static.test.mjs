@@ -153,7 +153,10 @@ test('lessons expose existing and one-off offers and keep the owner phone and in
   for(const content of ['id="aulas"','Business English','id="reta-final"'])assert.ok(page.includes(content));
   assert.doesNotMatch(page,/wa\.me|api\.whatsapp\.com|META_ACCESS_TOKEN|WHATSAPP_TO|R\$\s*550/);
   assert.match(page,/data-mock-form/);
-  assert.match(page,/R\$ 149/);
+  assert.match(page,/R\$ 80/);
+  assert.ok(page.includes(route==='en/'?'60-minute mock job interview':'Simulação de entrevista em inglês · 1 hora'));
+  assert.ok(page.includes(route==='en/'?'Within 2 hours after the session ends':'Em até 2 horas após o término da sessão'));
+  assert.doesNotMatch(page,/R\$ 149|BRL 149|45-minute mock/);
   if(!intakeConfigured){assert.doesNotMatch(page,/data-lesson-form/);assert.match(page,/data-active="false"/);}
   else {assert.match(page,/data-lesson-form/);assert.match(page,/data-active="true"/);}
  }
