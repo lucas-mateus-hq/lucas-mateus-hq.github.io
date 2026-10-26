@@ -75,7 +75,7 @@ export const portfolioCopy:Record<string,string>={
   "Professional portfolio · Talent Acquisition, Recruiting Operations and selected applied R&D.": "Portfólio profissional · Recrutamento e Seleção, Operações de Recrutamento e pesquisa aplicada selecionada.",
   "Lucas Mateus — Talent Acquisition & Recruiting Operations": "Lucas Mateus · Recrutamento e Seleção e Operações de Recrutamento",
   "Lucas Mateus — Talent Acquisition and Recruiting Operations professional with international recruiting, sourcing, candidate experience and People / Learning Operations experience.": "Lucas Mateus · Experiência em recrutamento internacional, sourcing, experiência do candidato e operações de pessoas e aprendizagem.",
-  "Professional portfolio covering Talent Acquisition, international recruiting, sourcing, candidate experience and independent Applied R&D.": "Portfólio profissional com recrutamento e seleção, recrutamento internacional, sourcing, experiência do candidato e pesquisa aplicada independente."
+  "Professional portfolio covering Talent Acquisition, international recruiting, sourcing, candidate experience and independent Applied R&D.": "Portfólio profissional com recrutamento e seleção, recrutamento internacional, sourcing, experiência do candidato e pesquisa aplicada independente.",
   "Research and clear summaries with AI": "Pesquisa e síntese de informações com IA",
   "Making AI tools useful in everyday work": "Uso prático de ferramentas de IA",
   "Testing and improving ideas": "Testes e melhorias de ideias",
