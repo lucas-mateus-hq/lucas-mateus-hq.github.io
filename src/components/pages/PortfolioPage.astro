@@ -54,11 +54,11 @@ const capabilities = [
 ];
 
 const appliedAiCapabilities = [
-  'AI-assisted research & synthesis',
-  'Human–AI workflow design',
-  'Evaluation & experimentation',
-  'Knowledge & state architecture',
-  'AI orchestration literacy'
+  'Research and clear summaries with AI',
+  'Making AI tools useful in everyday work',
+  'Testing and improving ideas',
+  'Organizing information and processes',
+  'Connecting different AI tools'
 ];
 
 const education = [
@@ -106,7 +106,7 @@ const personSchema = {
     <link rel="alternate" hreflang="en-US" href={new URL(english,Astro.site).href} />
     <meta property="og:type" content="profile" />
     <meta property="og:title" content={t("Lucas Mateus — Talent Acquisition & Recruiting Operations")} />
-    <meta property="og:description" content={t("Professional portfolio covering Talent Acquisition, international recruiting, sourcing, candidate experience and independent Applied R&D.")} />
+    <meta property="og:description" content={t("Professional portfolio covering international recruiting, candidate experience, learning and selected personal AI projects.")} />
     <meta property="og:url" content={canonical} />
     <link rel="stylesheet" href={`${base}/fonts/fonts.css`} />
     <link rel="preload" href={`${base}/fonts/source-sans-3-latin.woff2`} as="font" type="font/woff2" crossorigin="anonymous" />
@@ -121,7 +121,7 @@ const personSchema = {
         <a href="#experience">{t("Experience")}</a>
         <a href="#evidence">{t("Evidence")}</a>
         <a href="#background">{t("Background")}</a>
-        <a href="#rnd">{t("Applied R&D")}</a>
+        <a href="#rnd">{t("AI projects")}</a>
         <a href="https://www.linkedin.com/in/lucasmateus/" rel="me">LinkedIn</a>
       </nav>
       <LanguageSwitcher lang={lang} pt={pt} en={english} />
@@ -171,7 +171,7 @@ const personSchema = {
         <header class="section-head">
           <span>02</span>
           <div>
-            <p>{t("Selected evidence")}</p>
+            <p>{t("Results and examples")}</p>
             <h2>{t("Examples from my work.")}</h2>
           </div>
         </header>
@@ -198,19 +198,19 @@ const personSchema = {
         <header class="section-head">
           <span>03</span>
           <div>
-            <p>{t("Applied research & development")}</p>
-            <h2>{t("What I am exploring with AI.")}</h2>
+            <p>{t("Projects with AI")}</p>
+            <h2>{t("What I’m building and learning with AI.")}</h2>
           </div>
         </header>
         <div class="rnd-card">
           <div>
-            <span class="badge">{t("Independent Applied R&D")}</span>
-            <h3>{t("Human–AI collaboration & applied learning")}</h3>
-            <p>{t("I explore how people and AI systems can work together on research, learning and document production. I focus on what was actually tested, where a result can be inspected and what still needs human judgment.")}</p>
+            <span class="badge">{t("Independent projects")}</span>
+            <h3>{t("Using AI to learn and create")}</h3>
+            <p>{t("I try practical ways to use AI for research, learning and creating useful materials. I share what I’ve tested, what worked and what still needs a person’s judgment.")}</p>
             <div class="mini-tag-grid">
               {appliedAiCapabilities.map((capability) => <span>{t(capability)}</span>)}
             </div>
-            <p class="boundary">{t("These experiments are a way to keep learning alongside my professional work. They are not a claim that every tool or idea is ready for production.")}</p>
+            <p class="boundary">{t("These are personal experiments alongside my professional work, not a claim that every idea is a finished product.")}</p>
           </div>
           <a href={`${home}#criacoes`}>{t("Explore selected creations →")}</a>
         </div>
@@ -259,7 +259,7 @@ const personSchema = {
     <footer>
       <div>{t("Lucas Mateus da Silva · São Paulo, Brazil")}</div>
       <div class="links"><a href="https://www.linkedin.com/in/lucasmateus/">LinkedIn</a><a href="https://github.com/lucas-mateus-hq">GitHub</a></div>
-      <p>{t("Professional portfolio · Talent Acquisition, Recruiting Operations and selected applied R&D.")}</p>
+      <p>{t("Professional portfolio · Recruiting, learning and personal AI projects.")}</p>
     </footer>
     <NavigationEnhancements />
   </body>
