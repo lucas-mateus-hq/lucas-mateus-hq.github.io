@@ -81,8 +81,8 @@ test('mock interview submits via the unchanged secure lesson endpoint only after
   await expect(page.locator('[data-mock-status]')).toContainText('Solicitação recebida');
   expect(submissions).toHaveLength(1);
   expect(submissions[0].goal).toBe('interview');
-  expect(submissions[0].speaking).toBe('not_sure');
-  expect(submissions[0].timeframe).toBe('exploring');
+  expect(submissions[0].speaking).toBe('not_provided');
+  expect(submissions[0].timeframe).toBe('not_provided');
   expect(submissions[0].availability).toBe('Tuesday evening, Brasília time');
   expect(submissions[0].context).toMatch(/Service: 60-minute mock interview \(BRL 80\)/);
   expect(submissions[0].context).toContain('Recruiting Specialist');
