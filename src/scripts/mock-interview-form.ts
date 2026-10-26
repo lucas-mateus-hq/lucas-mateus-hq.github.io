@@ -59,7 +59,7 @@ export function initMockInterviewForm() {
       const privacyAcknowledged = data.get('privacyAcknowledged') === 'on';
       // Existing private Worker contract: no additional personal-data fields or endpoint.
       const context = [
-        'Service: 45-minute mock interview (BRL 149)',
+        'Service: 60-minute mock interview (BRL 80), personalized written report within 2h after session',
         'Target role: '+role,
         'Focus: '+focusLabel+' ('+focus+')',
         'Interview date: '+(interviewDate||'not provided'),
@@ -67,7 +67,7 @@ export function initMockInterviewForm() {
       ].join(' | ');
       const payload = {name,email,goal:'interview',speaking,timeframe,context,availability,locale:form.dataset.locale,privacyAcknowledged,website};
       const message = [
-        en?'Hi Lucas, I would like to request your 45-minute mock interview (R$149).':'Olá, Lucas! Gostaria de solicitar sua simulação de entrevista de 45 minutos (R$ 149).',
+        en?'Hi Lucas, I would like to request your 60-minute mock interview (R$80, written report within 2 hours after the session).':'Olá, Lucas! Gostaria de solicitar sua simulação de entrevista de 60 minutos (R$ 80, relatório escrito em até 2 horas após a sessão).',
         '',
         (en?'Name: ':'Nome: ')+name,
         (en?'Email: ':'E-mail: ')+email,
