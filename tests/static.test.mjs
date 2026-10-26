@@ -154,9 +154,11 @@ test('lessons expose existing and one-off offers and keep the owner phone and in
   assert.doesNotMatch(page,/wa\.me|api\.whatsapp\.com|META_ACCESS_TOKEN|WHATSAPP_TO|R\$\s*550/);
   assert.match(page,/data-mock-form/);
   assert.match(page,/R\$ 80/);
-  assert.ok(page.includes(route==='en/'?'60-minute mock job interview':'Simulação de entrevista em inglês · 1 hora'));
-  assert.ok(page.includes(route==='en/'?'Within 2 hours after the session ends':'Em até 2 horas após o término da sessão'));
+  assert.ok(page.includes(route==='en/'?'Practice your next job interview in English':'Treine sua próxima entrevista em inglês'));
+  assert.ok(page.includes(route==='en/'?'within 2 hours of the end of the session':'em até 2 horas após a sessão'));
   assert.doesNotMatch(page,/R\$ 149|BRL 149|45-minute mock/);
+  assert.ok(page.includes(route==='en/'?'one 60-minute session + written report':'1 hora de prática + relatório'));
+  assert.ok(page.includes(route==='en/'?'Check availability':'Consultar disponibilidade'));
   if(!intakeConfigured){assert.doesNotMatch(page,/data-lesson-form/);assert.match(page,/data-active="false"/);}
   else {assert.match(page,/data-lesson-form/);assert.match(page,/data-active="true"/);}
  }
