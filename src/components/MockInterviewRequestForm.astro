@@ -5,80 +5,33 @@ const {lang}=Astro.props;
 const en=lang==='en-US';
 const privacy=en?'/privacy/':'/privacidade/';
 const {active,api,siteKey}=lessonIntake;
-const levels=en?[
- ['starting','I’m starting or returning to the basics'],
- ['simple','I can give short, simple answers'],
- ['needs_support','I can hold a conversation but need support'],
- ['comfortable','I speak comfortably and want to practice interviews'],
- ['not_sure','I’m not sure']
-]:[
- ['starting','Estou começando ou retomando o básico'],
- ['simple','Consigo responder com frases simples'],
- ['needs_support','Consigo conversar, mas preciso de apoio'],
- ['comfortable','Converso com facilidade e quero treinar entrevistas'],
- ['not_sure','Ainda não sei']
-];
-const times=en?[
- ['week','Within 7 days'],['month','Within 30 days'],
- ['later','After 30 days'],['exploring','No interview scheduled yet']
-]:[
- ['week','Nos próximos 7 dias'],['month','Nos próximos 30 dias'],
- ['later','Daqui a mais de 30 dias'],['exploring','Ainda não tenho entrevista marcada']
-];
-const focuses=en?[
- ['story','Introducing myself and telling my career story'],
- ['behavioral','Behavioral and competency questions'],
- ['technical','Explaining my work and projects'],
- ['confidence','Speaking more clearly and confidently'],
- ['unsure','I would like guidance']
-]:[
- ['story','Apresentação e trajetória profissional'],
- ['behavioral','Perguntas comportamentais e por competências'],
- ['technical','Explicar experiências e projetos'],
- ['confidence','Clareza, fluidez e confiança ao falar'],
- ['unsure','Quero ajuda para definir o foco']
-];
 ---
 <section class="mock-intake" id="pedido-simulacao" data-locale-section aria-labelledby="mock-form-title">
   <div class="mock-intake-heading">
-    <p class="label">{en?'One-to-one interview practice':'Simulação individual de entrevista'}</p>
-    <h3 id="mock-form-title">{active?(en?'Tell me about the interview':'Conte sobre a entrevista'):(en?'Let’s arrange your practice session':'Vamos combinar sua simulação')}</h3>
-    <p>{active?(en?'Tell me the role you are aiming for and what you would like to practise. I’ll get back to you to arrange a time. The 60-minute session costs R$ 80 and includes written feedback emailed within 2 hours after we finish. No payment at this stage.':'Me conte qual cargo você busca e o que gostaria de treinar. Eu retorno para combinar um horário. A sessão de 1 hora custa R$ 80 e inclui relatório por e-mail em até 2 horas após o término. Sem pagamento nesta etapa.'):(en?'R$ 80 for one hour of interview practice in English, plus your feedback report by email within two hours after we finish. Contact me on LinkedIn to discuss your target role and find a time.':'R$ 80 por uma hora de entrevista simulada em inglês, com relatório por e-mail em até duas horas após o término. Entre em contato pelo LinkedIn para contar qual vaga você busca e combinar um horário.')}</p>
+    <p class="label">{en?'Personalized interview practice':'Preparação individual para entrevistas'}</p>
+    <h3 id="mock-form-title">{active?(en?'Request your mock interview':'Solicite sua simulação'):(en?'Online booking is being prepared':'Agendamento online em preparação')}</h3>
+    <p>{active?(en?'Tell me the role you are targeting and when you can meet. I’ll reply by email to arrange a time before any payment.':'Conte qual cargo você busca e quando pode participar. Vou responder por e-mail para combinar o horário antes de qualquer pagamento.'):(en?'This service will be available to request here once the contact form is ready. No inquiry is collected on this page yet.':'A solicitação deste serviço será liberada aqui quando o formulário estiver pronto. Esta página ainda não recebe pedidos.')}</p>
   </div>
-  {!active && <div class="mock-direct">
-    <a class="button primary" href="https://www.linkedin.com/in/lucasmateus/" target="_blank" rel="noopener noreferrer">{en?'Contact me on LinkedIn':'Entrar em contato pelo LinkedIn'} <span aria-hidden="true">↗</span></a>
-    <p>{en?'Not connected yet? LinkedIn may require you to send a connection request before you can message me. You don’t need to fill out a form on this website.':'Ainda não somos conexões? O LinkedIn pode exigir um convite de conexão antes de permitir mensagens. Você não precisa preencher um formulário neste site.'}</p>
-  </div>}
-  {active && <noscript><p>{en?'JavaScript is needed for this form. You can contact me on LinkedIn instead.':'Este formulário precisa de JavaScript. Você também pode falar comigo pelo LinkedIn.'}</p></noscript>}
-  {active && <form class="lesson-form mock-form" data-mock-form data-api={api} data-site-key={siteKey} data-active={active?'true':'false'} data-locale={lang} novalidate aria-describedby="mock-privacy">
-    <fieldset disabled data-mock-fields>
-      <legend class="screen-reader-only">{en?'Mock interview inquiry':'Solicitação de simulação de entrevista'}</legend>
-      <div class="form-grid">
-        <div class="form-field"><label for="mock-name">{en?'Your name *':'Seu nome *'}</label><input id="mock-name" name="name" autocomplete="name" maxlength="80" required /></div>
-        <div class="form-field"><label for="mock-email">{en?'What email can I reach you at? *':'Qual é o seu e-mail? *'}</label><input id="mock-email" name="email" type="email" autocomplete="email" maxlength="254" required /></div>
-        <div class="form-field"><label for="mock-role">{en?'What role are you applying for? *':'Qual cargo você está buscando? *'}</label><input id="mock-role" name="role" maxlength="90" required placeholder={en?'e.g. Customer Success Specialist':'Ex.: Analista de Customer Success'} /></div>
-        <div class="form-field"><label for="mock-speaking">{en?'How comfortable are you speaking English? *':'Como você se sente falando inglês hoje? *'}</label><select id="mock-speaking" name="speaking" required><option value="">{en?'Choose an option':'Selecione uma opção'}</option>{levels.map(([value,label])=><option value={value}>{label}</option>)}</select></div>
-        <div class="form-field"><label for="mock-timeframe">{en?'When would you like to prepare? *':'Para quando você quer se preparar? *'}</label><select id="mock-timeframe" name="timeframe" required><option value="">{en?'Choose an option':'Selecione uma opção'}</option>{times.map(([value,label])=><option value={value}>{label}</option>)}</select></div>
-        <div class="form-field"><label for="mock-focus">{en?'What would you like to practise? *':'O que você gostaria de treinar? *'}</label><select id="mock-focus" name="focus" required><option value="">{en?'Choose an option':'Selecione uma opção'}</option>{focuses.map(([value,label])=><option value={value}>{label}</option>)}</select></div>
-        <div class="form-field"><label for="mock-date">{en?'Already have an interview date? (optional)':'Já tem data para a entrevista? (opcional)'}</label><input id="mock-date" name="interviewDate" type="date" /></div>
-        <div class="form-field"><label for="mock-availability">{en?'Your availability and time zone (optional)':'Disponibilidade e fuso horário (opcional)'}</label><input id="mock-availability" name="availability" maxlength="160" placeholder={en?'e.g. evening, Brasília time':'Ex.: à noite, horário de Brasília'} /></div>
-        <div class="form-field form-wide"><label for="mock-notes">{en?'Anything else I should know? (optional)':'Quer me contar mais alguma coisa? (opcional)'}</label><textarea id="mock-notes" name="notes" maxlength="320" rows="3" placeholder={en?'e.g. second round, international team':'Ex.: segunda etapa, equipe internacional'}></textarea><p class="field-hint">{en?'No résumé, documents, recruiter contacts or confidential details needed.':'Não é necessário enviar currículo, documentos, contatos de recrutadores ou dados confidenciais.'}</p></div>
-      </div>
-      <div class="form-trap" aria-hidden="true"><label for="mock-website">Website</label><input id="mock-website" name="website" tabindex="-1" autocomplete="off" /></div>
-      <p class="field-hint" id="mock-privacy">{en?'I’ll use these details only to reply about your session. No marketing emails. ':'Usarei seus dados apenas para responder sobre a sessão. Sem mensagens de marketing. '}<a href={privacy}>{en?'Privacy notice':'Aviso de privacidade'}</a>.</p>
-      <label class="form-ack"><input type="checkbox" name="privacyAcknowledged" required /><span>{en?'I understand that my information will be used to respond to this request. *':'Entendo que meus dados serão usados para responder a esta solicitação. *'}</span></label>
-      {active && <div data-mock-challenge></div>}
-      <div class="form-submit"><button type="submit" class="button primary">{active?(en?'Check available times':'Consultar horários'):(en?'Prepare a message for LinkedIn':'Preparar mensagem para o LinkedIn')} <span aria-hidden="true">↗</span></button><span class="field-hint">{en?'R$ 80 · 60 minutes · no payment yet':'R$ 80 · 60 minutos · sem pagamento nesta etapa'}</span></div>
-    </fieldset>
-    <p role="status" aria-live="polite" tabindex="-1" class="form-status" data-mock-status></p>
-    <div class="mock-handoff" data-mock-handoff hidden>
-      <label for="mock-message">{en?'Your message is ready — copy it and send via LinkedIn':'Sua mensagem está pronta — copie e envie pelo LinkedIn'}</label>
-      <textarea id="mock-message" rows="9" readonly data-mock-message></textarea>
-      <div class="mock-handoff-actions">
-        <button type="button" class="button secondary" data-mock-copy>{en?'Copy message':'Copiar mensagem'}</button>
-        <a class="button primary" href="https://www.linkedin.com/in/lucasmateus/" target="_blank" rel="noopener noreferrer">{en?'Open LinkedIn':'Abrir LinkedIn'} <span aria-hidden="true">↗</span></a>
-      </div>
-    </div>
-  </form>}
+  {active && <>
+    <noscript><p>{en?'Please enable JavaScript to use this protected form.':'Ative o JavaScript para utilizar este formulário protegido.'}</p></noscript>
+    <form class="lesson-form mock-form" data-mock-form data-api={api} data-site-key={siteKey} data-active="true" data-locale={lang} novalidate aria-describedby="mock-privacy">
+      <fieldset disabled data-mock-fields>
+        <legend class="screen-reader-only">{en?'Mock interview request':'Solicitação de simulação de entrevista'}</legend>
+        <div class="form-grid">
+          <div class="form-field"><label for="mock-name">{en?'Your name *':'Seu nome *'}</label><input id="mock-name" name="name" autocomplete="name" maxlength="80" required /></div>
+          <div class="form-field"><label for="mock-email">{en?'Your email *':'Seu e-mail *'}</label><input id="mock-email" name="email" type="email" autocomplete="email" maxlength="254" required /></div>
+          <div class="form-field"><label for="mock-role">{en?'What role are you applying for? *':'Qual cargo você está buscando? *'}</label><input id="mock-role" name="role" maxlength="90" required placeholder={en?'e.g. Customer Success Specialist':'Ex.: Analista de Customer Success'} /></div>
+          <div class="form-field"><label for="mock-availability">{en?'When are you available? *':'Quando você tem disponibilidade? *'}</label><input id="mock-availability" name="availability" maxlength="160" required placeholder={en?'e.g. evenings, Brasília time':'Ex.: à noite, horário de Brasília'} /></div>
+          <div class="form-field form-wide"><label for="mock-notes">{en?'Anything else you want to practise? (optional)':'Quer contar mais sobre a entrevista? (opcional)'}</label><textarea id="mock-notes" name="notes" maxlength="320" rows="3" placeholder={en?'e.g. a behavioral interview with an international team':'Ex.: entrevista comportamental com equipe internacional'}></textarea><p class="field-hint">{en?'No résumé, documents or confidential details needed.':'Não é necessário enviar currículo, documentos ou informações confidenciais.'}</p></div>
+        </div>
+        <div class="form-trap" aria-hidden="true"><label for="mock-website">Website</label><input id="mock-website" name="website" tabindex="-1" autocomplete="off" /></div>
+        <p class="field-hint" id="mock-privacy">{en?'Your details are used only to respond about this session; no marketing emails. ':'Os dados são usados apenas para responder sobre esta sessão, sem envio de publicidade. '}<a href={privacy}>{en?'Privacy notice':'Aviso de privacidade'}</a>.</p>
+        <label class="form-ack"><input type="checkbox" name="privacyAcknowledged" required /><span>{en?'I agree to the use of these details to respond to my request. *':'Concordo com o uso destes dados para responder à minha solicitação. *'}</span></label>
+        <div data-mock-challenge></div>
+        <div class="form-submit"><button type="submit" class="button primary">{en?'Send request':'Enviar solicitação'} <span aria-hidden="true">↗</span></button><span class="field-hint">{en?'R$ 80 · 60 minutes + written report · No payment yet':'R$ 80 · 60 minutos + relatório escrito · Sem pagamento agora'}</span></div>
+      </fieldset>
+      <p role="status" aria-live="polite" tabindex="-1" class="form-status" data-mock-status></p>
+    </form>
+  </>}
 </section>
 <script>import {initMockInterviewForm} from '../scripts/mock-interview-form';initMockInterviewForm();</script>
