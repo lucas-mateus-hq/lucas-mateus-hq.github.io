@@ -88,7 +88,10 @@ jobs:
           retention-days: 14
 
   deploy:
-    if: github.event_name != 'pull_request'
+    # Direct inquiries must be verified end to end BEFORE a commercial page is released.
+    # The owner sets INTAKE_LIVE_VERIFIED=true only after a real Turnstile submission
+    # is stored in private D1 and visible to the owner. Missing config fails closed.
+    if: ${{ github.event_name != 'pull_request' && vars.INTAKE_LIVE_VERIFIED == 'true' && vars.PUBLIC_LESSON_API_URL != '' && vars.PUBLIC_TURNSTILE_SITE_KEY != '' }}
     needs: [validate, intake-ui]
     environment:
       name: github-pages
@@ -104,6 +107,11 @@ jobs:
           node-version: '22'
       - name: Install dependencies from lock
         run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Verify real form endpoint before publishing
+        env:
+          PUBLIC_LESSON_API_URL: ${{ vars.PUBLIC_LESSON_API_URL }}
+          PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
+        run: node scripts/check-intake-release.mjs
       - name: Build static site
         run: npm run build
       - name: Identify the exact release
