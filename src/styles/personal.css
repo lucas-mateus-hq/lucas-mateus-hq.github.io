@@ -56,6 +56,9 @@ html{scroll-padding-top:0}
 .mock-intake h3{font-size:clamp(26px,3vw,34px);line-height:1.25;margin:0 0 12px}
 .mock-intake-heading>p:not(.label){font-size:16px;line-height:1.65;color:var(--muted);margin:0 0 12px}
 .mock-intake-heading .mock-notice{border-left:3px solid var(--gold);padding:10px 14px;background:rgba(255,255,255,.04);color:var(--ink)!important}
+.mock-direct{display:flex;flex-wrap:wrap;align-items:center;gap:16px 24px;margin-top:20px}
+.mock-direct .button{flex:none;max-width:100%}
+.mock-direct p{flex:1 1 220px;font-size:14px;line-height:1.55;color:var(--muted);margin:0}
 .mock-intake .lesson-form{margin-top:22px}
 .mock-handoff{padding:24px;margin-top:24px;border:1px solid var(--gold);border-radius:12px;background:#123438}
 .mock-handoff[hidden]{display:none}
