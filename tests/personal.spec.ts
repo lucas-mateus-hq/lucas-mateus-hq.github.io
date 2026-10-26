@@ -53,7 +53,7 @@ test('portfolio retains evidence, career history, direct anchors and personal re
   await expect(page.locator('#evidence')).toContainText('14 of 15 (93%)');
   for (const name of ['Wellhub', 'Reckitt', 'TikTok', 'RealLife English']) await expect(page.locator('.experience-list')).toContainText(name);
   await expect(page.locator('#background')).toContainText('degree not completed');
-  await expect(page.locator('#rnd')).toContainText('Human–AI collaboration');
+  await expect(page.locator('#rnd')).toContainText('Using AI to learn and create');
   await expect(page.locator('body')).not.toContainText('Capability Lab');
   await page.getByRole('link', { name: 'Lucas Mateus · Home' }).click();
   await expect(page.getByRole('heading', { level: 1 })).toContainText('People');
