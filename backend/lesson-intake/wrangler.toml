@@ -1,0 +1,32 @@
+# Tracked non-secret configuration for Cloudflare Workers Builds (GitHub import).
+# Worker name and D1 ID refer to the user's existing Cloudflare resources.
+name = "lucas-lessons-intake"
+main = "worker.mjs"
+compatibility_date = "2026-10-21"
+workers_dev = true
+
+[observability]
+enabled = false
+
+[vars]
+# Worker still needs a real Turnstile secret and an initialized private D1 database.
+# Until both are present, POST returns 503 rather than accepting an unverified lead.
+# The GitHub Pages form stays hidden until its own release gate is approved.
+INTAKE_ENABLED = "true"
+WHATSAPP_ENABLED = "false"
+WHATSAPP_COST_POLICY = "zero"
+WHATSAPP_BILLING_APPROVED = "false"
+META_GRAPH_VERSION = ""
+META_TEMPLATE_NAME = ""
+META_TEMPLATE_LANGUAGE = "pt_BR"
+
+[[d1_databases]]
+binding = "LEADS_DB"
+database_name = "lucas-lessons-intake"
+database_id = "229a3075-f519-4b9f-a31f-d759d1bbf021"
+migrations_dir = "migrations"
+
+[triggers]
+crons = ["17 3 * * *"]
+
+# Never put TURNSTILE_SECRET_KEY, API tokens, customer data or private phone here.

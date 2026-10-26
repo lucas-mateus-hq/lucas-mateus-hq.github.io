@@ -10,4 +10,4 @@ test-results/
 !.env.example
 .dev.vars*
 .wrangler/
-backend/lesson-intake/wrangler.toml
+# The backend Wrangler file now contains only non-secret public configuration.
