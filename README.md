@@ -11,7 +11,7 @@ GitHub Pages publishing source must be GitHub Actions. PRs validate; main valida
 
 ## Mock interview offer (draft, pending founder approval)
 
-The bilingual home page now includes a **60-minute one-off mock job interview in English** priced at **R$80**, distinct from ongoing English lessons and the self-guided Reta Final toolkit. The dedicated request form asks only for practical interview preparation details. After each completed session, the owner commits to send a concise, human-reviewed personalized written feedback report by email **within two hours of the session ending**, whether or not any future transcription tool is used.
+The bilingual home page now includes a **60-minute one-off mock job interview in English** priced at **R$80**, distinct from ongoing English lessons and the self-guided Reta Final toolkit. The dedicated request form asks only for practical interview preparation details. This is a new commercial service; prior hiring and English-teaching experience must not be described as a sales record for mock interviews. After each completed session, the owner commits to send a concise, human-reviewed personalized written feedback report by email **within two hours of the session ending**, whether or not any future transcription tool is used.
 
 When PUBLIC_LESSON_API_URL and PUBLIC_TURNSTILE_SITE_KEY are configured, the new form sends the same allowlisted lesson-request payload to the existing private Cloudflare Worker; the context field identifies the mock-interview service. No new backend permissions, storage tables or payment integrations are introduced.
 
