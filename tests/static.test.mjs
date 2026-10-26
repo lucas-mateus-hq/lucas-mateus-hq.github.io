@@ -161,7 +161,7 @@ test('lessons expose existing and one-off offers and keep the owner phone and in
   assert.ok(page.includes(route==='en/'?'within 2 hours of the end of the session':'em até 2 horas após a sessão'));
   assert.doesNotMatch(page,/R\$ 149|BRL 149|45-minute mock/);
   assert.ok(page.includes(route==='en/'?'one 60-minute session + written report':'1 hora de prática + relatório'));
-  assert.ok(page.includes(route==='en/'?'Check availability':'Consultar disponibilidade'));
+  assert.ok(page.includes(intakeConfigured?(route==='en/'?'Check availability':'Consultar disponibilidade'):(route==='en/'?'How to book':'Como agendar')));
   if(!intakeConfigured){assert.doesNotMatch(page,/data-lesson-form/);assert.match(page,/href="https:\/\/www.linkedin.com\/in\/lucasmateus\/"/);}
   else {assert.match(page,/data-lesson-form/);assert.match(page,/data-active="true"/);}
  }
