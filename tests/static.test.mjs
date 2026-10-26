@@ -81,8 +81,8 @@ test('home is personal, upcoming product is honest, and no data capture or purch
   assert.ok(home.includes(`src="${prefix}lucas-mateus.webp"`), 'serve an optimized copy of the existing public profile portrait');
   assert.ok(existsSync('dist/lucas-mateus.webp'));
   for(const route of ['', 'en/']){assert.doesNotMatch(html(route),/Disponível em português brasileiro|Available in Brazilian Portuguese|Materiais educacionais e projetos|Learning materials and projects/);}
-  for(const route of ['', 'portfolio/pt/']){assert.ok(html(route).includes('produtividade no dia a dia'));assert.doesNotMatch(html(route),/organização de trabalhos complexos/);}
-  for(const route of ['en/', 'portfolio/'])assert.ok(html(route).includes('everyday productivity'));
+  for(const route of ['', 'portfolio/pt/']){assert.ok(html(route).includes('projetos práticos'));assert.doesNotMatch(html(route),/organização de trabalhos complexos/);}
+  for(const route of ['en/', 'portfolio/'])assert.ok(html(route).includes('practical projects'));
 });
 
 test('professional evidence remains present and technical utility files are not published', () => {
