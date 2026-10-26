@@ -68,6 +68,12 @@ export const privacySections=[
 ];
 
 
+const sessionNotice="If you book a mock job interview, the role and interview information you provide, together with relevant manual notes taken during the one-hour session, are used to provide personalized feedback and send your written report to the email you provided within two hours after the call ends. The site does not automatically record, transcribe or analyze calls; no meeting bot is currently active. Any future third-party recording or AI transcription would require advance notice about the provider, purpose, retention and handling of your data, plus your separate, explicit permission before the call is captured. The service can be conducted with manual notes instead. Payment is not processed by this website.";
+privacyCopy["Booked sessions and written feedback"]="Sessões agendadas e relatório escrito";
+privacyCopy[sessionNotice]="Se você contratar uma simulação de entrevista, os dados sobre o cargo e a entrevista que fornecer, junto com anotações manuais pertinentes feitas durante a sessão de uma hora, serão usados para preparar o feedback personalizado e enviar o relatório escrito ao e-mail informado em até duas horas após o fim da chamada. O site não grava, transcreve nem analisa chamadas automaticamente; nenhum bot de reunião está ativo neste momento. Qualquer gravação ou transcrição por IA e terceiros no futuro exigirá informação antecipada sobre o provedor, finalidade, retenção e tratamento dos dados, além de sua autorização específica e expressa antes da captura. A sessão também poderá ocorrer com anotações manuais. Não há pagamento processado por este site.";
+privacySections.splice(4,0,{id:"mock-report",title:"Booked sessions and written feedback",text:sessionNotice});
+
+
 if (lessonIntake.active) {
   const replacements: Record<string, [string, string]> = {
     browsing: [
