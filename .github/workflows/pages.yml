@@ -89,9 +89,10 @@ jobs:
 
   deploy:
     # Direct inquiries must be verified end to end BEFORE a commercial page is released.
-    # The owner sets INTAKE_LIVE_VERIFIED=true only after a real Turnstile submission
-    # is stored in private D1 and visible to the owner. Missing config fails closed.
-    if: ${{ github.event_name != 'pull_request' && vars.INTAKE_LIVE_VERIFIED == 'true' && vars.PUBLIC_LESSON_API_URL != '' && vars.PUBLIC_TURNSTILE_SITE_KEY != '' }}
+    # The owner sets INTAKE_RELEASE_APPROVED=true only after deploying private D1,
+    # configuring real Turnstile and confirming a responsive enabled Worker.
+    # Real browser submission/D1 receipt must be checked immediately after release. Missing config fails closed.
+    if: ${{ github.event_name != 'pull_request' && vars.INTAKE_RELEASE_APPROVED == 'true' && vars.PUBLIC_LESSON_API_URL != '' && vars.PUBLIC_TURNSTILE_SITE_KEY != '' }}
     needs: [validate, intake-ui]
     environment:
       name: github-pages
