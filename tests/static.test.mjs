@@ -17,7 +17,7 @@ test('unconfigured publication keeps LinkedIn contact, accurate privacy and reti
   }
   for(const route of ['privacidade/','privacy/']){
     const source=html(route);
-    for(const id of ['responsibility','hosting','browsing','contact','publishing','rights','changes'])assert.ok(source.includes(`id="${id}"`),route+': '+id);
+    for(const id of ['responsibility','hosting','browsing','contact','mock-report','publishing','rights','changes'])assert.ok(source.includes(`id="${id}"`),route+': '+id);
     assert.ok(source.includes('https://www.linkedin.com/in/lucasmateus/'));
     assert.ok(source.includes('https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement'));
     assert.ok(source.includes('2026'));
