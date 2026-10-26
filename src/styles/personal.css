@@ -40,6 +40,10 @@ html{scroll-padding-top:0}
 .mock-offer h3{font-size:clamp(26px,3vw,36px);line-height:1.19;letter-spacing:-.03em;margin:0 0 16px}
 .mock-offer-content>p:not(.label){font-size:18px;line-height:1.65;color:var(--ink);margin:0 0 12px}
 .mock-offer .mock-offer-small{font-size:14px!important;color:var(--muted)!important}
+.mock-steps{padding-left:22px;margin:18px 0 16px;color:var(--ink)}
+.mock-steps li{font-size:16px;line-height:1.6;padding-left:3px}
+.mock-steps li+li{margin-top:10px}
+.mock-steps li::marker{color:var(--mint)}
 .mock-offer-action{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:16px}
 .mock-offer-action .button{max-width:100%;text-align:center}
 .mock-price{display:flex;flex-direction:column;margin:0;gap:4px}
