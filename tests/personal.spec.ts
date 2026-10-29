@@ -199,7 +199,7 @@ test('English lessons are discoverable in both languages without collecting data
   const active=Boolean(process.env.PUBLIC_LESSON_API_URL && process.env.PUBLIC_TURNSTILE_SITE_KEY);
   await expect(page.locator('#aulas form')).toHaveCount(active?2:0);
   await expect(page.locator('#aulas .mock-offer a.button')).toHaveAttribute('href','#pedido-simulacao');
-  await expect(page.locator('#pedido-simulacao')).toContainText(active?(route==='./'?'Conte sobre a entrevista':'Tell me about the interview'):(route==='./'?'Agendamento online em preparação':'Online booking is being prepared'));
+  await expect(page.locator('#pedido-simulacao')).toContainText(active?(route==='./'?'Conte qual cargo você busca':'Tell me the role you are targeting'):(route==='./'?'Agendamento online em preparação':'Online booking is being prepared'));
   await expect(page.locator('#aulas .lesson-next a.button')).toHaveAttribute('href',active?'#pedido-aulas':'https://www.linkedin.com/in/lucasmateus/');
  }
 });
