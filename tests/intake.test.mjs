@@ -102,3 +102,34 @@ test('retention removes expired records but preserves unexpired requests',async(
 test('interruption after storage can resume by ID without running another effect',async()=>{
  const f=fixture(),p=sample();await handleRequest(request(p),f.env,{fetch:f.fetcher,now});const r=await handleRequest(request({...p,turnstileToken:'fresh-token'}),f.env,{fetch:async()=>{throw new Error('must not call provider');},now});assert.equal(r.status,200);assert.equal((await r.json()).requestId,p.requestId);
 });
+
+test('verification transport uses explicit form encoding and refuses redirects',async()=>{
+ const f=fixture(),p=sample();
+ const r=await handleRequest(request(p),f.env,{now,fetch:async(target,options)=>{
+  assert.equal(target,'https://challenges.cloudflare.com/turnstile/v0/siteverify');
+  assert.equal(options.redirect,'manual');
+  assert.equal(options.headers['Content-Type'],'application/x-www-form-urlencoded');
+  assert.equal(typeof options.body,'string');
+  const body=new URLSearchParams(options.body);
+  assert.equal(body.get('secret'),f.env.TURNSTILE_SECRET_KEY);
+  assert.equal(body.get('response'),p.turnstileToken);
+  return new Response(null,{status:302,headers:{Location:'https://attacker.invalid'}});
+ }});
+ assert.equal(r.status,503);
+ assert.deepEqual(await r.json(),{error:'VERIFICATION_UNAVAILABLE',reason:'UPSTREAM_HTTP',upstreamStatus:302});
+ assert.equal(f.store.db.prepare('SELECT COUNT(*) AS n FROM lesson_requests').get().n,0);
+});
+for(const [label,fetcher,reason,status] of [
+ ['request',async()=>{throw new TypeError('synthetic-secret synthetic-token visitor@example.invalid');},'UPSTREAM_REQUEST',undefined],
+ ['timeout',async()=>{throw new DOMException('private details','TimeoutError');},'UPSTREAM_TIMEOUT',undefined],
+ ['abort',async()=>{throw new DOMException('private details','AbortError');},'UPSTREAM_TIMEOUT',undefined],
+ ['http',async()=>new Response('private details',{status:502}),'UPSTREAM_HTTP',502],
+ ['json',async()=>new Response('private details'),'UPSTREAM_RESPONSE',undefined],
+])test('verification diagnostics are safe and fail closed: '+label,async()=>{
+ const f=fixture();
+ const r=await handleRequest(request(sample()),f.env,{fetch:fetcher,now});
+ assert.equal(r.status,503);assert.equal(r.headers.get('Cache-Control'),'no-store');
+ const body=await r.json();
+ assert.deepEqual(body,{error:'VERIFICATION_UNAVAILABLE',reason,...(status?{upstreamStatus:status}:{})});
+ assert.equal(f.store.db.prepare('SELECT COUNT(*) AS n FROM lesson_requests').get().n,0);
+});
