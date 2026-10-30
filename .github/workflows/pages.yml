@@ -25,6 +25,11 @@ concurrency:
 
 jobs:
   validate:
+    # General navigation contracts verify the unavailable intake state.
+    # The intake-ui job independently verifies configured forms with intercepted providers.
+    env:
+      PUBLIC_LESSON_API_URL: ''
+      PUBLIC_TURNSTILE_SITE_KEY: ''
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
