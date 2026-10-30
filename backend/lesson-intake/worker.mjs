@@ -125,14 +125,23 @@ export async function handleRequest(request, env, deps = {}) {
       return reply(200, {accepted: true, requestId: value.requestId});
     }
     let challenge;
+    let verificationStage = 'request';
     try {
       const check = await fetcher('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-        method: 'POST', redirect: 'error', signal: AbortSignal.timeout(7000),
-        body: new URLSearchParams({secret: env.TURNSTILE_SECRET_KEY, response: input.turnstileToken}),
+        // Do not follow redirects carrying the verification secret.
+        method: 'POST', redirect: 'manual', signal: AbortSignal.timeout(7000),
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({secret: env.TURNSTILE_SECRET_KEY, response: input.turnstileToken}).toString(),
       });
-      if (!check.ok) return reply(503, {error: 'VERIFICATION_UNAVAILABLE'});
+      if (!check.ok) return reply(503, {error: 'VERIFICATION_UNAVAILABLE', reason: 'UPSTREAM_HTTP', upstreamStatus: check.status});
+      verificationStage = 'response';
       challenge = await check.json();
-    } catch { return reply(503, {error: 'VERIFICATION_UNAVAILABLE'}); }
+    } catch (error) {
+      // Fixed categories only: never expose exception messages, secrets or tokens.
+      const reason = verificationStage === 'response' ? 'UPSTREAM_RESPONSE' :
+        error?.name === 'TimeoutError' || error?.name === 'AbortError' ? 'UPSTREAM_TIMEOUT' : 'UPSTREAM_REQUEST';
+      return reply(503, {error: 'VERIFICATION_UNAVAILABLE', reason});
+    }
     if (challenge?.success !== true || challenge.hostname !== HOST || challenge.action !== 'lesson_intake') return reply(403, {error: 'VERIFICATION_FAILED'});
     // SQL parameters only; at most 100 accepted requests in a rolling 24h.
     const inserted = await env.LEADS_DB.prepare(`INSERT INTO lesson_requests
