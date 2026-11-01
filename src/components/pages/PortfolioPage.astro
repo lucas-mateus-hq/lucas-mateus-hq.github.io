@@ -115,6 +115,7 @@ const personSchema = {
     <SocialMeta lang={lang} />
   </head>
   <body>
+    <a class="skip-link" href="#top">{en?'Skip to content':'Pular para o conteúdo'}</a>
     <header class="topbar">
       <a class="identity" href={home}>{t("← Lucas Mateus · Home")}</a>
       <nav class="portfolio-navigation" aria-label={t("Professional portfolio navigation")}>
@@ -127,7 +128,7 @@ const personSchema = {
       <LanguageSwitcher lang={lang} pt={pt} en={english} />
     </header>
 
-    <main id="top" class="journey-main"><CartographicLines />
+    <main id="top" class="journey-main" tabindex="-1"><CartographicLines />
       <section class="hero" aria-labelledby="page-title">
         <p class="eyebrow">{t("São Paulo, Brazil · Professional Portfolio")}</p>
         <h1 id="page-title">{t("Talent Acquisition &")}<br />{t("Recruiting Operations")}</h1>
@@ -258,7 +259,7 @@ const personSchema = {
 
     <footer>
       <div>{t("Lucas Mateus da Silva · São Paulo, Brazil")}</div>
-      <div class="links"><a href="https://www.linkedin.com/in/lucasmateus/">LinkedIn</a><a href="https://github.com/lucas-mateus-hq">GitHub</a></div>
+      <div class="links"><a href="https://www.linkedin.com/in/lucasmateus/">LinkedIn</a><a href="https://github.com/lucas-mateus-hq">GitHub</a><a href="#top">{en?'↑ Top':'↑ Topo'}</a></div>
       <p>{t("Professional portfolio · Recruiting, learning and personal AI projects.")}</p>
     </footer>
     <NavigationEnhancements />
@@ -269,6 +270,11 @@ const personSchema = {
   :root{--ink:#f7f3ea;--paper:#071b20;--line:#41595e;--muted:#bdccc9;--accent:#73cdba;color-scheme:dark}
   *{box-sizing:border-box}
   a:focus-visible{outline:3px solid var(--accent);outline-offset:5px}
+  .actions a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+  .rnd-card>a:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:4px}
+  footer a:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:2px}
+  .skip-link{position:fixed;z-index:110;left:12px;top:12px;background:var(--ink);color:var(--paper);padding:14px 20px;text-decoration:none;font-weight:600;font-size:14px;transform:translateY(-180%)}.skip-link:focus{transform:none}
+  main:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
   html{scroll-behavior:auto;background:var(--paper)}
   body{margin:0;background:var(--paper);color:var(--ink);font-family:"Source Sans 3",Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
   a{color:inherit}
