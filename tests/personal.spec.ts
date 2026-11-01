@@ -70,6 +70,23 @@ test('keyboard access starts with skip link and works without JavaScript', async
   await expect(page.locator('main')).toBeFocused();
   await page.getByRole('link', { name: 'Conheça a proposta' }).click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Reta Final.');
+
+  // Test skip-link on portfolio page
+  await page.goto('http://127.0.0.1:4321/portfolio/');
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/#top$/);
+  await expect(page.locator('main')).toBeFocused();
+
+  // Test skip-link on privacy page
+  await page.goto('http://127.0.0.1:4321/privacidade/');
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('link', { name: 'Pular para o conteúdo' })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/#conteudo$/);
+  await expect(page.locator('main')).toBeFocused();
+
   await context.close();
 });
 

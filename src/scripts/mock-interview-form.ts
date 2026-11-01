@@ -32,11 +32,26 @@ export function initMockInterviewForm(){
    })().finally(()=>{setupPromise=undefined;});
    return setupPromise;
   }
+  const notesArea=form.querySelector<HTMLTextAreaElement>('#mock-notes');
+  const notesHint=notesArea?.parentElement?.querySelector<HTMLElement>('.field-hint');
+  if(notesArea && notesHint){
+   const baseHint=notesHint.textContent||'';
+   notesArea.addEventListener('input',()=>{
+    notesHint.textContent=`${baseHint} (${notesArea.value.length}/320)`;
+   });
+  }
   fields.disabled=false;
   form.addEventListener('focusin',()=>{void setup();},{once:true});
   form.addEventListener('submit',async event=>{
    event.preventDefault();
-   if(busy||accepted||!form.reportValidity())return;
+   if(busy||accepted)return;
+   const inputs=form.querySelectorAll<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>('input:not([type=hidden]),select,textarea');
+   inputs.forEach(input=>{
+    if(!input.checkValidity()){input.setAttribute('aria-invalid','true');}
+    else{input.removeAttribute('aria-invalid');}
+    input.addEventListener('input',()=>input.removeAttribute('aria-invalid'),{once:true});
+   });
+   if(!form.reportValidity())return;
    const data=new FormData(form);
    const name=String(data.get('name')||'').trim();
    const email=String(data.get('email')||'').trim();

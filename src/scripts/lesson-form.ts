@@ -43,12 +43,30 @@ export function initLessonForms() {
       })().finally(()=>{setupPromise=undefined;});
       return setupPromise;
     };
+    // Live character counter for textarea
+    const textarea=form.querySelector<HTMLTextAreaElement>('#lesson-context');
+    const hint=form.querySelector<HTMLElement>('#context-hint');
+    if(textarea && hint){
+      const baseHint=hint.textContent||'';
+      const updateCount=()=>{
+        const len=textarea.value.length;
+        hint.textContent=`${baseHint} (${len}/800)`;
+      };
+      textarea.addEventListener('input',updateCount);
+    }
+
     // No external verification request is made until the visitor interacts with this form.
     fields.disabled=false;
     form.addEventListener('focusin',()=>{if(!challenge && !loader)void setup();},{once:true});
     form.addEventListener('submit',async event=>{
       event.preventDefault();
       if(busy)return;
+      const inputs=form.querySelectorAll<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>('input:not([type=hidden]),select,textarea');
+      inputs.forEach(input=>{
+        if(!input.checkValidity()){input.setAttribute('aria-invalid','true');}
+        else{input.removeAttribute('aria-invalid');}
+        input.addEventListener('input',()=>input.removeAttribute('aria-invalid'),{once:true});
+      });
       if(!form.reportValidity())return;
       if(!challenge || !widget){inform(en?'Please wait for verification, then try again.':'Aguarde a verificação e tente novamente.',true);await setup();return;}
       const token=challenge.getResponse(widget);
