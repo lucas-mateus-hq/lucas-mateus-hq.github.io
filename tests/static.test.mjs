@@ -194,11 +194,12 @@ test('reia sales page delivers authentic Hotmart narrative and external checkout
   assert.match(reia, /Diagnóstico ágil do serviço certo para seu perfil/);
   assert.match(reia, /Abordagem profissional sem parecer amador ou invasivo/);
   assert.match(reia, /Economia de tempo com templates prontos para o mercado/);
-  assert.match(reia, /Risco zero para testar na prática/);
+  assert.match(reia, /Entenda o que está comprando antes de decidir/);
   assert.match(reia, /Bússola de Renda com IA/);
   assert.match(reia, /Primeiro Cliente IA/);
   assert.match(reia, /Dúvidas comuns sobre o REIA/);
-  assert.match(reia, /Garantia Incondicional de 7 Dias/);
+  assert.match(reia, /Confira a oferta antes de comprar/);
+  assert.doesNotMatch(reia, /risco zero|garantia incondicional/i);
   assert.match(reia, /Lucas Mateus/);
 
   // No forms, no data inputs, no embedded payment mechanisms
