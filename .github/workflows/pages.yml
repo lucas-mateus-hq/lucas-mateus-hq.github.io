@@ -30,7 +30,7 @@ jobs:
     env:
       PUBLIC_LESSON_API_URL: ''
       PUBLIC_TURNSTILE_SITE_KEY: ''
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - name: Checkout
@@ -100,7 +100,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - name: Checkout
@@ -145,7 +145,7 @@ jobs:
 
 
   intake-ui:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 12
     env:
       PUBLIC_LESSON_API_URL: https://intake-test.example.workers.dev/v1/lesson-requests
