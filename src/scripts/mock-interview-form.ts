@@ -36,9 +36,10 @@ export function initMockInterviewForm(){
   const notesHint=notesArea?.parentElement?.querySelector<HTMLElement>('.field-hint');
   if(notesArea && notesHint){
    const baseHint=notesHint.textContent||'';
-   notesArea.addEventListener('input',()=>{
-    notesHint.textContent=`${baseHint} (${notesArea.value.length}/320)`;
-   });
+   const updateCount=()=>{notesHint.textContent=`${baseHint} (${notesArea.value.length}/320)`;};
+   notesArea.addEventListener('input',updateCount);
+   form.addEventListener('reset',()=>queueMicrotask(updateCount));
+   updateCount();
   }
   fields.disabled=false;
   form.addEventListener('focusin',()=>{void setup();},{once:true});
