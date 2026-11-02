@@ -53,6 +53,8 @@ export function initLessonForms() {
         hint.textContent=`${baseHint} (${len}/800)`;
       };
       textarea.addEventListener('input',updateCount);
+      form.addEventListener('reset',()=>queueMicrotask(updateCount));
+      updateCount();
     }
 
     // No external verification request is made until the visitor interacts with this form.
