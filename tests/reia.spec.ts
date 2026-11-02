@@ -17,7 +17,7 @@ test.describe('REIA Sales Page (/renda-extra-com-ia/)', () => {
     await expect(page.locator('.listicle-card').nth(1)).toContainText('Diagnóstico ágil do serviço certo para seu perfil');
     await expect(page.locator('.listicle-card').nth(2)).toContainText('Abordagem profissional sem parecer amador ou invasivo');
     await expect(page.locator('.listicle-card').nth(3)).toContainText('Economia de tempo com templates prontos para o mercado');
-    await expect(page.locator('.listicle-card').nth(4)).toContainText('Risco zero para testar na prática');
+    await expect(page.locator('.listicle-card').nth(4)).toContainText('Entenda o que está comprando antes de decidir');
 
     // Check FAQ items
     await expect(page.locator('.faq-item')).toHaveCount(4);
@@ -37,7 +37,7 @@ test.describe('REIA Sales Page (/renda-extra-com-ia/)', () => {
 
     // Check guarantee
     await expect(page.locator('.guarantee-box')).toBeVisible();
-    await expect(page.locator('.guarantee-box h2')).toHaveText('Garantia Incondicional de 7 Dias');
+    await expect(page.locator('.guarantee-box h2')).toHaveText('Confira a oferta antes de comprar');
   });
 
   test('checkout CTAs consistently point to canonical Hotmart checkout with secure attributes', async ({ page }) => {
