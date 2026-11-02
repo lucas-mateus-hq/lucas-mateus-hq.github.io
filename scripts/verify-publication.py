@@ -45,7 +45,8 @@ for attempt in range(12):
 checks = []
 for route, lang in [('', 'pt-BR'), ('en/', 'en-US'), ('portfolio/pt/', 'pt-BR'),
                     ('portfolio/', 'en-US'), ('criacoes/reta-final/', 'pt-BR'),
-                    ('en/criacoes/reta-final/', 'en-US'), ('privacidade/', 'pt-BR'), ('privacy/', 'en-US')]:
+                    ('en/criacoes/reta-final/', 'en-US'), ('privacidade/', 'pt-BR'), ('privacy/', 'en-US'),
+                    ('renda-extra-com-ia/', 'pt-BR')]:
     status, body = fetch(route)
     html = body.decode('utf-8')
     assert status == 200 and f'<html lang="{lang}"' in html, route
@@ -55,6 +56,10 @@ for route, lang in [('', 'pt-BR'), ('en/', 'en-US'), ('portfolio/pt/', 'pt-BR'),
         assert 'id="criacoes"' in html and 'id="contato"' in html, route
     if route in ('privacy/', 'privacidade/'):
         assert 'id="hosting"' in html and 'id="rights"' in html, route
+    if route == 'renda-extra-com-ia/':
+        assert 'Renda Extra com IA' in html, route
+        assert 'https://pay.hotmart.com/I108167656O' in html, route
+        assert 'risco zero' not in html.lower() and 'garantia incondicional' not in html.lower(), route
     checks.append({'path':route, 'status':status, 'language':lang})
 for path in ['identity.svg', 'lucas-mateus.webp', 'images/reta-final-tablet.webp',
              'images/social-pt.png', 'images/social-en.png', 'fonts/fonts.css', 'sitemap.xml']:
