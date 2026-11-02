@@ -1,0 +1,11 @@
+# Cloudflare Workers Builds automatically triggers on repository push for "lucas-mateus-hq-github-io".
+# The actual dynamic Worker resides in backend/lesson-intake, while this root repository builds the static Astro site.
+name = "lucas-mateus-hq-github-io"
+compatibility_date = "2026-10-21"
+
+[build]
+command = "npm run build"
+
+[assets]
+directory = "./dist"
+not_found_handling = "404-page"
