@@ -34,6 +34,17 @@ test.describe('REIA Sales Page (/renda-extra-com-ia/)', () => {
     // Check author section
     await expect(page.locator('.author-card')).toBeVisible();
     await expect(page.locator('.author-card h2')).toHaveText('Lucas Mateus');
+    await expect(page.locator('.author-card .meta-note')).toHaveCount(0);
+    await expect(page.locator('.author-card')).not.toContainText('Nota de transparência');
+    const portrait = page.locator('.author-portrait');
+    await expect(portrait).toHaveAttribute('alt', 'Foto de Lucas Mateus');
+    await expect(portrait).toBeVisible();
+    const visual = await portrait.evaluate((img: HTMLImageElement) => ({
+      loaded: img.complete && img.naturalWidth > 0,
+      borderRadius: getComputedStyle(img).borderRadius,
+    }));
+    expect(visual.loaded).toBe(true);
+    expect(visual.borderRadius).toBe('50%');
 
     // Check guarantee
     await expect(page.locator('.guarantee-box')).toBeVisible();

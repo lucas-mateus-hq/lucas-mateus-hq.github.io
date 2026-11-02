@@ -577,9 +577,24 @@ const coverUrl = `${base}/images/reia-cover.webp`;
       }
 
       .author-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
         margin-bottom: 24px;
         border-bottom: 1px solid var(--reia-border);
         padding-bottom: 20px;
+      }
+
+      .author-portrait {
+        display: block;
+        width: 112px;
+        height: 112px;
+        flex: 0 0 112px;
+        border-radius: 50%;
+        object-fit: cover;
+        object-position: center 25%;
+        border: 3px solid var(--reia-surface);
       }
 
       .author-header .kicker {
@@ -602,14 +617,6 @@ const coverUrl = `${base}/images/reia-cover.webp`;
         line-height: 1.7;
         color: var(--reia-body);
         margin-bottom: 18px;
-      }
-
-      .author-content p.meta-note {
-        font-size: 0.9rem;
-        color: var(--reia-muted);
-        border-left: 3px solid var(--reia-rust);
-        padding-left: 14px;
-        margin-top: 24px;
       }
 
       .author-links {
@@ -780,6 +787,20 @@ const coverUrl = `${base}/images/reia-cover.webp`;
 
         .author-card {
           padding: 32px 20px;
+        }
+
+        .author-header {
+          gap: 16px;
+        }
+
+        .author-header h2 {
+          font-size: clamp(1.6rem, 6vw, 2.2rem);
+        }
+
+        .author-portrait {
+          width: 84px;
+          height: 84px;
+          flex-basis: 84px;
         }
 
         .guarantee-box {
@@ -1057,8 +1078,19 @@ const coverUrl = `${base}/images/reia-cover.webp`;
         <div class="container">
           <div class="author-card">
             <header class="author-header">
-              <span class="kicker">Sobre o Autor</span>
-              <h2 id="author-title">Lucas Mateus</h2>
+              <div>
+                <span class="kicker">Sobre o Autor</span>
+                <h2 id="author-title">Lucas Mateus</h2>
+              </div>
+              <img
+                class="author-portrait"
+                src={`${base}/lucas-mateus.webp`}
+                alt="Foto de Lucas Mateus"
+                width="112"
+                height="112"
+                loading="lazy"
+                decoding="async"
+              />
             </header>
             <div class="author-content">
               <p>
@@ -1066,9 +1098,6 @@ const coverUrl = `${base}/images/reia-cover.webp`;
               </p>
               <p>
                 Sua trajetória envolve a criação de ferramentas digitais, sistemas de aprendizagem e materiais práticos focados em transformar conhecimento técnico em autonomia profissional. Este guia foi desenvolvido para orientar de ponta a ponta quem deseja começar com IA: da escolha da oportunidade à entrega da primeira proposta real, com clareza e honestidade.
-              </p>
-              <p class="meta-note">
-                Nota de transparência: Este material apoia a capacitação e a prática profissional independente. Não garante valores específicos de faturamento, contratos ou contratações, que dependem unicamente da dedicação, do mercado e da execução de cada profissional.
               </p>
               <div class="author-links">
                 <a href={homeUrl} class="author-link">Ver portfólio profissional de Lucas</a>
