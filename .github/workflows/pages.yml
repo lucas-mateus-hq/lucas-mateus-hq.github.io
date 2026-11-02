@@ -112,13 +112,33 @@ jobs:
       - name: Install dependencies from lock
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Verify real form endpoint before publishing
+        id: intake_preflight
         if: ${{ vars.INTAKE_RELEASE_APPROVED == 'true' }}
+        continue-on-error: true
         env:
           PUBLIC_LESSON_API_URL: ${{ vars.PUBLIC_LESSON_API_URL }}
           PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
         run: node scripts/check-intake-release.mjs
+      - name: Disable intake if independent release cannot prove it works
+        if: ${{ vars.INTAKE_RELEASE_APPROVED == 'true' && steps.intake_preflight.outcome != 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "::warning title=Intake disabled::Preflight failed. Publishing static pages with intake forms disabled; interview requests cannot be submitted."
+          echo "PUBLIC_LESSON_API_URL=" >> "$GITHUB_ENV"
+          echo "PUBLIC_TURNSTILE_SITE_KEY=" >> "$GITHUB_ENV"
       - name: Build static site
         run: npm run build
+      - name: Fail closed if unavailable intake is present in HTML
+        if: ${{ vars.INTAKE_RELEASE_APPROVED == 'true' && steps.intake_preflight.outcome != 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -n -E 'data-lesson-form|data-mock-form' dist --include='*.html'; then
+            echo "ERROR: Intake is unavailable but an intake form is still rendered." >&2
+            exit 1
+          fi
+          echo "INTAKE_DISABLED_VERIFIED: Static commercial pages can publish independently."
       - name: Identify the exact release
         run: python3 scripts/verify-publication.py --prepare
       - name: Configure Pages
