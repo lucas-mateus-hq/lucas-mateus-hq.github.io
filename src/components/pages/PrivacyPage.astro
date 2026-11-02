@@ -33,6 +33,8 @@ const updated=en?'October 25, 2026':'25 de outubro de 2026';
       :root { font-family: "Source Sans 3", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #f7f3ea; background: #071b20; }
       * { box-sizing: border-box; }
       body { margin: 0; }
+      .skip-link{position:fixed;z-index:110;left:12px;top:12px;background:#f7f3ea;color:#071b20;padding:14px 20px;text-decoration:none;font-weight:600;font-size:14px;transform:translateY(-180%)}.skip-link:focus{transform:none}
+      main:focus-visible{outline:3px solid #73cdba;outline-offset:-3px}
       .privacy-languages{width:min(760px,calc(100% - 40px));margin:0 auto;display:flex;justify-content:flex-end;padding-top:20px}
       main { width: min(760px, calc(100% - 40px)); margin: 0 auto; padding: 28px 0 96px; }
       a { color: inherit; }
@@ -53,8 +55,9 @@ const updated=en?'October 25, 2026':'25 de outubro de 2026';
     <SocialMeta lang={lang} />
   </head>
   <body>
+    <a class="skip-link" href="#conteudo">{en?'Skip to content':'Pular para o conteúdo'}</a>
     <header class="privacy-languages"><LanguageSwitcher lang={lang} pt={pt} en={english} /></header>
-    <main>
+    <main id="conteudo" tabindex="-1">
       <a class="back" href={portfolio}>{t("← Professional portfolio")}</a>
       <p class="eyebrow">{t("Lucas Mateus · Privacy")}</p>
       <h1>{t("Privacy Policy")}</h1>

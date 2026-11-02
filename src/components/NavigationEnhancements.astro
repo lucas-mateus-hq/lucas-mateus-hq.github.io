@@ -26,8 +26,21 @@
         // A nested inquiry remains the locale destination while its parent section
         // is current, including focus-induced scrolling of the sticky header.
         const nested = target?.matches('[data-locale-section]') && visible[0]?.el.contains(target);
-        const hash = explicit || nested ? fragment : (window.scrollY < 100 ? '' : (visible[0] ? `#${visible[0].el.id}` : ''));
+        const currentId = explicit || nested ? (target?.id || '') : (window.scrollY < 100 ? '' : (visible[0]?.el.id || ''));
+        const hash = currentId ? `#${currentId}` : '';
         links.forEach(link => link.setAttribute('href', link.dataset.localeHref + hash));
+
+        // Highlight active nav link in primary navigation
+        const navLinks = document.querySelectorAll('.primary-navigation a, .portfolio-navigation a');
+        navLinks.forEach(nl => {
+          const href = nl.getAttribute('href') || '';
+          const targetAnchor = href.includes('#') ? href.split('#')[1] : '';
+          if (currentId && targetAnchor === currentId) {
+            nl.setAttribute('aria-current', 'true');
+          } else {
+            nl.removeAttribute('aria-current');
+          }
+        });
       };
       let scheduled = false;
       window.addEventListener('scroll', () => {

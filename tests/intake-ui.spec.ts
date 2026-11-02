@@ -17,10 +17,12 @@ for(const english of [false,true])test(`configured form acknowledges only a conf
  let submissions:any[]=[];
  await page.route(endpoint,async route=>{const body=route.request().postDataJSON();submissions.push(body);await route.fulfill({status:201,headers:{'Access-Control-Allow-Origin':'*'},contentType:'application/json',body:JSON.stringify({accepted:true,requestId:body.requestId})});});
  await prepare(page,english);
+ await expect(page.locator('#context-hint')).toContainText(/\(\d+\/800\)/);
  await page.locator('[data-lesson-form]').getByRole('button',{name:english?'Send inquiry':'Enviar solicitação'}).click();
  await expect(page.locator('[data-lesson-form] [data-form-status]')).toContainText(english?'Inquiry received':'Solicitação recebida');
  expect(submissions).toHaveLength(1);expect(submissions[0].locale).toBe(english?'en-US':'pt-BR');expect(submissions[0].email).toBe('visitor@example.invalid');
  await expect(page.locator('#lesson-name')).toHaveValue('');
+ await expect(page.locator('#context-hint')).toContainText('(0/800)');
  await expect(page.locator('[data-form-fields]')).toHaveAttribute('disabled','');
  await expect(page.locator('#lesson-name')).toBeDisabled();
  await expect(page.locator('[data-lesson-form]').getByRole('button',{name:english?'Send inquiry':'Enviar solicitação'})).toBeDisabled();
@@ -76,6 +78,7 @@ test('mock interview submits via the unchanged secure lesson endpoint only after
   await page.locator('#mock-role').fill('Recruiting Specialist');
   await page.locator('#mock-availability').fill('Tuesday evening, Brasília time');
   await page.locator('#mock-notes').fill('Interview with an international team.');
+  await expect(page.locator('#mock-notes-hint')).toContainText(/\(\d+\/320\)/);
   await page.locator('.mock-form [name=privacyAcknowledged]').check();
   await page.locator('.mock-form').getByRole('button',{name:'Enviar solicitação'}).click();
   await expect(page.locator('[data-mock-status]')).toContainText('Solicitação recebida');
@@ -89,5 +92,6 @@ test('mock interview submits via the unchanged secure lesson endpoint only after
   expect(submissions[0].context).toContain('personalized written report within 2h after session');
   expect(submissions[0].turnstileToken).toBe('synthetic-no-real-provider');
   await expect(page.locator('#mock-name')).toBeDisabled();
+  await expect(page.locator('#mock-notes-hint')).toContainText('(0/320)');
   expect(await page.locator('.mock-form a[href*="linkedin.com"]').count()).toBe(0);
 });
