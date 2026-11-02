@@ -216,3 +216,11 @@ test('reia sales page delivers authentic Hotmart narrative and external checkout
   assert.match(reia, /href="#reia-main"/);
   assert.match(reia, /id="reia-main" tabindex="-1"/);
 });
+
+test('REIA sales route is discoverable from both home languages', () => {
+  for (const route of ['', 'en/']) {
+    const page = html(route);
+    assert.match(page, /href="\/renda-extra-com-ia\/"/);
+    assert.match(page, /Renda Extra com IA: Teste, Entregue, Repita/);
+  }
+});
