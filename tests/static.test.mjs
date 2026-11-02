@@ -5,7 +5,7 @@ import { readFileSync, existsSync } from 'node:fs';
 const prefix = '/';
 const intakeConfigured=Boolean(process.env.PUBLIC_LESSON_API_URL && process.env.PUBLIC_TURNSTILE_SITE_KEY);
 const origin = 'https://lucas-mateus-hq.github.io';
-const routes = ['', 'en/', 'portfolio/', 'portfolio/pt/', 'criacoes/reta-final/', 'en/criacoes/reta-final/', 'privacy/', 'privacidade/'];
+const routes = ['', 'en/', 'portfolio/', 'portfolio/pt/', 'criacoes/reta-final/', 'en/criacoes/reta-final/', 'privacy/', 'privacidade/', 'renda-extra-com-ia/'];
 const fileFor = (path) => `dist/${path}${path.endsWith('/') || !path ? 'index.html' : ''}`;
 const html = (route) => readFileSync(fileFor(route), 'utf8');
 
@@ -108,7 +108,12 @@ test('actual editorial identity and product text pairs meet WCAG AA contrast', (
     ['0b2429','f7f3ea'],['0b2429','bdccc9'],['0b2429','c58a45'],
     ['0f6b61','f7f3ea'],['73cdba','071b20'],
     ['102a43','d0dce8'],['102a43','abcbe5'],['d3e5d2','203d35'],
-    ['e7641b','0c2037'],['081a2b','b9cbd9']
+    ['e7641b','0c2037'],['081a2b','b9cbd9'],
+    // REIA palette actual pairs
+    ['F5F0E8','93351F'],['F5F0E8','172027'],['F5F0E8','465057'],
+    ['EADFCC','93351F'],['EADFCC','172027'],['EADFCC','465057'],
+    ['FFFFFF','93351F'],['FFFFFF','172027'],['FFFFFF','465057'],
+    ['F57456','172027'],['93351F','FFFFFF']
   ];
   for (const [bg,fg] of pairs) {
     const values=[luminance(bg),luminance(fg)].sort((a,b)=>a-b);
@@ -178,4 +183,36 @@ test('portfolio explains AI work to ordinary visitors without internal engineeri
   assert.doesNotMatch(page,/AI orchestration literacy|Knowledge & state architecture|Independent Applied R&D|Arquitetura de conhecimento e estado|Conhecimento aplicado de orquestração de IA|Pesquisa aplicada independente/);
   assert.match(page,/id="rnd"/); // Existing deep links remain valid after changing the visitor-facing label.
  }
+});
+
+test('reia sales page delivers authentic Hotmart narrative and external checkout without collecting data', () => {
+  const reia = html('renda-extra-com-ia/');
+  assert.match(reia, /lang="pt-BR"/);
+  assert.match(reia, /Renda Extra com IA: Teste, Entregue, Repita/);
+  assert.match(reia, /5 motivos concretos para transformar IA em renda extra/);
+  assert.match(reia, /Fim da paralisia por excesso de teoria/);
+  assert.match(reia, /Diagnóstico ágil do serviço certo para seu perfil/);
+  assert.match(reia, /Abordagem profissional sem parecer amador ou invasivo/);
+  assert.match(reia, /Economia de tempo com templates prontos para o mercado/);
+  assert.match(reia, /Entenda o que está comprando antes de decidir/);
+  assert.match(reia, /Bússola de Renda com IA/);
+  assert.match(reia, /Primeiro Cliente IA/);
+  assert.match(reia, /Dúvidas comuns sobre o REIA/);
+  assert.match(reia, /Confira a oferta antes de comprar/);
+  assert.doesNotMatch(reia, /risco zero|garantia incondicional/i);
+  assert.match(reia, /Lucas Mateus/);
+
+  // No forms, no data inputs, no embedded payment mechanisms
+  assert.doesNotMatch(reia, /<form\b|<input\b|<textarea\b/);
+
+  // External checkout links exclusively point to Hotmart
+  const ctas = [...reia.matchAll(/href="(https:\/\/pay\.hotmart\.com\/[^"]+)"/g)].map(m => m[1]);
+  assert.ok(ctas.length >= 2, 'Must have at least 2 strategic checkout CTAs');
+  for (const cta of ctas) {
+    assert.equal(cta, 'https://pay.hotmart.com/I108167656O');
+  }
+
+  // Skip link & main container focus
+  assert.match(reia, /href="#reia-main"/);
+  assert.match(reia, /id="reia-main" tabindex="-1"/);
 });

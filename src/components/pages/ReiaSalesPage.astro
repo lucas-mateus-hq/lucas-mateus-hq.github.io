@@ -1,0 +1,1135 @@
+---
+interface Props {
+  canonicalUrl?: string;
+}
+
+const { canonicalUrl = 'https://pay.hotmart.com/I108167656O' } = Astro.props;
+
+const pageTitle = "Renda Extra com IA: Teste, Entregue, Repita · Guia Prático por Lucas Mateus";
+const pageDescription = "Guia prático de 72 páginas com 12 oportunidades reais de renda extra com inteligência artificial, ferramentas interativas exclusivas e plano de ação de 30 dias.";
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const site = Astro.site?.origin || 'https://lucas-mateus-hq.github.io';
+const canonicalPageUrl = `${site}${base}/renda-extra-com-ia/`;
+const ogImageUrl = `${site}${base}/images/social-pt.png`;
+const homeUrl = `${base}/`;
+const privacyUrl = `${base}/privacidade/`;
+const coverUrl = `${base}/images/reia-cover.webp`;
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta name="robots" content="index,follow" />
+    <link rel="icon" type="image/svg+xml" href={`${base}/identity.svg`} />
+    <link rel="canonical" href={canonicalPageUrl} />
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonicalPageUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- Typography: Outfit via Google Fonts with local fallback -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
+
+    <style>
+      :root {
+        --reia-bg: #F5F0E8;
+        --reia-surface: #EADFCC;
+        --reia-surface-card: #FFFFFF;
+        --reia-coral: #F57456;
+        --reia-coral-hover: #E35D3E;
+        --reia-rust: #93351F;
+        --reia-rust-light: #B4462B;
+        --reia-body: #172027;
+        --reia-muted: #465057;
+        --reia-border: rgba(147, 53, 31, 0.15);
+        --reia-border-strong: rgba(147, 53, 31, 0.3);
+        --font-outfit: "Outfit", "Source Sans 3", system-ui, -apple-system, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        background-color: var(--reia-bg);
+        color: var(--reia-body);
+        font-family: var(--font-outfit);
+        font-size: 16px;
+        line-height: 1.6;
+        scroll-behavior: smooth;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      body {
+        min-height: 100vh;
+        background-color: var(--reia-bg);
+        color: var(--reia-body);
+      }
+
+      /* Accessibility: Skip Link & Focus */
+      .skip-link {
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        z-index: 1000;
+        background: var(--reia-rust);
+        color: #FFFFFF;
+        padding: 12px 20px;
+        font-weight: 700;
+        text-decoration: none;
+        border-radius: 6px;
+        transform: translateY(-160%);
+        transition: transform 0.2s ease-in-out;
+      }
+
+      .skip-link:focus-visible {
+        transform: translateY(0);
+        outline: 3px solid var(--reia-rust);
+        outline-offset: 3px;
+      }
+
+      :focus-visible {
+        outline: 3px solid var(--reia-rust);
+        outline-offset: 4px;
+      }
+
+      .container {
+        width: min(1140px, calc(100% - 48px));
+        margin-inline: auto;
+      }
+
+      /* Header / Top Navigation */
+      .reia-header {
+        border-bottom: 1px solid var(--reia-border);
+        background: rgba(245, 240, 232, 0.95);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        padding: 16px 0;
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .site-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--reia-rust);
+        text-decoration: none;
+      }
+
+      .site-brand:hover {
+        color: var(--reia-rust-light);
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--reia-muted);
+        text-decoration: none;
+        padding: 8px 14px;
+        border-radius: 99px;
+        border: 1px solid transparent;
+        transition: all 0.2s ease;
+      }
+
+      .back-link:hover {
+        color: var(--reia-rust);
+        border-color: var(--reia-border-strong);
+        background: var(--reia-surface);
+      }
+
+      /* Main container */
+      main {
+        outline: none;
+      }
+
+      /* Buttons & CTA - high contrast deep body text on coral (#172027 on #F57456 = 5.9:1 WCAG AA) */
+      .cta-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        background-color: var(--reia-coral);
+        color: var(--reia-body);
+        font-weight: 700;
+        font-size: 1.15rem;
+        padding: 18px 36px;
+        border-radius: 999px;
+        text-decoration: none;
+        box-shadow: 0 4px 16px rgba(245, 116, 86, 0.35);
+        transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+        border: 2px solid transparent;
+        text-align: center;
+      }
+
+      .cta-button:hover {
+        background-color: var(--reia-coral-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(245, 116, 86, 0.45);
+      }
+
+      .cta-button:active {
+        transform: translateY(0);
+      }
+
+      .cta-button.secondary {
+        background-color: #FFFFFF;
+        color: var(--reia-rust);
+        border: 2px solid var(--reia-rust);
+        box-shadow: none;
+      }
+
+      .cta-button.secondary:hover {
+        background-color: var(--reia-surface);
+        color: var(--reia-rust-light);
+      }
+
+      .cta-note {
+        font-size: 0.85rem;
+        color: var(--reia-muted);
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      /* Hero Section */
+      .hero {
+        padding: 72px 0 64px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.25fr 0.95fr;
+        gap: 56px;
+        align-items: center;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--reia-surface);
+        color: var(--reia-rust);
+        padding: 6px 16px;
+        border-radius: 99px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 24px;
+        border: 1px solid var(--reia-border);
+      }
+
+      .hero h1 {
+        font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+        line-height: 1.12;
+        letter-spacing: -0.03em;
+        font-weight: 800;
+        color: var(--reia-rust);
+        margin-bottom: 20px;
+      }
+
+      .hero-tagline {
+        font-size: 1.25rem;
+        line-height: 1.5;
+        font-weight: 600;
+        color: var(--reia-body);
+        margin-bottom: 16px;
+      }
+
+      .hero-description {
+        font-size: 1.1rem;
+        line-height: 1.65;
+        color: var(--reia-muted);
+        margin-bottom: 32px;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .hero-media {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .cover-wrapper {
+        position: relative;
+        padding: 16px;
+        background: #FFFFFF;
+        border-radius: 20px;
+        box-shadow: 0 16px 40px rgba(147, 53, 31, 0.12);
+        border: 1px solid var(--reia-border);
+        max-width: 380px;
+        width: 100%;
+      }
+
+      .cover-image {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+        border-radius: 12px;
+        display: block;
+        object-fit: cover;
+      }
+
+      .cover-badge {
+        position: absolute;
+        bottom: -14px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--reia-rust);
+        color: #FFFFFF;
+        font-size: 0.8rem;
+        font-weight: 700;
+        padding: 6px 18px;
+        border-radius: 99px;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(147, 53, 31, 0.3);
+      }
+
+      /* Section Common */
+      .section-heading {
+        text-align: center;
+        max-width: 780px;
+        margin: 0 auto 52px;
+      }
+
+      .section-kicker {
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--reia-rust);
+        margin-bottom: 12px;
+      }
+
+      .section-heading h2 {
+        font-size: clamp(2rem, 3.2vw, 2.75rem);
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        color: var(--reia-rust);
+        margin-bottom: 16px;
+      }
+
+      .section-heading p {
+        font-size: 1.15rem;
+        color: var(--reia-muted);
+      }
+
+      /* Listicle: 5 Motivos Concretos */
+      .listicle-section {
+        padding: 88px 0;
+        background-color: var(--reia-surface);
+        border-top: 1px solid var(--reia-border);
+        border-bottom: 1px solid var(--reia-border);
+      }
+
+      .listicle-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        max-width: 920px;
+        margin: 0 auto;
+      }
+
+      .listicle-card {
+        background: #FFFFFF;
+        border-radius: 20px;
+        padding: 36px 36px;
+        border: 1px solid var(--reia-border);
+        box-shadow: 0 8px 24px rgba(147, 53, 31, 0.05);
+        display: grid;
+        grid-template-columns: 64px 1fr;
+        gap: 28px;
+        align-items: flex-start;
+      }
+
+      .listicle-badge-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .listicle-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--reia-rust);
+        color: #FFFFFF;
+        font-weight: 800;
+        font-size: 1.4rem;
+        box-shadow: 0 4px 12px rgba(147, 53, 31, 0.25);
+      }
+
+      .listicle-body h3 {
+        font-size: 1.45rem;
+        line-height: 1.3;
+        font-weight: 700;
+        color: var(--reia-rust);
+        margin-bottom: 14px;
+      }
+
+      .listicle-body .pain-point {
+        font-size: 0.98rem;
+        color: var(--reia-muted);
+        line-height: 1.6;
+        margin-bottom: 16px;
+        padding-bottom: 14px;
+        border-bottom: 1px dashed var(--reia-border);
+      }
+
+      .listicle-body .solution-detail {
+        font-size: 1.02rem;
+        color: var(--reia-body);
+        line-height: 1.6;
+        margin-bottom: 16px;
+      }
+
+      .listicle-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: var(--reia-rust);
+        background: var(--reia-surface);
+        padding: 6px 14px;
+        border-radius: 99px;
+        border: 1px solid var(--reia-border);
+      }
+
+      /* Deliverables Cards */
+      .deliverables-section {
+        padding: 96px 0;
+      }
+
+      .cards-grid-four {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
+      }
+
+      .card-deliverable {
+        background: #FFFFFF;
+        border-radius: 20px;
+        padding: 36px 32px;
+        border: 1px solid var(--reia-border);
+        box-shadow: 0 8px 28px rgba(147, 53, 31, 0.06);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .deliverable-badge {
+        align-self: flex-start;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        background: rgba(245, 116, 86, 0.15);
+        color: var(--reia-rust);
+        padding: 5px 12px;
+        border-radius: 99px;
+        margin-bottom: 18px;
+      }
+
+      .card-deliverable h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--reia-rust);
+        line-height: 1.3;
+        margin-bottom: 14px;
+      }
+
+      .card-deliverable p {
+        font-size: 1rem;
+        color: var(--reia-muted);
+        line-height: 1.65;
+        margin-bottom: 20px;
+      }
+
+      .card-deliverable ul {
+        list-style: none;
+        margin-top: auto;
+        padding-top: 16px;
+        border-top: 1px solid var(--reia-border);
+      }
+
+      .card-deliverable li {
+        font-size: 0.92rem;
+        color: var(--reia-body);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .card-deliverable li::before {
+        content: "✓";
+        color: var(--reia-rust);
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      /* FAQ Section */
+      .faq-section {
+        padding: 88px 0;
+        background-color: var(--reia-surface);
+        border-top: 1px solid var(--reia-border);
+        border-bottom: 1px solid var(--reia-border);
+      }
+
+      .faq-list {
+        max-width: 840px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .faq-item {
+        background: #FFFFFF;
+        border: 1px solid var(--reia-border);
+        border-radius: 14px;
+        padding: 24px 28px;
+        box-shadow: 0 4px 12px rgba(147, 53, 31, 0.04);
+      }
+
+      .faq-question {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--reia-rust);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .faq-answer {
+        font-size: 1rem;
+        color: var(--reia-muted);
+        line-height: 1.65;
+      }
+
+      /* Author Section */
+      .author-section {
+        padding: 88px 0;
+      }
+
+      .author-card {
+        background: #FFFFFF;
+        border-radius: 24px;
+        border: 1px solid var(--reia-border);
+        padding: 48px;
+        box-shadow: 0 12px 36px rgba(147, 53, 31, 0.06);
+        max-width: 920px;
+        margin: 0 auto;
+      }
+
+      .author-header {
+        margin-bottom: 24px;
+        border-bottom: 1px solid var(--reia-border);
+        padding-bottom: 20px;
+      }
+
+      .author-header .kicker {
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--reia-rust);
+        margin-bottom: 6px;
+      }
+
+      .author-header h2 {
+        font-size: 2.2rem;
+        color: var(--reia-rust);
+        font-weight: 800;
+      }
+
+      .author-content p {
+        font-size: 1.05rem;
+        line-height: 1.7;
+        color: var(--reia-body);
+        margin-bottom: 18px;
+      }
+
+      .author-content p.meta-note {
+        font-size: 0.9rem;
+        color: var(--reia-muted);
+        border-left: 3px solid var(--reia-rust);
+        padding-left: 14px;
+        margin-top: 24px;
+      }
+
+      .author-links {
+        margin-top: 28px;
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .author-link {
+        font-weight: 600;
+        color: var(--reia-rust);
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      }
+
+      .author-link:hover {
+        color: var(--reia-rust-light);
+      }
+
+      /* Guarantee & Direct Checkout */
+      .guarantee-section {
+        padding: 96px 0 88px;
+        text-align: center;
+      }
+
+      .guarantee-box {
+        background: #FFFFFF;
+        border: 2px solid var(--reia-rust);
+        border-radius: 24px;
+        padding: 56px 40px;
+        max-width: 800px;
+        margin: 0 auto;
+        box-shadow: 0 16px 48px rgba(147, 53, 31, 0.08);
+      }
+
+      .guarantee-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: var(--reia-surface);
+        color: var(--reia-rust);
+        font-size: 1.8rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+      }
+
+      .guarantee-box h2 {
+        font-size: clamp(1.8rem, 3vw, 2.4rem);
+        color: var(--reia-rust);
+        font-weight: 800;
+        margin-bottom: 16px;
+      }
+
+      .guarantee-box p {
+        font-size: 1.1rem;
+        line-height: 1.65;
+        color: var(--reia-muted);
+        margin-bottom: 32px;
+        max-width: 620px;
+        margin-inline: auto;
+      }
+
+      .guarantee-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+
+      /* Footer */
+      .reia-footer {
+        background-color: var(--reia-surface);
+        border-top: 1px solid var(--reia-border);
+        padding: 48px 0 36px;
+        font-size: 0.9rem;
+        color: var(--reia-muted);
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 36px;
+        margin-bottom: 32px;
+      }
+
+      .footer-disclaimer p {
+        line-height: 1.65;
+        margin-bottom: 12px;
+      }
+
+      .footer-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .footer-nav a {
+        color: var(--reia-rust);
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .footer-nav a:hover {
+        text-decoration: underline;
+      }
+
+      .footer-bottom {
+        border-top: 1px solid var(--reia-border);
+        padding-top: 24px;
+        text-align: center;
+        font-size: 0.85rem;
+      }
+
+      /* Responsive Breakpoints */
+      @media (max-width: 960px) {
+        .hero-grid {
+          grid-template-columns: 1fr;
+          gap: 48px;
+          text-align: center;
+        }
+
+        .hero-actions {
+          align-items: center;
+        }
+
+        .cards-grid-four {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .container {
+          width: calc(100% - 32px);
+        }
+
+        .hero {
+          padding: 48px 0 40px;
+        }
+
+        .listicle-card {
+          grid-template-columns: 1fr;
+          gap: 16px;
+          padding: 24px 20px;
+        }
+
+        .listicle-badge-col {
+          align-items: flex-start;
+        }
+
+        .faq-item {
+          padding: 20px 18px;
+        }
+
+        .cta-button {
+          width: 100%;
+          padding: 16px 24px;
+          font-size: 1.05rem;
+        }
+
+        .author-card {
+          padding: 32px 20px;
+        }
+
+        .guarantee-box {
+          padding: 36px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a href="#reia-main" class="skip-link">Pular para o conteúdo principal</a>
+
+    <!-- Top Navigation Header -->
+    <header class="reia-header" role="banner">
+      <div class="container header-content">
+        <a href={homeUrl} class="site-brand">
+          <span>Lucas Mateus</span>
+        </a>
+        <a href={homeUrl} class="back-link">
+          <span aria-hidden="true">←</span>
+          <span>Voltar ao site</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Content Container with tabindex="-1" for skip link focus -->
+    <main id="reia-main" tabindex="-1">
+      <!-- 1. Hero Section -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="container hero-grid">
+          <div class="hero-content">
+            <span class="hero-badge">Guia Prático + Ferramentas Interativas</span>
+            <h1 id="hero-title">Renda Extra com IA: Teste, Entregue, Repita</h1>
+            <p class="hero-tagline">Menos ideias no papel. Mais resultados na prática.</p>
+            <p class="hero-description">
+              Está cansado de pesquisar formas de ganhar dinheiro com inteligência artificial e não saber por onde começar? Transforme suas ideias em um serviço real para oferecer a clientes e conquistar sua renda extra com segurança.
+            </p>
+            <div class="hero-actions">
+              <a
+                href={canonicalUrl}
+                class="cta-button"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>Garantir Acesso na Hotmart</span>
+                <span aria-hidden="true">→</span>
+              </a>
+              <span class="cta-note">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                Pagamento e acesso gerenciados pela Hotmart
+              </span>
+            </div>
+          </div>
+          <div class="hero-media">
+            <div class="cover-wrapper">
+              <img
+                src={coverUrl}
+                alt="Capa do e-book Renda Extra com IA: Teste, Entregue, Repita"
+                class="cover-image"
+                width="300"
+                height="300"
+                loading="eager"
+              />
+              <span class="cover-badge">Material Digital Completo</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Listicle: 5 Motivos Concretos para Utilizar o REIA -->
+      <section class="listicle-section" aria-labelledby="listicle-title">
+        <div class="container">
+          <header class="section-heading">
+            <span class="section-kicker">Por Que o REIA Funciona</span>
+            <h2 id="listicle-title">5 motivos concretos para transformar IA em renda extra</h2>
+            <p>Veja exatamente como cada etapa do método e ferramenta resolve um obstáculo real na sua jornada até o primeiro cliente.</p>
+          </header>
+
+          <div class="listicle-grid">
+            <!-- Motivo 1 -->
+            <article class="listicle-card">
+              <div class="listicle-badge-col">
+                <span class="listicle-number" aria-hidden="true">1</span>
+              </div>
+              <div class="listicle-body">
+                <h3>Fim da paralisia por excesso de teoria</h3>
+                <p class="pain-point">
+                  <strong>O obstáculo:</strong> Ficar preso em dezenas de cursos, tutoriais de prompt e vídeos sensacionalistas sem nunca colocar uma oferta de pé no mundo real.
+                </p>
+                <p class="solution-detail">
+                  O guia vai direto à prática comercial: você aprende a selecionar um serviço viável para sua rotina, produzir uma amostra profissional rápida e apresentar sua solução sem hesitar.
+                </p>
+                <span class="listicle-pill">Incluído no: E-book Principal (72 Páginas)</span>
+              </div>
+            </article>
+
+            <!-- Motivo 2 -->
+            <article class="listicle-card">
+              <div class="listicle-badge-col">
+                <span class="listicle-number" aria-hidden="true">2</span>
+              </div>
+              <div class="listicle-body">
+                <h3>Diagnóstico ágil do serviço certo para seu perfil</h3>
+                <p class="pain-point">
+                  <strong>O obstáculo:</strong> Tentar fazer de tudo um pouco e não conseguir se posicionar, perdendo tempo com serviços incompatíveis com seu conhecimento prévio.
+                </p>
+                <p class="solution-detail">
+                  A <em>Bússola de Renda com IA</em> é uma ferramenta interativa exclusiva que cruza suas habilidades atuais, sua rotina e as ferramentas que você domina para indicar o caminho de menor atrito.
+                </p>
+                <span class="listicle-pill">Incluído no: Bússola de Renda com IA (Interativa)</span>
+              </div>
+            </article>
+
+            <!-- Motivo 3 -->
+            <article class="listicle-card">
+              <div class="listicle-badge-col">
+                <span class="listicle-number" aria-hidden="true">3</span>
+              </div>
+              <div class="listicle-body">
+                <h3>Abordagem profissional sem parecer amador ou invasivo</h3>
+                <p class="pain-point">
+                  <strong>O obstáculo:</strong> O receio de fazer contato com clientes, não saber o que escrever na mensagem de apresentação e parecer inconveniente.
+                </p>
+                <p class="solution-detail">
+                  O assistente <em>Primeiro Cliente IA</em> guia passo a passo a formulação de mensagens claras de abordagem, definição de escopo transparente e propostas comerciais que geram confiança imediata.
+                </p>
+                <span class="listicle-pill">Incluído no: Assistente Primeiro Cliente IA</span>
+              </div>
+            </article>
+
+            <!-- Motivo 4 -->
+            <article class="listicle-card">
+              <div class="listicle-badge-col">
+                <span class="listicle-number" aria-hidden="true">4</span>
+              </div>
+              <div class="listicle-body">
+                <h3>Economia de tempo com templates prontos para o mercado</h3>
+                <p class="pain-point">
+                  <strong>O obstáculo:</strong> Perder dias criando apresentações, contratos e tabelas do zero sem saber como cobrar um preço justo e competitivo.
+                </p>
+                <p class="solution-detail">
+                  Você recebe um cardápio de serviços totalmente editável, checklists de garantia de qualidade de entrega e um cronograma diário de execução para os primeiros 30 dias.
+                </p>
+                <span class="listicle-pill">Incluído no: Cardápio Editável & Plano 30 Dias</span>
+              </div>
+            </article>
+
+            <!-- Motivo 5 -->
+            <article class="listicle-card">
+              <div class="listicle-badge-col">
+                <span class="listicle-number" aria-hidden="true">5</span>
+              </div>
+              <div class="listicle-body">
+                <h3>Entenda o que está comprando antes de decidir</h3>
+                <p class="pain-point">
+                  <strong>O obstáculo:</strong> A dificuldade de avaliar um material digital sem saber exatamente o que está incluído.
+                </p>
+                <p class="solution-detail">
+                  O conteúdo do pacote é apresentado antes da compra: guia de 72 páginas, ferramentas Bússola e Primeiro Cliente IA e materiais de apoio. Confira o preço e as condições de reembolso diretamente na Hotmart antes de pagar.
+                </p>
+                <span class="listicle-pill">Conteúdo apresentado antes da compra</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Deliverables / Package Cards -->
+      <section class="deliverables-section" aria-labelledby="deliverables-title">
+        <div class="container">
+          <header class="section-heading">
+            <span class="section-kicker">O Que Você Recebe</span>
+            <h2 id="deliverables-title">Um pacote completo pensado para execução</h2>
+            <p>Conteúdo direto ao ponto e ferramentas de apoio para acelerar seus primeiros clientes.</p>
+          </header>
+
+          <div class="cards-grid-four">
+            <article class="card-deliverable">
+              <span class="deliverable-badge">Livro Digital</span>
+              <h3>E-book Principal (72 Páginas)</h3>
+              <p>
+                Guia aprofundado com as 12 oportunidades de renda extra com IA, critérios objetivos de escolha do seu nicho, método de validação de amostra e estratégias reais de abordagem.
+              </p>
+              <ul>
+                <li>12 modelos de serviço detalhados</li>
+                <li>Critérios para precificação competitiva</li>
+                <li>Leitura direta, sem enrolação ou teorias vazias</li>
+              </ul>
+            </article>
+
+            <article class="card-deliverable">
+              <span class="deliverable-badge">Ferramenta Exclusiva</span>
+              <h3>Bússola de Renda com IA</h3>
+              <p>
+                Ferramenta interativa desenhada para cruzar suas habilidades prévias, tempo disponível e ferramentas preferidas, apontando o serviço ideal para o seu perfil.
+              </p>
+              <ul>
+                <li>Diagnóstico ágil de oportunidades</li>
+                <li>Utilização orientada no material do produto</li>
+                <li>Sem necessidade de assinaturas extras</li>
+              </ul>
+            </article>
+
+            <article class="card-deliverable">
+              <span class="deliverable-badge">Ferramenta Comercial</span>
+              <h3>Primeiro Cliente IA</h3>
+              <p>
+                Assistente estruturado que guia passo a passo a montagem da sua proposta comercial, escopo do serviço, prazos e mensagem de apresentação para o cliente.
+              </p>
+              <ul>
+                <li>Estrutura profissional de propostas</li>
+                <li>Definição precisa de entregáveis</li>
+                <li>Roteiros de contato direto e abordagem</li>
+              </ul>
+            </article>
+
+            <article class="card-deliverable">
+              <span class="deliverable-badge">Kit de Ação</span>
+              <h3>Cardápio Editável & Plano 30 Dias</h3>
+              <p>
+                Templates personalizáveis com cardápio de serviços prontos para apresentar, checklist de entrega e cronograma diário para cumprir o primeiro mês.
+              </p>
+              <ul>
+                <li>Cardápio de serviços editável</li>
+                <li>Checklist de controle de qualidade na entrega</li>
+                <li>Plano de execução passo a passo para 30 dias</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. FAQ Section -->
+      <section class="faq-section" aria-labelledby="faq-title">
+        <div class="container">
+          <header class="section-heading">
+            <span class="section-kicker">Perguntas Frequentes</span>
+            <h2 id="faq-title">Dúvidas comuns sobre o REIA</h2>
+            <p>Tudo o que você precisa saber sobre o conteúdo, formato e acesso.</p>
+          </header>
+
+          <div class="faq-list">
+            <article class="faq-item">
+              <h3 class="faq-question">Como recebo o acesso ao material?</h3>
+              <p class="faq-answer">
+                Logo após a confirmação do pagamento pela Hotmart, você recebe por e-mail os dados de acesso para download imediato do e-book em PDF e os links diretos para as ferramentas digitais (Bússola de Renda com IA e Primeiro Cliente IA).
+              </p>
+            </article>
+
+            <article class="faq-item">
+              <h3 class="faq-question">Preciso pagar assinaturas caras de IA para começar?</h3>
+              <p class="faq-answer">
+                Não. Todos os modelos de serviço apresentados no e-book foram estruturados para funcionarem com planos gratuitos ou opções acessíveis das ferramentas mais populares de mercado.
+              </p>
+            </article>
+
+            <article class="faq-item">
+              <h3 class="faq-question">As ferramentas interativas funcionam no celular?</h3>
+              <p class="faq-answer">
+                Sim. A Bússola de Renda com IA e o assistente Primeiro Cliente IA funcionam diretamente no navegador, seja em celulares, tablets ou computadores desktop, sem necessidade de instalar programas pesados.
+              </p>
+            </article>
+
+            <article class="faq-item">
+              <h3 class="faq-question">Onde verifico a política de reembolso?</h3>
+              <p class="faq-answer">
+                A Hotmart informa o prazo de garantia aplicável à sua compra. Verifique o prazo e as condições no checkout antes de finalizar o pagamento. Se precisar solicitar reembolso dentro do prazo, utilize os canais oficiais da Hotmart.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Author Section -->
+      <section class="author-section" aria-labelledby="author-title">
+        <div class="container">
+          <div class="author-card">
+            <header class="author-header">
+              <span class="kicker">Sobre o Autor</span>
+              <h2 id="author-title">Lucas Mateus</h2>
+            </header>
+            <div class="author-content">
+              <p>
+                Com sólida experiência em educação, recrutamento e desenvolvimento de pessoas, além de um trabalho constante em projetos de inteligência artificial aplicada, Lucas Mateus atua conectando pesquisa, tecnologia e execução em soluções acessíveis.
+              </p>
+              <p>
+                Sua trajetória envolve a criação de ferramentas digitais, sistemas de aprendizagem e materiais práticos focados em transformar conhecimento técnico em autonomia profissional. Este guia foi desenvolvido para orientar de ponta a ponta quem deseja começar com IA: da escolha da oportunidade à entrega da primeira proposta real, com clareza e honestidade.
+              </p>
+              <p class="meta-note">
+                Nota de transparência: Este material apoia a capacitação e a prática profissional independente. Não garante valores específicos de faturamento, contratos ou contratações, que dependem unicamente da dedicação, do mercado e da execução de cada profissional.
+              </p>
+              <div class="author-links">
+                <a href={homeUrl} class="author-link">Ver portfólio profissional de Lucas</a>
+                <a href="https://www.linkedin.com/in/lucasmateus/" target="_blank" rel="noopener noreferrer" class="author-link">Perfil no LinkedIn ↗</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Guarantee & Strategic Final CTA -->
+      <section class="guarantee-section" aria-labelledby="guarantee-title">
+        <div class="container">
+          <div class="guarantee-box">
+            <div class="guarantee-icon" aria-hidden="true">★</div>
+            <h2 id="guarantee-title">Confira a oferta antes de comprar</h2>
+            <p>
+              Confira os materiais incluídos nesta página e, ao prosseguir para a Hotmart, verifique o valor final, as formas de pagamento e o prazo de reembolso da sua oferta antes de concluir a compra.
+            </p>
+            <div class="guarantee-actions">
+              <a
+                href={canonicalUrl}
+                class="cta-button"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>Conferir oferta na Hotmart</span>
+                <span aria-hidden="true">→</span>
+              </a>
+              <span class="cta-note">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                Compra segura processada pela plataforma Hotmart
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="reia-footer" role="contentinfo">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-disclaimer">
+            <p>
+              <strong>Transparência e Entrega:</strong> O pagamento, processamento seguro e disponibilização dos arquivos deste produto são gerenciados integralmente pela Hotmart. O site pessoal de Lucas Mateus não coleta dados de pagamento nem armazena credenciais financeiras.
+            </p>
+            <p>
+              Produto digital registrado sob o código de referência Hotmart I108167656O.
+            </p>
+          </div>
+          <nav class="footer-nav" aria-label="Links do rodapé">
+            <a href={homeUrl}>Página Inicial</a>
+            <a href={privacyUrl}>Política de Privacidade</a>
+            <a href="https://hotmart.com/pt-br/legal/terms-of-use" target="_blank" rel="noopener noreferrer">Termos Hotmart ↗</a>
+          </nav>
+        </div>
+        <div class="footer-bottom">
+          <p>© {new Date().getFullYear()} Lucas Mateus da Silva. Todos os direitos reservados.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
