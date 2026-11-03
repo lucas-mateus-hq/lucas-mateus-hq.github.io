@@ -213,8 +213,8 @@ test('English lessons are discoverable in both languages without collecting data
   await page.locator('.primary-navigation').getByRole('link',{name:label,exact:true}).click();
   await expect(page).toHaveURL(/#aulas$/);
   await expect(page.locator('#aulas')).toContainText(title);
-  const active=Boolean(process.env.PUBLIC_LESSON_API_URL && process.env.PUBLIC_TURNSTILE_SITE_KEY);
-  await expect(page.locator('#aulas form')).toHaveCount(active?2:0);
+  const active=process.env.PUBLIC_TALLY_INTAKE_APPROVED==='true' && ['PUBLIC_TALLY_LESSON_PT_ID','PUBLIC_TALLY_LESSON_EN_ID','PUBLIC_TALLY_MOCK_PT_ID','PUBLIC_TALLY_MOCK_EN_ID'].every(key=>/^[A-Za-z0-9]{6,24}$/.test(process.env[key]||''));
+  await expect(page.locator('#aulas iframe[data-tally-src]')).toHaveCount(active?2:0);
   await expect(page.locator('#aulas .mock-offer a.button')).toHaveAttribute('href','#pedido-simulacao');
   await expect(page.locator('#pedido-simulacao')).toContainText(active?(route==='./'?'Conte qual cargo você busca':'Tell me the role you are targeting'):(route==='./'?'Agendamento online em preparação':'Online booking is being prepared'));
   await expect(page.locator('#aulas .lesson-next a.button')).toHaveAttribute('href',active?'#pedido-aulas':'https://www.linkedin.com/in/lucasmateus/');
@@ -222,7 +222,7 @@ test('English lessons are discoverable in both languages without collecting data
 });
 
 
-test('offline mock interview is explicitly unavailable until private intake is verified',async({page})=>{
+test('offline mock interview is explicitly unavailable until provider receipt is verified',async({page})=>{
   await page.goto('./#pedido-simulacao');
   await expect(page.locator('.mock-offer')).toContainText('R$ 80');
   await expect(page.locator('.mock-offer')).toContainText('1 hora');
