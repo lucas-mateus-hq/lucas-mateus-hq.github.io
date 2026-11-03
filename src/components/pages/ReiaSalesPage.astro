@@ -700,22 +700,12 @@ const coverUrl = `${base}/images/reia-cover.webp`;
         color: var(--reia-muted);
       }
 
-      .footer-grid {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 36px;
-        margin-bottom: 32px;
-      }
-
-      .footer-disclaimer p {
-        line-height: 1.65;
-        margin-bottom: 12px;
-      }
-
       .footer-nav {
         display: flex;
-        flex-direction: column;
-        gap: 10px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 14px 28px;
+        margin-bottom: 32px;
       }
 
       .footer-nav a {
@@ -751,9 +741,6 @@ const coverUrl = `${base}/images/reia-cover.webp`;
           grid-template-columns: 1fr;
         }
 
-        .footer-grid {
-          grid-template-columns: 1fr;
-        }
       }
 
       @media (max-width: 640px) {
@@ -1140,21 +1127,11 @@ const coverUrl = `${base}/images/reia-cover.webp`;
     <!-- Footer -->
     <footer class="reia-footer" role="contentinfo">
       <div class="container">
-        <div class="footer-grid">
-          <div class="footer-disclaimer">
-            <p>
-              <strong>Transparência e Entrega:</strong> O pagamento, processamento seguro e disponibilização dos arquivos deste produto são gerenciados integralmente pela Hotmart. O site pessoal de Lucas Mateus não coleta dados de pagamento nem armazena credenciais financeiras.
-            </p>
-            <p>
-              Produto digital registrado sob o código de referência Hotmart I108167656O.
-            </p>
-          </div>
-          <nav class="footer-nav" aria-label="Links do rodapé">
+        <nav class="footer-nav" aria-label="Links do rodapé">
             <a href={homeUrl}>Página Inicial</a>
             <a href={privacyUrl}>Política de Privacidade</a>
             <a href="https://hotmart.com/pt-br/legal/terms-of-use" target="_blank" rel="noopener noreferrer">Termos Hotmart ↗</a>
-          </nav>
-        </div>
+        </nav>
         <div class="footer-bottom">
           <p>© {new Date().getFullYear()} Lucas Mateus da Silva. Todos os direitos reservados.</p>
         </div>
