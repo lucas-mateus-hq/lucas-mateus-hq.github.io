@@ -1,0 +1,44 @@
+---
+import {getTallyForm} from '../config/tally-intake';
+import type {IntakeKind,IntakeLanguage} from '../config/tally-intake';
+interface Props {kind:IntakeKind;lang:IntakeLanguage}
+const {kind,lang}=Astro.props;
+const en=lang==='en-US';
+const mock=kind==='mock';
+const form=getTallyForm(kind,lang);
+const sectionId=mock?'pedido-simulacao':'pedido-aulas';
+const headingId=mock?'mock-form-title':'lesson-form-title';
+const heading=mock?(en?'Request your mock interview':'Solicite sua simulação'):(en?'Ask about English lessons':'Consulte aulas de inglês');
+const unavailable=mock?(en?'Online booking is being prepared. This page does not receive session requests yet.':'Agendamento online em preparação. Esta página ainda não recebe pedidos.'):(en?'The lesson inquiry form is being prepared. No request can be sent here yet.':'O formulário de aulas está em preparação. Ainda não é possível enviar solicitações por aqui.');
+const description=mock?(en?'Tell me your target role, availability and what you want to practise. We confirm a time before any payment.':'Conte qual cargo você busca, sua disponibilidade e o que deseja praticar. Combinamos o horário antes de qualquer pagamento.'):(en?'Tell me your English-learning goals and availability so we can discuss a suitable approach.':'Conte seu objetivo com o inglês e sua disponibilidade para conversarmos sobre a preparação.');
+---
+<section class="tally-intake" id={sectionId} aria-labelledby={headingId} data-locale-section>
+  <div class="tally-intake-heading">
+    <p class="label">{mock?(en?'Individual interview preparation':'Preparação individual para entrevistas'):(en?'English lessons':'Aulas de inglês')}</p>
+    <h3 id={headingId}>{form?heading:(mock?(en?'Online booking is being prepared':'Agendamento online em preparação'):(en?'Online lesson inquiries are being prepared':'Solicitações de aulas em preparação'))}</h3>
+    {form?<p>{description}</p>:<p>{unavailable}</p>}
+  </div>
+  {form && <>
+    <p class="tally-privacy">
+      {en?'This form is provided by Tally. Your answers are sent to Tally, not to GitHub Pages. Please do not include confidential documents or sensitive personal information.':'Este formulário é fornecido pelo Tally. Suas respostas são enviadas ao Tally, não ao GitHub Pages. Não inclua documentos confidenciais nem dados pessoais sensíveis.'}
+      {' '}<a href={en?'/privacy/':'/privacidade/'}>{en?'Read the privacy notice':'Leia o aviso de privacidade'}</a>.
+    </p>
+    <iframe data-tally-src={form.embedded} loading="lazy" width="100%" height={mock?'660':'760'} frameborder="0" marginheight="0" marginwidth="0" title={en?(mock?'Mock interview request form hosted by Tally':'English lesson inquiry form hosted by Tally'):(mock?'Formulário de simulação de entrevista no Tally':'Formulário de aulas de inglês no Tally')}></iframe>
+    <p class="tally-fallback">
+      {en?'If the form does not appear, ':'Se o formulário não aparecer, '}
+      <a href={form.external} target="_blank" rel="noopener noreferrer">{en?'open it directly in Tally':'abra diretamente no Tally'}</a>.
+    </p>
+    <noscript><p><a href={form.external}>{en?'Open the form in Tally':'Abrir formulário no Tally'}</a></p></noscript>
+  </>}
+</section>
+<style>
+  .tally-intake{margin:32px 0;padding:26px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--card-radius)}
+  .tally-intake-heading h3{font-size:clamp(22px,3vw,30px);margin:8px 0 12px;line-height:1.25}
+  .tally-intake-heading p:not(.label){max-width:72ch;line-height:1.7}
+  .tally-privacy,.tally-fallback{font-size:14px;line-height:1.6;color:var(--muted)}
+  .tally-privacy{margin:18px 0}
+  .tally-fallback{margin:14px 0 0}
+  .tally-intake iframe{display:block;width:100%;border:0;background:transparent}
+  .tally-intake a{text-underline-offset:3px}
+  @media(max-width:640px){.tally-intake{padding:20px 14px}}
+</style>

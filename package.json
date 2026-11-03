@@ -11,7 +11,7 @@
     "test:relay": "playwright test tests/relay-zero-cost.spec.ts",
     "test:static": "node --test tests/static.test.mjs",
     "test:intake": "node --test tests/intake.test.mjs",
-    "test:intake-ui": "playwright test tests/intake-ui.spec.ts"
+    "test:tally-ui": "playwright test tests/tally-ui.spec.ts"
   },
   "engines": {
     "node": ">=22"

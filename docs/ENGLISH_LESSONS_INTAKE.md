@@ -1,5 +1,7 @@
 # English lessons: screening and private WhatsApp alerts
 
+> **Registro histórico de captação Cloudflare/WhatsApp.** A nova arquitetura proposta para aulas e simulações usa Tally, descrita em [TALLY_FORMS_MIGRATION.md](TALLY_FORMS_MIGRATION.md). Não ativar integrações antigas nem serviços pagos a partir deste registro. Preservar eventuais dados históricos até conciliação.
+
 ## Decisão vigente: R$ 0 por mês (21 de outubro de 2026)
 
 O Founder fixou o orçamento dos avisos em **R$ 0/mês**. Não habilitar cobrança,
