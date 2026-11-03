@@ -1,12 +1,10 @@
 ---
-import {lessonIntake} from '../config/lesson-intake';
-import LessonRequestForm from './LessonRequestForm.astro';
-import MockInterviewRequestForm from './MockInterviewRequestForm.astro';
+import {tallyIntake} from '../config/tally-intake';
+import TallyIntake from './TallyIntake.astro';
 interface Props {lang: 'pt-BR'|'en-US'}
 const {lang}=Astro.props;
 const en=lang==='en-US';
-const {active,api,siteKey}=lessonIntake;
-const privacy=en?'/privacy/':'/privacidade/';
+const {active}=tallyIntake;
 ---
 <section class="band lessons-band" id="aulas" aria-labelledby="lessons-title">
   <div class="wrap">
@@ -37,7 +35,8 @@ const privacy=en?'/privacy/':'/privacidade/';
     </div>
     <div class="lesson-next"><div><h3>{en?'What would you like to prepare for?':'O que você precisa preparar?'}</h3><p>{en?'Tell me your goal and time frame. We can discuss an approach, availability, and pricing before you decide.':'Me conte seu objetivo e prazo. Conversamos sobre a abordagem, a disponibilidade e os valores antes de você decidir.'}</p></div>{active?<a class="button primary" href="#pedido-aulas">{en?'Ask about lessons':'Consultar aulas'}<span aria-hidden="true">↓</span></a>:<a class="button primary" href="https://www.linkedin.com/in/lucasmateus/">{en?'Ask about lessons on LinkedIn':'Consultar aulas pelo LinkedIn'}<span aria-hidden="true">↗</span></a>}</div>
     <p class="lesson-separation">{en?'Lessons involve working directly with me. For self-guided interview preparation, explore the separate Reta Final toolkit below.':'Nas aulas, você trabalha diretamente comigo. Para preparação autônoma, conheça a proposta do toolkit Reta Final na próxima seção.'}</p>
-    <MockInterviewRequestForm lang={lang} />
-    {active && <LessonRequestForm lang={lang} api={api} siteKey={siteKey} privacy={privacy} />}
+    <TallyIntake kind="mock" lang={lang} />
+    {active && <TallyIntake kind="lesson" lang={lang} />}
+    {active && <script is:inline src="https://tally.so/widgets/embed.js" async></script>}
   </div>
 </section>
