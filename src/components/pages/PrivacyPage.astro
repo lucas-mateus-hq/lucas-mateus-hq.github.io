@@ -14,7 +14,7 @@ const english=`${base}/privacy/`;
 const canonical=new URL(en?english:pt,Astro.site).href;
 const portfolio=`${base}/portfolio/${en?'':'pt/'}`;
 const t=(key:string):string=>{if(en)return key;const value=privacyCopy[key];if(value===undefined)throw new Error('Missing translation: '+key);return value;};
-const updated=en?'October 25, 2026':'25 de outubro de 2026';
+const updated=en?'November 3, 2026':'3 de novembro de 2026';
 ---
 <!doctype html>
 <html lang={lang}>
