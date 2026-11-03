@@ -31,7 +31,8 @@ for(const lang of ['pt-BR','en-US'] as const){
       await expect(section.getByRole('link',{name:lang==='pt-BR'?'abra diretamente no Tally':'open it directly in Tally'})).toHaveAttribute('href',`https://tally.so/r/${id}`);
       await expect(section).toContainText('Tally');
     }
-    expect(embeds.length).toBeGreaterThan(0);
+    await frames.first().scrollIntoViewIfNeeded();
+    await expect.poll(()=>embeds.length).toBeGreaterThan(0);
     await expect(page.locator('#aulas form')).toHaveCount(0);
     expect(await page.evaluate(()=>localStorage.length+sessionStorage.length)).toBe(0);
   });
