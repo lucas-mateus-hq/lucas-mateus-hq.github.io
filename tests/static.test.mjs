@@ -203,6 +203,10 @@ test('reia sales page delivers authentic Hotmart narrative and external checkout
   assert.match(reia, /Lucas Mateus/);
   assert.match(reia, /src="\/lucas-mateus\.webp"[^>]*alt="Foto de Lucas Mateus"/);
   assert.doesNotMatch(reia, /Nota de transparência/);
+  assert.doesNotMatch(reia, /Transparência e Entrega|Produto digital registrado sob o código de referência Hotmart/);
+  assert.match(reia, /aria-label="Links do rodapé"/);
+  assert.match(reia, /Política de Privacidade/);
+  assert.match(reia, /Termos Hotmart/);
 
   // No forms, no data inputs, no embedded payment mechanisms
   assert.doesNotMatch(reia, /<form\b|<input\b|<textarea\b/);
