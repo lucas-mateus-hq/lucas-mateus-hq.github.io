@@ -14,7 +14,7 @@ function browser(saved=null, broken=false){
   return {context,nodes,requests,storage,get reloads(){return reloads;},click(s){nodes.get(s).click();}};
 }
 test('no Analytics request before choice or after decline',()=>{
-  const b=browser();assert.equal(b.requests.length,0);b.click('[data-analytics-reject]');assert.equal(b.requests.length,0);assert.equal(b.context['ga-disable-G-75PZFNFP2X'],true);
+  const b=browser();assert.equal(b.nodes.get('[data-analytics-choice]').hidden,false);assert.equal(b.requests.length,0);b.click('[data-analytics-reject]');assert.equal(b.requests.length,0);assert.equal(b.context['ga-disable-G-75PZFNFP2X'],true);
 });
 test('acceptance loads one destination and strips query and fragment',()=>{
   const b=browser();b.click('[data-analytics-accept]');b.click('[data-analytics-accept]');assert.equal(b.requests.length,1);assert.match(b.requests[0],/G-75PZFNFP2X$/);
