@@ -1,0 +1,84 @@
+---
+interface Props { lang?: string }
+const { lang = 'pt-BR' } = Astro.props;
+const en = lang === 'en-US';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<aside class="analytics-choice" aria-label={en ? 'Audience measurement' : 'Medição de audiência'} data-analytics-choice hidden>
+  <p>{en ? 'May I use Google Analytics to understand visits and improve this site? You can browse without accepting.' : 'Posso usar o Google Analytics para entender as visitas e melhorar este site? Você pode navegar sem aceitar.'} <a href={`${base}/${en ? 'privacy/' : 'privacidade/'}#analytics`}>{en ? 'Privacy' : 'Privacidade'}</a></p>
+  <div><button type="button" data-analytics-accept>{en ? 'Accept' : 'Aceitar'}</button><button type="button" data-analytics-reject>{en ? 'Decline' : 'Recusar'}</button></div>
+</aside>
+<button type="button" class="analytics-settings" data-analytics-settings>{en ? 'Privacy choices' : 'Preferências de privacidade'}</button>
+<script is:inline>
+(() => {
+  const id = 'G-75PZFNFP2X';
+  const key = 'lucas-analytics-consent-v1';
+  const box = document.querySelector('[data-analytics-choice]');
+  const settings = document.querySelector('[data-analytics-settings]');
+  let loaded = false;
+  window['ga-disable-' + id] = true;
+  const read = () => { try { const v = JSON.parse(localStorage.getItem(key) || 'null'); return v && Date.now() - v.at < 15552000000 ? v.choice : null; } catch { return null; } };
+  const save = choice => { try { localStorage.setItem(key, JSON.stringify({ choice, at: Date.now() })); } catch {} };
+  const removeCookies = () => {
+    for (const item of document.cookie.split(';')) {
+      const name = item.split('=')[0].trim();
+      if (!/^_ga(?:_|$)/.test(name)) continue;
+      document.cookie = name + '=; Max-Age=0; path=/';
+      const parts = location.hostname.split('.');
+      for (let i = 0; i < parts.length; i++) document.cookie = name + '=; Max-Age=0; path=/; domain=' + parts.slice(i).join('.');
+    }
+  };
+  const start = () => {
+    window['ga-disable-' + id] = false;
+    if (loaded) return;
+    loaded = true;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ window.dataLayer.push(arguments); };
+    window.gtag('consent', 'default', { analytics_storage: 'granted', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
+    window.gtag('js', new Date());
+    window.gtag('config', id, {
+      send_page_view: false,
+      allow_google_signals: false,
+      allow_ad_personalization_signals: false,
+      page_location: location.origin + location.pathname,
+      page_referrer: '',
+      cookie_expires: 15552000,
+      cookie_update: false
+    });
+    window.gtag('event', 'page_view', { page_location: location.origin + location.pathname, page_referrer: '' });
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+    document.head.appendChild(script);
+  };
+  const choose = accepted => {
+    save(accepted ? 'accepted' : 'rejected');
+    box.hidden = true;
+    if (accepted) start();
+    else {
+      window['ga-disable-' + id] = true;
+      if (window.gtag) window.gtag('consent', 'update', { analytics_storage: 'denied' });
+      removeCookies();
+      if (loaded) location.reload();
+    }
+  };
+  document.querySelector('[data-analytics-accept]').addEventListener('click', () => choose(true));
+  document.querySelector('[data-analytics-reject]').addEventListener('click', () => choose(false));
+  settings.addEventListener('click', () => { box.hidden = !box.hidden; if (!box.hidden) document.querySelector('[data-analytics-accept]').focus(); });
+  const choice = read();
+  if (choice === 'accepted') start();
+  else { removeCookies(); box.hidden = choice !== 'rejected'; }
+  window.addEventListener('storage', event => { if (event.key === key) location.reload(); });
+})();
+</script>
+<style>
+  .analytics-choice[hidden]{display:none}
+  .analytics-choice{position:fixed;z-index:120;bottom:64px;left:16px;right:16px;margin:0 auto;max-width:620px;padding:20px;background:#f7f3ea;color:#172027;border:2px solid #41595e;border-radius:12px;box-shadow:0 4px 24px #0003;font:16px/1.5 Arial,sans-serif}
+  .analytics-choice p{margin:0 0 12px;font:inherit;color:inherit}
+  .analytics-choice a{color:#0f6b61;text-decoration:underline}
+  .analytics-choice div{display:flex;gap:12px;flex-wrap:wrap}
+  .analytics-choice button,.analytics-settings{font:600 14px/1.4 Arial,sans-serif;min-height:44px;padding:10px 16px;border:1px solid #41595e;border-radius:6px;background:#f7f3ea;color:#172027;cursor:pointer}
+  .analytics-choice button{flex:1}
+  .analytics-settings{position:fixed;bottom:8px;left:16px;z-index:119;font-size:12px}
+  .analytics-choice button:focus-visible,.analytics-choice a:focus-visible,.analytics-settings:focus-visible{outline:3px solid #0f6b61;outline-offset:3px}
+</style>

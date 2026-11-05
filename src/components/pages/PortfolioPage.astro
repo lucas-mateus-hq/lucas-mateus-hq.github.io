@@ -1,4 +1,5 @@
 ---
+import AnalyticsConsent from '../AnalyticsConsent.astro';
 import SocialMeta from '../SocialMeta.astro';
 import NavigationEnhancements from '../NavigationEnhancements.astro';
 import '../../styles/identity.css';
@@ -263,6 +264,7 @@ const personSchema = {
       <p>{t("Professional portfolio · Recruiting, learning and personal AI projects.")}</p>
     </footer>
     <NavigationEnhancements />
+  <AnalyticsConsent lang={lang} />
   </body>
 </html>
 

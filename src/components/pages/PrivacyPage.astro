@@ -1,4 +1,5 @@
 ---
+import AnalyticsConsent from '../AnalyticsConsent.astro';
 import {lessonIntake} from '../../config/lesson-intake';
 import SocialMeta from '../SocialMeta.astro';
 import NavigationEnhancements from '../NavigationEnhancements.astro';
@@ -14,7 +15,7 @@ const english=`${base}/privacy/`;
 const canonical=new URL(en?english:pt,Astro.site).href;
 const portfolio=`${base}/portfolio/${en?'':'pt/'}`;
 const t=(key:string):string=>{if(en)return key;const value=privacyCopy[key];if(value===undefined)throw new Error('Missing translation: '+key);return value;};
-const updated=en?'October 25, 2026':'25 de outubro de 2026';
+const updated=en?'November 5, 2026':'5 de novembro de 2026';
 ---
 <!doctype html>
 <html lang={lang}>
@@ -65,6 +66,11 @@ const updated=en?'October 25, 2026':'25 de outubro de 2026';
       <p class="updated"><strong>{t("Last updated:")}</strong> {updated}</p>
 
       {privacySections.map(section=><section id={section.id}><h2>{t(section.title)}</h2><p>{t(section.text)}</p>{section.id==='contact'||section.id==='rights'?<p class="policy-link"><a href="https://www.linkedin.com/in/lucasmateus/">{t("Contact Lucas on LinkedIn")} ↗</a></p>:null}</section>)}
+      <section id="analytics">
+        <h2>{en?'Optional audience measurement':'Medição opcional de audiência'}</h2>
+        <p>{en?'Google Analytics loads only after you accept it. It measures visits and interactions using cookies and technical information such as browser, device and approximate location. Google processes this information and may process it outside Brazil. You can decline without losing access, or withdraw consent through “Privacy choices”. Your choice is stored in this browser for up to 180 days. Declining stops future collection in this browser and removes accessible Analytics cookies; it does not erase data already sent to Google. Form answers, names, emails and phone numbers must not be sent as analytics events.':'O Google Analytics é carregado somente após sua aceitação. Ele mede visitas e interações usando cookies e informações técnicas como navegador, dispositivo e localização aproximada. O Google trata essas informações e pode tratá-las fora do Brasil. Você pode recusar sem perder acesso ou retirar o consentimento em “Preferências de privacidade”. Sua escolha é guardada neste navegador por até 180 dias. A recusa interrompe novas coletas neste navegador e remove os cookies acessíveis do Analytics; ela não apaga dados já enviados ao Google. Respostas de formulários, nomes, e-mails e telefones não devem ser enviados como eventos de análise.'}</p>
+        <p class="policy-link"><a href="https://policies.google.com/technologies/partner-sites">{en?'How Google uses information from sites or apps that use its services':'Como o Google usa informações de sites ou apps que usam seus serviços'}</a></p>
+      </section>
       <section id="references"><h2>{t("Provider policies and your rights")}</h2><ul>
         <li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages">{t("GitHub Pages hosting")}</a></li>
         <li><a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">{t("GitHub privacy statement")}</a></li>
@@ -74,5 +80,6 @@ const updated=en?'October 25, 2026':'25 de outubro de 2026';
       </ul></section>
     </main>
     <NavigationEnhancements />
+  <AnalyticsConsent lang={lang} />
   </body>
 </html>
