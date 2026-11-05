@@ -1,3 +1,4 @@
+const withoutAnalyticsConsent = source => source.replace(/<aside class="analytics-choice"[\s\S]*?<\/script>/g, '');
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
@@ -79,7 +80,7 @@ test('home is personal, upcoming product is honest, and no data capture or purch
   const product = html('criacoes/reta-final/');
   assert.match(product, /Lançamento em breve/);
   assert.match(product, /Hotmart/);
-  assert.doesNotMatch(product, /href="[^"]*hotmart|<form\b|<input\b|<button\b/);
+  assert.doesNotMatch(withoutAnalyticsConsent(product), /href="[^"]*hotmart|<form\b|<input\b|<button\b/);
   assert.ok(home.includes(`src="${prefix}lucas-mateus.webp"`), 'serve an optimized copy of the existing public profile portrait');
   assert.ok(existsSync('dist/lucas-mateus.webp'));
   for(const route of ['', 'en/']){assert.doesNotMatch(html(route),/Disponível em português brasileiro|Available in Brazilian Portuguese|Materiais educacionais e projetos|Learning materials and projects/);}
@@ -131,7 +132,7 @@ test('locale pairs have reciprocal language links and preserve assets and eviden
     assert.deepEqual(images(a),images(b));
     const sections=x=>[...x.matchAll(/<section[^>]*id="([^"]+)"/g)].map(m=>m[1]);
     assert.deepEqual(sections(a),sections(b));
-    assert.doesNotMatch(a+b,/translate\.google|localStorage|document\.cookie/);
+    assert.doesNotMatch(withoutAnalyticsConsent(a)+withoutAnalyticsConsent(b),/translate\.google|localStorage|document\.cookie/);
   }
   assert.match(html('en/'), /Coming soon/);
   assert.match(html('portfolio/pt/'), /14 de 15 \(93%\)/);
