@@ -41,6 +41,7 @@ async function digest(value) {
 function reply(status, body, cors = true) {
   return new Response(JSON.stringify(body), {status, headers: {
     'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'DENY', 'Content-Security-Policy': "frame-ancestors 'none'", 'Referrer-Policy': 'strict-origin-when-cross-origin',
     ...(cors ? {'Access-Control-Allow-Origin': ORIGIN, 'Vary': 'Origin'} : {}),
   }});
 }
@@ -109,6 +110,8 @@ export async function handleRequest(request, env, deps = {}) {
   if (request.method === 'OPTIONS') return new Response(null, {status: 204, headers: {
     'Access-Control-Allow-Origin': ORIGIN, 'Vary': 'Origin', 'Access-Control-Allow-Methods': 'POST',
     'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Max-Age': '600',
+    'X-Content-Type-Options': 'nosniff', 'X-Frame-Options': 'DENY',
+    'Content-Security-Policy': "frame-ancestors 'none'", 'Referrer-Policy': 'strict-origin-when-cross-origin',
   }});
   if (request.method !== 'POST') return reply(405, {error: 'METHOD_NOT_ALLOWED'});
   if (env.INTAKE_ENABLED !== 'true' || !env.LEADS_DB || !env.TURNSTILE_SECRET_KEY) return reply(503, {error: 'INTAKE_UNAVAILABLE'});
