@@ -67,7 +67,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   settings.addEventListener('click', () => { box.hidden = !box.hidden; if (!box.hidden) document.querySelector('[data-analytics-accept]').focus(); });
   const choice = read();
   if (choice === 'accepted') start();
-  else { removeCookies(); box.hidden = choice !== 'rejected'; }
+  else { removeCookies(); box.hidden = choice === 'rejected'; }
   window.addEventListener('storage', event => { if (event.key === key) location.reload(); });
 })();
 </script>
