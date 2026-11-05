@@ -1,4 +1,5 @@
 ---
+import AnalyticsConsent from '../components/AnalyticsConsent.astro';
 import SocialMeta from '../components/SocialMeta.astro';
 import NavigationEnhancements from '../components/NavigationEnhancements.astro';
 import '../styles/identity.css';
@@ -56,5 +57,6 @@ const canonical = new URL(`${base}/${path}`, Astro.site).href;
       <small>São Paulo, {en?'Brazil':'Brasil'} · {new Date().getFullYear()}</small>
     </footer>
     <NavigationEnhancements />
+  <AnalyticsConsent lang={lang} />
   </body>
 </html>

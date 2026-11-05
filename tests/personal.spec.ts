@@ -43,7 +43,7 @@ test('upcoming product has a working detail route and no fabricated checkout', a
   await expect(page).toHaveURL(/\/criacoes\/reta-final\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Reta Final.');
   await expect(page.locator('.notice')).toContainText('Hotmart');
-  await expect(page.locator('a[href*="hotmart"], form, input, button')).toHaveCount(0);
+  await expect(page.locator('main').locator('a[href*="hotmart"], form, input, button')).toHaveCount(0);
   await page.getByRole('link', { name: 'Voltar ao início', exact: true }).click();
   await expect(page).toHaveURL(/\/$/);
 });
@@ -96,7 +96,7 @@ test('privacy links remain available and legacy utilities return 404', async ({ 
     expect(response.status(), path).toBe(404);
   }
   await page.goto('./');
-  await page.getByRole('link', { name: 'Privacidade', exact: true }).click();
+  await page.getByRole('contentinfo').getByRole('link', { name: 'Privacidade', exact: true }).click();
   await expect(page).toHaveURL(/\/privacidade\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Política de Privacidade');
 });
@@ -157,7 +157,7 @@ test('English navigation stays English and exposes honest product status',async(
   await page.getByRole('link',{name:'Explore Reta Final',exact:false}).click();
   await expect(page).toHaveURL(/\/en\/criacoes\/reta-final\/$/);
   await expect(page.locator('.notice')).toContainText('Coming soon');
-  await expect(page.locator('a[href*="hotmart"],form,input,button')).toHaveCount(0);
+  await expect(page.locator('main').locator('a[href*="hotmart"],form,input,button')).toHaveCount(0);
   await page.getByRole('link',{name:'Back to home',exact:true}).click();
   await expect(page).toHaveURL(/\/en\/$/);
   await page.getByRole('link',{name:'Explore my work'}).click();
@@ -232,4 +232,30 @@ test('offline mock interview is explicitly unavailable until private intake is v
   await expect(page.locator('#pedido-simulacao a[href*="linkedin.com"]')).toHaveCount(0);
   await expect(page.locator('.mock-offer a.button')).toContainText('Agendamento em breve');
   expect(await page.evaluate(()=>localStorage.length+sessionStorage.length)).toBe(0);
+});
+
+test('analytics requires consent and supports withdrawal without real Google traffic', async ({page}) => {
+  const requests: string[] = [];
+  await page.route('**/*.google-analytics.com/**', route => route.abort());
+  await page.route('**/www.googletagmanager.com/**', route => {
+    requests.push(route.request().url());
+    return route.fulfill({status:200,contentType:'text/javascript',body:''});
+  });
+  await page.goto('/');
+  await expect(page.locator('[data-analytics-choice]')).toBeVisible();
+  expect(requests).toHaveLength(0);
+  await page.locator('[data-analytics-reject]').click();
+  await page.reload();
+  await expect(page.locator('[data-analytics-choice]')).toBeHidden();
+  expect(requests).toHaveLength(0);
+  await page.locator('[data-analytics-settings]').click();
+  await page.locator('[data-analytics-accept]').click();
+  await expect.poll(() => requests.length).toBe(1);
+  expect(requests[0]).toContain('G-75PZFNFP2X');
+  await page.locator('[data-analytics-settings]').click();
+  await page.locator('[data-analytics-reject]').click();
+  await expect(page.locator('[data-analytics-choice]')).toBeHidden();
+  await page.reload();
+  await expect(page.locator('[data-analytics-choice]')).toBeHidden();
+  expect(requests).toHaveLength(1);
 });
