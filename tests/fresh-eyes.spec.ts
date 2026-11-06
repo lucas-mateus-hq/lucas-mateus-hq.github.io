@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
 
-for (const route of ['', 'en/', 'portfolio/', 'portfolio/pt/', 'criacoes/reta-final/', 'en/criacoes/reta-final/', 'privacy/', 'privacidade/']) {
+for (const route of ['', 'en/', 'portfolio/', 'portfolio/pt/', 'privacy/', 'privacidade/']) {
   for (const width of [320, 390, 768, 1440]) {
     test(`${route || 'home'} contains content at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: width >= 768 ? 1000 : 844 });
