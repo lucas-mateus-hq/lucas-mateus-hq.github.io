@@ -34,18 +34,16 @@ test('home presents Lucas and real public destinations without the lab dashboard
   await expect(page.locator('#page-title')).toContainText('Recrutamento');
 });
 
-test('upcoming product has a working detail route and no fabricated checkout', async ({ page }) => {
-  await page.goto('./');
-  await page.getByRole('link', { name: 'Explore minhas criações' }).click();
-  await expect(page).toHaveURL(/#criacoes$/);
-  await expect(page.locator('#reta-final')).toContainText('Lançamento em breve');
-  await page.getByRole('link', { name: 'Conheça a proposta' }).click();
-  await expect(page).toHaveURL(/\/criacoes\/reta-final\/$/);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Reta Final.');
-  await expect(page.locator('.notice')).toContainText('Hotmart');
-  await expect(page.locator('a[href*="hotmart"], form, input, button')).toHaveCount(0);
-  await page.getByRole('link', { name: 'Voltar ao início', exact: true }).click();
-  await expect(page).toHaveURL(/\/$/);
+test('creations show REIA without the retired Reta Final card', async ({ page }) => {
+  for (const route of ['./', 'en/']) {
+    await page.goto(route);
+    await page.locator('.actions a[href="#criacoes"]').click();
+    await expect(page).toHaveURL(/#criacoes$/);
+    await expect(page.locator('#reta-final, a[href*="criacoes/reta-final"]')).toHaveCount(0);
+    await expect(page.locator('#reia')).toBeVisible();
+    await page.locator('#reia a').click();
+    await expect(page).toHaveURL(/\/renda-extra-com-ia\/$/);
+  }
 });
 
 test('portfolio retains evidence, career history, direct anchors and personal return link', async ({ page }) => {
@@ -68,8 +66,8 @@ test('keyboard access starts with skip link and works without JavaScript', async
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/#conteudo$/);
   await expect(page.locator('main')).toBeFocused();
-  await page.getByRole('link', { name: 'Conheça a proposta' }).click();
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Reta Final.');
+  await page.locator('#reia a').click();
+  await expect(page).toHaveURL(/\/renda-extra-com-ia\/$/);
 
   // Test skip-link on portfolio page
   await page.goto('http://127.0.0.1:4321/portfolio/');
@@ -119,7 +117,7 @@ test('navigation order, destination cues and touch targets match the visitor jou
 
 test('text spacing customization preserves content and controls', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 844 });
-  for (const route of ['./', 'en/', 'criacoes/reta-final/', 'en/criacoes/reta-final/']) {
+  for (const route of ['./', 'en/']) {
     await page.goto(route);
     await page.addStyleTag({content:'* { line-height:1.5 !important; letter-spacing:.12em !important; word-spacing:.16em !important; } p { margin-bottom:2em !important; }'});
     const overflow = await page.evaluate(() => Array.from(document.querySelectorAll('main a, main p, main h1, main h2, main h3, .site-header nav a')).filter(el => el.scrollWidth > el.clientWidth + 1).map(el => el.textContent));
@@ -131,7 +129,7 @@ test('text spacing customization preserves content and controls', async ({ page 
 });
 
 
-for (const [pt,en,title] of [['./','en/','People.'],['criacoes/reta-final/','en/criacoes/reta-final/','Reta Final.'],['portfolio/pt/','portfolio/','Talent Acquisition'],['privacidade/','privacy/','Privacy Policy']] as const) {
+for (const [pt,en,title] of [['./','en/','People.'],['portfolio/pt/','portfolio/','Talent Acquisition'],['privacidade/','privacy/','Privacy Policy']] as const) {
   test(`language switch keeps the equivalent page: ${pt}`, async ({browser}) => {
     const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});
     const page=await context.newPage();
@@ -151,15 +149,11 @@ for (const [pt,en,title] of [['./','en/','People.'],['criacoes/reta-final/','en/
   });
 }
 
-test('English navigation stays English and exposes honest product status',async({page})=>{
+test('English navigation retains the REIA language cue and portfolio',async({page})=>{
   await page.goto('en/');
   await page.getByRole('link',{name:'Explore my creations'}).click();
-  await page.getByRole('link',{name:'Explore Reta Final',exact:false}).click();
-  await expect(page).toHaveURL(/\/en\/criacoes\/reta-final\/$/);
-  await expect(page.locator('.notice')).toContainText('Coming soon');
-  await expect(page.locator('a[href*="hotmart"],form,input,button')).toHaveCount(0);
-  await page.getByRole('link',{name:'Back to home',exact:true}).click();
-  await expect(page).toHaveURL(/\/en\/$/);
+  await expect(page.locator('#reia')).toContainText('Available in Portuguese');
+  await expect(page.locator('a[href*="criacoes/reta-final"]')).toHaveCount(0);
   await page.getByRole('link',{name:'Explore my work'}).click();
   await expect(page).toHaveURL(/\/portfolio\/$/);
   await expect(page.locator('#evidence')).toContainText('14 of 15 (93%)');

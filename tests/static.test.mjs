@@ -5,7 +5,7 @@ import { readFileSync, existsSync } from 'node:fs';
 const prefix = '/';
 const intakeConfigured=Boolean(process.env.PUBLIC_LESSON_API_URL && process.env.PUBLIC_TURNSTILE_SITE_KEY);
 const origin = 'https://lucas-mateus-hq.github.io';
-const routes = ['', 'en/', 'portfolio/', 'portfolio/pt/', 'criacoes/reta-final/', 'en/criacoes/reta-final/', 'privacy/', 'privacidade/', 'renda-extra-com-ia/'];
+const routes = ['', 'en/', 'portfolio/', 'portfolio/pt/', 'privacy/', 'privacidade/', 'renda-extra-com-ia/'];
 const fileFor = (path) => `dist/${path}${path.endsWith('/') || !path ? 'index.html' : ''}`;
 const html = (route) => readFileSync(fileFor(route), 'utf8');
 
@@ -71,15 +71,11 @@ test('every internal navigation link, anchor, stylesheet and image resolves in t
   }
 });
 
-test('home is personal, upcoming product is honest, and no data capture or purchase URL was invented', () => {
+test('home is personal and preserves approved public destinations', () => {
   const home = html('');
   assert.match(home, /lang="pt-BR"/);
   for (const content of ['Lucas Mateus','Wellhub','Reckitt','TikTok','id="criacoes"','id="trabalho"','id="escritos"','id="sobre"']) assert.ok(home.includes(content),content);
   assert.doesNotMatch(home, /Capability Lab|Billi Lab|C Lab|Telemetry Mode|Scaffold/);
-  const product = html('criacoes/reta-final/');
-  assert.match(product, /Lançamento em breve/);
-  assert.match(product, /Hotmart/);
-  assert.doesNotMatch(product, /href="[^"]*hotmart|<form\b|<input\b|<button\b/);
   assert.ok(home.includes(`src="${prefix}lucas-mateus.webp"`), 'serve an optimized copy of the existing public profile portrait');
   assert.ok(existsSync('dist/lucas-mateus.webp'));
   for(const route of ['', 'en/']){assert.doesNotMatch(html(route),/Disponível em português brasileiro|Available in Brazilian Portuguese|Materiais educacionais e projetos|Learning materials and projects/);}
@@ -123,7 +119,7 @@ test('actual editorial identity and product text pairs meet WCAG AA contrast', (
 
 
 test('locale pairs have reciprocal language links and preserve assets and evidence', () => {
-  for (const [pt,en] of [['','en/'],['criacoes/reta-final/','en/criacoes/reta-final/'],['portfolio/pt/','portfolio/'],['privacidade/','privacy/']]) {
+  for (const [pt,en] of [['','en/'],['portfolio/pt/','portfolio/'],['privacidade/','privacy/']]) {
     const a=html(pt),b=html(en);
     assert.match(a, /<html lang="pt-BR"/); assert.match(b, /<html lang="en-US"/);
     for(const page of [a,b]) for(const [lang,route] of [['pt-BR',pt],['en-US',en]]) assert.ok(page.includes(`hreflang="${lang}" href="${origin}${prefix}${route}"`),`${pt} / ${en}: alternate ${lang}`);
@@ -133,18 +129,18 @@ test('locale pairs have reciprocal language links and preserve assets and eviden
     assert.deepEqual(sections(a),sections(b));
     assert.doesNotMatch(a+b,/translate\.google|localStorage|document\.cookie/);
   }
-  assert.match(html('en/'), /Coming soon/);
+  assert.match(html('en/'), /Available in Portuguese/);
   assert.match(html('portfolio/pt/'), /14 de 15 \(93%\)/);
   assert.match(html('portfolio/pt/'), /graduação não concluída/);
 });
 
 
-test('home creations focus on Reta Final without the technical implementation card', () => {
+test('home creations retain REIA and exclude the retired product', () => {
   for(const route of ['', 'en/']) {
     const page = html(route);
-    const productRoute = route ? 'en/criacoes/reta-final/' : 'criacoes/reta-final/';
-    assert.match(page, /<article class="feature" id="reta-final">/);
-    assert.ok(page.includes(`href="${prefix}${productRoute}"`));
+    assert.doesNotMatch(page, /id="reta-final"|href="[^"]*criacoes\/reta-final/);
+    assert.match(page, /id="reia"/);
+    assert.ok(page.includes('href="/renda-extra-com-ia/"'));
     assert.doesNotMatch(page, /public-case|case-links|Este portfólio, por dentro|This portfolio, from the inside/);
     assert.doesNotMatch(page, /github\.com\/lucas-mateus-hq\/lucas-capability-os-pages\/pull\/28|actions\/workflows\/pages\.yml/);
     for(const section of ['trabalho', 'criacoes', 'sobre', 'contato']) {
@@ -157,7 +153,7 @@ test('home creations focus on Reta Final without the technical implementation ca
 test('lessons expose existing and one-off offers and keep the owner phone and inactive collection out of public pages',()=>{
  for(const route of ['', 'en/']){
   const page=html(route);
-  for(const content of ['id="aulas"','Business English','id="reta-final"'])assert.ok(page.includes(content));
+  for(const content of ['id="aulas"','Business English','id="reia"'])assert.ok(page.includes(content));
   assert.doesNotMatch(page,/wa\.me|api\.whatsapp\.com|META_ACCESS_TOKEN|WHATSAPP_TO|R\$\s*550/);
   if(intakeConfigured)assert.match(page,/data-mock-form/);
   else { assert.match(page,/Agendamento online em preparação|Online booking is being prepared/);assert.doesNotMatch(page,/data-mock-form/); }
@@ -229,4 +225,38 @@ test('REIA sales route is discoverable from both home languages', () => {
     assert.match(page, /href="\/renda-extra-com-ia\/"/);
     assert.match(page, /Renda Extra com IA: Teste, Entregue, Repita/);
   }
+});
+
+// Retired product URLs stay reachable only as static redirects, never as sales pages.
+test('retired Reta Final routes redirect to their locale home and leave the sitemap and navigation', () => {
+  const sitemap = readFileSync('dist/sitemap.xml', 'utf8');
+  assert.doesNotMatch(sitemap, /reta-final/);
+  for (const [route, destination] of [['criacoes/reta-final/', '/'], ['en/criacoes/reta-final/', '/en/']]) {
+    const redirect = html(route);
+    assert.match(redirect, /http-equiv="refresh"/);
+    assert.ok(redirect.includes(`url=${destination}`), route);
+    assert.ok(redirect.includes(`href="${destination}"`), 'accessible fallback');
+    assert.doesNotMatch(redirect, /<h1|Toolkit|Hotmart|checkout/);
+    assert.match(redirect, /noindex/);
+    for (const activeRoute of routes) assert.ok(!html(activeRoute).includes('/' + route), activeRoute);
+  }
+});
+
+test('REIA cover is 1200 square and contains only image data, with no embedded metadata', () => {
+  const cover = readFileSync('dist/images/reia-cover.webp');
+  assert.equal(cover.length, 33896);
+  assert.equal(cover.toString('ascii', 0, 4), 'RIFF');
+  assert.equal(cover.readUInt32LE(4) + 8, cover.length);
+  assert.equal(cover.toString('ascii', 8, 12), 'WEBP');
+  const chunks = [];
+  for (let offset = 12; offset < cover.length;) {
+    chunks.push(cover.toString('ascii', offset, offset + 4));
+    const length = cover.readUInt32LE(offset + 4);
+    offset += 8 + length + (length % 2);
+    assert.ok(offset <= cover.length);
+  }
+  assert.deepEqual(chunks, ['VP8 ']);
+  assert.equal(cover.toString('hex', 23, 26), '9d012a');
+  assert.equal(cover.readUInt16LE(26) & 0x3fff, 1200);
+  assert.equal(cover.readUInt16LE(28) & 0x3fff, 1200);
 });
