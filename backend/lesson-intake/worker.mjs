@@ -4,6 +4,12 @@ const ORIGIN = 'https://lucas-mateus-hq.github.io';
 const HOST = 'lucas-mateus-hq.github.io';
 const PATH = '/v1/lesson-requests';
 const MAX_BYTES = 8192;
+const SECURITY_HEADERS = Object.freeze({
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'Content-Security-Policy': "frame-ancestors 'none'",
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+});
 const DAY = 86400000;
 const ENUMS = {
   goal: ['interview', 'business', 'both', 'not_sure'],
@@ -40,8 +46,8 @@ async function digest(value) {
 }
 function reply(status, body, cors = true) {
   return new Response(JSON.stringify(body), {status, headers: {
-    'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff',
-    'X-Frame-Options': 'DENY', 'Content-Security-Policy': "frame-ancestors 'none'", 'Referrer-Policy': 'strict-origin-when-cross-origin',
+    'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store',
+    ...SECURITY_HEADERS,
     ...(cors ? {'Access-Control-Allow-Origin': ORIGIN, 'Vary': 'Origin'} : {}),
   }});
 }
@@ -110,8 +116,7 @@ export async function handleRequest(request, env, deps = {}) {
   if (request.method === 'OPTIONS') return new Response(null, {status: 204, headers: {
     'Access-Control-Allow-Origin': ORIGIN, 'Vary': 'Origin', 'Access-Control-Allow-Methods': 'POST',
     'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Max-Age': '600',
-    'X-Content-Type-Options': 'nosniff', 'X-Frame-Options': 'DENY',
-    'Content-Security-Policy': "frame-ancestors 'none'", 'Referrer-Policy': 'strict-origin-when-cross-origin',
+    ...SECURITY_HEADERS,
   }});
   if (request.method !== 'POST') return reply(405, {error: 'METHOD_NOT_ALLOWED'});
   if (env.INTAKE_ENABLED !== 'true' || !env.LEADS_DB || !env.TURNSTILE_SECRET_KEY) return reply(503, {error: 'INTAKE_UNAVAILABLE'});
