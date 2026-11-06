@@ -47,6 +47,19 @@ test('foreign and absent origins, GET and unsupported content type are rejected'
 });
 test('preflight is restricted to the portfolio origin and POST',async()=>{
  const r=await handleRequest(new Request(url,{method:'OPTIONS',headers:{Origin:origin}}),{});assert.equal(r.status,204);assert.equal(r.headers.get('Access-Control-Allow-Origin'),origin);assert.equal(r.headers.get('Access-Control-Allow-Methods'),'POST');
+ assert.equal(r.headers.get('X-Frame-Options'),'DENY');
+ assert.equal(r.headers.get('Content-Security-Policy'),"frame-ancestors 'none'");
+ assert.equal(r.headers.get('Referrer-Policy'),'strict-origin-when-cross-origin');
+ assert.equal(r.headers.get('X-Content-Type-Options'),'nosniff');
+});
+test('api responses provide defense-in-depth security headers',async()=>{
+ const f=fixture(),p=sample();
+ const r=await handleRequest(request(p),f.env,{fetch:f.fetcher,now});
+ assert.equal(r.headers.get('X-Frame-Options'),'DENY');
+ assert.equal(r.headers.get('Content-Security-Policy'),"frame-ancestors 'none'");
+ assert.equal(r.headers.get('Referrer-Policy'),'strict-origin-when-cross-origin');
+ assert.equal(r.headers.get('X-Content-Type-Options'),'nosniff');
+ assert.equal(r.headers.get('Cache-Control'),'no-store');
 });
 test('intake is closed without enabled flag, database or verification secret',async()=>{
  for(const patch of [{INTAKE_ENABLED:'false'},{LEADS_DB:null},{TURNSTILE_SECRET_KEY:''}]){const f=fixture(patch);assert.equal((await handleRequest(request(sample()),f.env)).status,503);}
