@@ -54,6 +54,16 @@ for route, lang in [('', 'pt-BR'), ('en/', 'en-US'), ('portfolio/pt/', 'pt-BR'),
     assert 'mailto:' not in html, route
     if route in ('', 'en/'):
         assert 'id="criacoes"' in html and 'id="contato"' in html, route
+        tally_approved = os.environ.get('PUBLIC_TALLY_INTAKE_APPROVED') == 'true'
+        if tally_approved:
+            suffix = 'EN' if route else 'PT'
+            for kind in ('LESSON', 'MOCK'):
+                form_id = os.environ.get(f'PUBLIC_TALLY_{kind}_{suffix}_ID', '')
+                assert re.fullmatch(r'[A-Za-z0-9]{6,24}', form_id), 'Missing valid Tally form ID'
+                assert f'https://tally.so/embed/{form_id}?' in html, f'Tally embed missing: {route} / {kind}'
+                assert f'https://tally.so/r/{form_id}' in html, f'Tally external fallback missing: {route} / {kind}'
+        else:
+            assert 'data-tally-src=' not in html, f'Unapproved Tally form exposed: {route}'
     if route in ('privacy/', 'privacidade/'):
         assert 'id="hosting"' in html and 'id="rights"' in html, route
     if route == 'renda-extra-com-ia/':

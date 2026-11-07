@@ -1,5 +1,7 @@
 # Simulação de entrevista — publicação segura (26/10/2026)
 
+> **Registro histórico da arquitetura Cloudflare/D1.** A migração proposta para Tally está documentada em [TALLY_FORMS_MIGRATION.md](TALLY_FORMS_MIGRATION.md). Não seguir os passos abaixo para uma nova ativação sem comparar com a decisão de migração atual. Não excluir dados históricos.
+
 **Escopo comercial:** 60 minutos · R$ 80 · relatório individual por e-mail em até duas horas após a sessão. O relatório é feito/revisado pelo responsável; não existe bot de transcrição, envio automático nem pagamento integrado.
 
 ## O que já está implementado

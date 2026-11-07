@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 
 const prefix = '/';
-const intakeConfigured=Boolean(process.env.PUBLIC_LESSON_API_URL && process.env.PUBLIC_TURNSTILE_SITE_KEY);
+const tallyIds=['PUBLIC_TALLY_LESSON_PT_ID','PUBLIC_TALLY_LESSON_EN_ID','PUBLIC_TALLY_MOCK_PT_ID','PUBLIC_TALLY_MOCK_EN_ID'].map(key=>process.env[key]||'');
+const intakeConfigured=process.env.PUBLIC_TALLY_INTAKE_APPROVED==='true' && tallyIds.every(id=>/^[A-Za-z0-9]{6,24}$/.test(id));
 const origin = 'https://lucas-mateus-hq.github.io';
 const routes = ['', 'en/', 'portfolio/', 'portfolio/pt/', 'criacoes/reta-final/', 'en/criacoes/reta-final/', 'privacy/', 'privacidade/', 'renda-extra-com-ia/'];
 const fileFor = (path) => `dist/${path}${path.endsWith('/') || !path ? 'index.html' : ''}`;
@@ -13,8 +14,8 @@ test('unconfigured publication keeps LinkedIn contact, accurate privacy and reti
   for(const route of routes) {
     assert.doesNotMatch(html(route),/mailto:|wa\.me|META_ACCESS_TOKEN|WHATSAPP_TO/);
     if(['', 'en/'].includes(route)) {
-      if(intakeConfigured)assert.match(html(route),/data-mock-form/);
-      else { assert.match(html(route),/Agendamento online em preparação|Online booking is being prepared/); assert.doesNotMatch(html(route),/data-mock-form|<form\b/); }
+      if(intakeConfigured){ assert.match(html(route),/data-tally-src/); assert.match(html(route),/tally.so\/embed\//); }
+      else { assert.match(html(route),/Agendamento online em preparação|Online booking is being prepared/); assert.doesNotMatch(html(route),/data-tally-src|<form\b/); }
     } else assert.doesNotMatch(html(route),/<input\b|<form\b/);
   }
   for(const route of ['privacidade/','privacy/']){
@@ -23,7 +24,7 @@ test('unconfigured publication keeps LinkedIn contact, accurate privacy and reti
     assert.ok(source.includes('https://www.linkedin.com/in/lucasmateus/'));
     assert.ok(source.includes('https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement'));
     assert.ok(source.includes('2026'));
-    assert.match(source,/GitHub Pages/);assert.doesNotMatch(source,/wa\.me|id="relay"/);if(!intakeConfigured)assert.doesNotMatch(source,/WhatsApp/);else assert.match(source,/id="lesson-inquiries"/);assert.match(source,/LGPD/);
+    assert.match(source,/GitHub Pages/);assert.doesNotMatch(source,/wa\.me|id="relay"/);if(!intakeConfigured)assert.doesNotMatch(source,/WhatsApp/);else {assert.match(source,/id="tally-requests"/);assert.match(source,/Tally/);}assert.match(source,/LGPD/);
   }
   for(const path of ['live-telemetry.js','telemetry.json','responsive-guard.css'])assert.equal(existsSync('dist/'+path),false,path);
 });
@@ -159,16 +160,16 @@ test('lessons expose existing and one-off offers and keep the owner phone and in
   const page=html(route);
   for(const content of ['id="aulas"','Business English','id="reta-final"'])assert.ok(page.includes(content));
   assert.doesNotMatch(page,/wa\.me|api\.whatsapp\.com|META_ACCESS_TOKEN|WHATSAPP_TO|R\$\s*550/);
-  if(intakeConfigured)assert.match(page,/data-mock-form/);
-  else { assert.match(page,/Agendamento online em preparação|Online booking is being prepared/);assert.doesNotMatch(page,/data-mock-form/); }
+  if(intakeConfigured){assert.match(page,/data-tally-src/);assert.match(page,/tally.so\/embed\//);}
+  else { assert.match(page,/Agendamento online em preparação|Online booking is being prepared/);assert.doesNotMatch(page,/data-tally-src/); }
   assert.match(page,/R\$ 80/);
   assert.ok(page.includes(route==='en/'?'Practice your next job interview in English':'Treine sua próxima entrevista em inglês'));
   assert.ok(page.includes(route==='en/'?'within 2 hours of the end of the session':'em até 2 horas após a sessão'));
   assert.doesNotMatch(page,/R\$ 149|BRL 149|45-minute mock/);
   assert.ok(page.includes(route==='en/'?'one 60-minute session + written report':'1 hora de prática + relatório'));
   assert.ok(page.includes(intakeConfigured?(route==='en/'?'Request a session':'Solicitar simulação'):(route==='en/'?'Booking opens soon':'Agendamento em breve')));
-  if(!intakeConfigured){assert.doesNotMatch(page,/data-lesson-form/);assert.match(page,/href="https:\/\/www.linkedin.com\/in\/lucasmateus\/"/);}
-  else {assert.match(page,/data-lesson-form/);assert.match(page,/data-active="true"/);}
+  if(!intakeConfigured){assert.doesNotMatch(page,/data-tally-src/);assert.match(page,/href="https:\/\/www.linkedin.com\/in\/lucasmateus\/"/);}
+  else {assert.match(page,/data-tally-src/);assert.match(page,/tally.so\/r\//);}
  }
 });
 
@@ -228,5 +229,25 @@ test('REIA sales route is discoverable from both home languages', () => {
     const page = html(route);
     assert.match(page, /href="\/renda-extra-com-ia\/"/);
     assert.match(page, /Renda Extra com IA: Teste, Entregue, Repita/);
+  }
+});
+
+test('Tally configuration is fail closed and only embeds four approved localized forms',()=>{
+  for(const route of ['', 'en/']){
+    const page=html(route);
+    if(intakeConfigured){
+      const language=route==='en/'?'EN':'PT';
+      const mock=process.env['PUBLIC_TALLY_MOCK_'+language+'_ID'];
+      const lesson=process.env['PUBLIC_TALLY_LESSON_'+language+'_ID'];
+      for(const id of [mock,lesson]){
+        assert.ok(id);
+        assert.ok(page.includes(`https://tally.so/embed/${id}?`));
+        assert.ok(page.includes(`https://tally.so/r/${id}`));
+      }
+      assert.match(page,/tally.so\/widgets\/embed.js/);
+      assert.doesNotMatch(page,/challenges\.cloudflare\.com|workers\.dev|data-lesson-form|data-mock-form/);
+    } else {
+      assert.doesNotMatch(page,/tally.so\/embed\/|data-tally-src|tally.so\/widgets\/embed.js/);
+    }
   }
 });
