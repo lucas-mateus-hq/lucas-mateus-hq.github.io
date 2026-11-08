@@ -202,14 +202,17 @@ test('portfolio title has a readable scale and reduced motion suppresses transit
 
 
 test('package CTA reaches an honest application state in both locales',async({page})=>{
- for(const [route,cta] of [['./','Aplicar para o acompanhamento'],['en/','Apply for individual support']] as const){
-  await page.goto(route);
-  await expect(page.locator('#trabalho')).toContainText('R$ 320');
+  await page.goto('./');
   await expect(page.locator('#trabalho')).toContainText('Interview Map');
-  await expect(page.locator('#trabalho')).toContainText('Google Meet');
-  await page.locator('.hero').getByRole('link',{name:cta}).click();
+  await expect(page.locator('#trabalho')).toContainText('videochamada');
+  await expect(page.locator('#trabalho')).not.toContainText('R$ 320');
+  await expect(page.locator('#trabalho')).not.toContainText('Google Meet');
+  await page.locator('.hero').getByRole('link',{name:'Aplicar para o acompanhamento'}).click();
   await expect(page).toHaveURL(/#aplicacao$/);
-  await expect(page.locator('#aplicacao')).toContainText(route==='./'?'Aplicações em preparação':'Applications are being prepared');
+  await expect(page.locator('#aplicacao')).toContainText('Aplicações em preparação');
   await expect(page.locator('#aulas,form')).toHaveCount(0);
- }
+  await page.goto('en/');
+  await expect(page.locator('#trabalho')).toHaveCount(0);
+  await expect(page.locator('#aplicacao')).toHaveCount(0);
+  await expect(page.locator('.hero').getByRole('link',{name:'Apply for individual support'})).toHaveCount(0);
 });
