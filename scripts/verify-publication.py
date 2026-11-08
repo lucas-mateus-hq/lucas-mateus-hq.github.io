@@ -52,7 +52,15 @@ for route, lang in [('', 'pt-BR'), ('en/', 'en-US'), ('portfolio/pt/', 'pt-BR'),
     assert 'data-capability-registry' not in html and 'live-telemetry.js' not in html, route
     assert 'mailto:' not in html, route
     if route in ('', 'en/'):
-        assert 'id="criacoes"' in html and 'id="contato"' in html, route
+        assert 'id="criacoes"' in html and 'id="aplicacao"' in html, route
+        assert 'R$ 320' in html and 'Interview Map' in html, route
+        assert 'workers.dev' not in html and 'turnstile' not in html.lower(), route
+        if os.environ.get('PUBLIC_TALLY_INTAKE_APPROVED') == 'true':
+            form_id = os.environ.get('PUBLIC_TALLY_INTERVIEW_EN_ID' if route else 'PUBLIC_TALLY_INTERVIEW_PT_ID', '')
+            assert re.fullmatch(r'[A-Za-z0-9]{6,24}', form_id), 'Missing Tally application ID'
+            assert f'https://tally.so/embed/{form_id}?' in html and f'https://tally.so/r/{form_id}' in html, route
+        else:
+            assert 'data-interview-application' not in html, route
     if route in ('privacy/', 'privacidade/'):
         assert 'id="hosting"' in html and 'id="rights"' in html, route
     if route == 'renda-extra-com-ia/':
