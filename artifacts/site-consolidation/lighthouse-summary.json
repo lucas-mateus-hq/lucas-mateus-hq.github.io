@@ -1,0 +1,46 @@
+{
+  "desktop": [
+    {
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1
+      },
+      "lcp_ms": 401.96,
+      "cls": 0
+    },
+    {
+      "scores": {
+        "performance": 1,
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1
+      },
+      "lcp_ms": 407.784,
+      "cls": 0
+    }
+  ],
+  "mobile": [
+    {
+      "scores": {
+        "performance": 0.99,
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1
+      },
+      "lcp_ms": 1802.0369999999998,
+      "cls": 0
+    },
+    {
+      "scores": {
+        "performance": 0.99,
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1
+      },
+      "lcp_ms": 1803.669,
+      "cls": 0
+    }
+  ]
+}
