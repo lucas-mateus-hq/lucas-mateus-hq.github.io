@@ -2,9 +2,9 @@ import { expect, test } from '@playwright/test';
 
 test('home presents Lucas and real public destinations without the lab dashboard', async ({ page }) => {
   await page.goto('./');
-  await expect(page).toHaveTitle('Lucas Mateus · Pessoas, aprendizagem e criações');
+  await expect(page).toHaveTitle('Lucas Mateus · Preparação para entrevistas em inglês');
   await expect(page.locator('html')).toHaveAttribute('lang', 'pt-BR');
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('ideias em prática');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Sua próxima entrevista em inglês');
   await page.evaluate(() => document.fonts.ready);
   await expect(page.locator('body')).toHaveCSS('font-family', /Source Sans 3/);
   expect(await page.evaluate(() => document.fonts.check('18px "Source Sans 3"') && document.fonts.check('700 40px "Source Sans 3"'))).toBe(true);
@@ -23,7 +23,7 @@ test('home presents Lucas and real public destinations without the lab dashboard
   await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(7, 27, 32)');
   expect(await page.locator('#trabalho').evaluate(el=>getComputedStyle(el,'::before').backgroundColor)).toBe('rgb(16, 44, 49)');
   expect(await page.locator('#criacoes').evaluate(el=>getComputedStyle(el,'::before').backgroundColor)).toBe('rgb(7, 27, 32)');
-  expect(await page.locator('#escritos').evaluate(el=>getComputedStyle(el,'::before').backgroundColor)).toBe('rgb(18, 58, 59)');
+  expect(await page.locator('#escritos').evaluate(el=>getComputedStyle(el,'::before').backgroundColor)).toBe('rgb(247, 243, 234)');
   expect(await page.locator('#contato').evaluate(el=>getComputedStyle(el,'::before').backgroundColor)).toBe('rgb(15, 107, 97)');
   await expect(page.locator('[data-capability-registry], [data-impact-demo], [data-telemetry-mode]')).toHaveCount(0);
   await expect(page.locator('script[src*="live-telemetry"]')).toHaveCount(0);
@@ -41,7 +41,7 @@ test('creations show REIA without the retired Reta Final card', async ({ page })
     await expect(page).toHaveURL(/#criacoes$/);
     await expect(page.locator('#reta-final, a[href*="criacoes/reta-final"]')).toHaveCount(0);
     await expect(page.locator('#reia')).toBeVisible();
-    await page.locator('#reia a').click();
+    await page.locator('#reia a[href="/renda-extra-com-ia/"]').click();
     await expect(page).toHaveURL(/\/renda-extra-com-ia\/$/);
   }
 });
@@ -54,7 +54,7 @@ test('portfolio retains evidence, career history, direct anchors and personal re
   await expect(page.locator('#rnd')).toContainText('Using AI to learn and create');
   await expect(page.locator('body')).not.toContainText('Capability Lab');
   await page.getByRole('link', { name: 'Lucas Mateus · Home' }).click();
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('People');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Your experience in Brazil');
 });
 
 test('keyboard access starts with skip link and works without JavaScript', async ({ browser }) => {
@@ -66,7 +66,7 @@ test('keyboard access starts with skip link and works without JavaScript', async
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/#conteudo$/);
   await expect(page.locator('main')).toBeFocused();
-  await page.locator('#reia a').click();
+  await page.locator('#reia a[href="/renda-extra-com-ia/"]').click();
   await expect(page).toHaveURL(/\/renda-extra-com-ia\/$/);
 
   // Test skip-link on portfolio page
@@ -103,7 +103,7 @@ test('navigation order, destination cues and touch targets match the visitor jou
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('./');
   const nav = page.getByRole('navigation', { name: 'Navegação principal' });
-  await expect(nav.getByRole('link')).toHaveText(['Trabalho', 'Aulas', 'Criações', 'Sobre', 'Contato']);
+  await expect(nav.getByRole('link')).toHaveText(['Acompanhamento', 'Produtos', 'Sobre', 'Contato']);
   await expect(page.locator('.destination-note, .section-aside')).toHaveCount(0);
   expect(await page.locator('#trabalho').evaluate(el => Boolean(el.compareDocumentPosition(document.querySelector('#criacoes')!) & Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true);
   for (const link of await page.locator('.site-header nav a, .actions a, .text-link, .footer-links a').all()) {
@@ -129,7 +129,7 @@ test('text spacing customization preserves content and controls', async ({ page 
 });
 
 
-for (const [pt,en,title] of [['./','en/','People.'],['portfolio/pt/','portfolio/','Talent Acquisition'],['privacidade/','privacy/','Privacy Policy']] as const) {
+for (const [pt,en,title] of [['./','en/','Your experience in Brazil.'],['portfolio/pt/','portfolio/','Talent Acquisition'],['privacidade/','privacy/','Privacy Policy']] as const) {
   test(`language switch keeps the equivalent page: ${pt}`, async ({browser}) => {
     const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});
     const page=await context.newPage();
@@ -196,35 +196,20 @@ test('portfolio title has a readable scale and reduced motion suppresses transit
   await expect(page.locator('.hero .button')).toHaveCSS('transition-duration','0s');
   await page.locator('.hero .button').hover();
   await expect(page.locator('.hero .button')).toHaveCSS('transform','none');
-  await page.getByRole('link',{name:'Entrar em contato',exact:true}).click();
+  await page.locator('.primary-navigation').getByRole('link',{name:'Contato',exact:true}).click();
   await expect(page).toHaveURL(/#contato$/);
 });
 
 
-test('English lessons are discoverable in both languages without collecting data before activation',async({page})=>{
- for(const [route,label,title] of [['./','Aulas','Treine sua próxima entrevista em inglês'],['en/','Lessons','Practice your next job interview in English']] as const){
+test('package CTA reaches an honest application state in both locales',async({page})=>{
+ for(const [route,cta] of [['./','Aplicar para o acompanhamento'],['en/','Apply for individual support']] as const){
   await page.goto(route);
-  await page.locator('.primary-navigation').getByRole('link',{name:label,exact:true}).click();
-  await expect(page).toHaveURL(/#aulas$/);
-  await expect(page.locator('#aulas')).toContainText(title);
-  await expect(page.locator('#aulas .lesson-separation')).toHaveText(route==='./'?'Nas aulas, você trabalha diretamente comigo.':'Lessons involve working directly with me.');
-  const active=Boolean(process.env.PUBLIC_LESSON_API_URL && process.env.PUBLIC_TURNSTILE_SITE_KEY);
-  await expect(page.locator('#aulas form')).toHaveCount(active?2:0);
-  await expect(page.locator('#aulas .mock-offer a.button')).toHaveAttribute('href','#pedido-simulacao');
-  await expect(page.locator('#pedido-simulacao')).toContainText(active?(route==='./'?'Conte qual cargo você busca':'Tell me the role you are targeting'):(route==='./'?'Agendamento online em preparação':'Online booking is being prepared'));
-  await expect(page.locator('#aulas .lesson-next a.button')).toHaveAttribute('href',active?'#pedido-aulas':'https://www.linkedin.com/in/lucasmateus/');
+  await expect(page.locator('#trabalho')).toContainText('R$ 320');
+  await expect(page.locator('#trabalho')).toContainText('Interview Map');
+  await expect(page.locator('#trabalho')).toContainText('Google Meet');
+  await page.locator('.hero').getByRole('link',{name:cta}).click();
+  await expect(page).toHaveURL(/#aplicacao$/);
+  await expect(page.locator('#aplicacao')).toContainText(route==='./'?'Aplicações em preparação':'Applications are being prepared');
+  await expect(page.locator('#aulas,form')).toHaveCount(0);
  }
-});
-
-
-test('offline mock interview is explicitly unavailable until private intake is verified',async({page})=>{
-  await page.goto('./#pedido-simulacao');
-  await expect(page.locator('.mock-offer')).toContainText('R$ 80');
-  await expect(page.locator('.mock-offer')).toContainText('1 hora');
-  await expect(page.locator('.mock-offer')).toContainText('relatório escrito por e-mail em até 2 horas após a sessão');
-  await expect(page.locator('#pedido-simulacao form')).toHaveCount(0);
-  await expect(page.locator('#pedido-simulacao')).toContainText('Esta página ainda não recebe pedidos.');
-  await expect(page.locator('#pedido-simulacao a[href*="linkedin.com"]')).toHaveCount(0);
-  await expect(page.locator('.mock-offer a.button')).toContainText('Agendamento em breve');
-  expect(await page.evaluate(()=>localStorage.length+sessionStorage.length)).toBe(0);
 });
