@@ -5,7 +5,7 @@ O padrão editorial obrigatório é [docs/PUBLIC_EXPERIENCE_STANDARD.md](docs/PU
 
 ## Audiências e hierarquia
 - Portfólio: recrutadores e potenciais empregadores; primeiro experiência profissional real, responsabilidades e evidências verificáveis. Termos técnicos próprios de recrutamento são aceitáveis quando ajudam essa audiência. Não converter projetos experimentais em credenciais comerciais falsas.
-- Serviço de simulação de entrevista: candidatos; descrever em linguagem direta a dificuldade que resolve, prática ao vivo, R$ 80, 60 minutos, relatório por e-mail em até 2 horas após a sessão, como solicitar e como o retorno acontece. Não divulgar bot, transcrição automática, calendário, pagamento integrado ou envio automático sem verificação operacional.
+- Acompanhamento individual para entrevistas: candidatos; R$320, 30 min + 2 × 60 min, Google Meet, relatório e Interview Map por e-mail em até 3 dias úteis da última sessão, aplicação antes da aprovação/pagamento Hotmart. Não divulgar bot, transcrição automática, calendário, pagamento integrado ou envio automático sem verificação operacional.
 - Reta Final: produto de aprendizagem autônoma distinto da simulação individual; preservar estado real de lançamento e não substituir uma oferta pela outra.
 
 ## Verificação antes de abrir/encerrar PR
@@ -14,6 +14,6 @@ O padrão editorial obrigatório é [docs/PUBLIC_EXPERIENCE_STANDARD.md](docs/PU
 3. Rever alegações factuais, preço, duração, prazo, datas, indisponibilidade, dados, privacidade e estados de compra/contato. Não inventar depoimentos, certificações, disponibilidade ou vendas.
 4. Executar build, testes automatizados e observação em navegador. CI verde **não** aprova comunicação ou viabilidade comercial sozinho.
 5. Criar PR draft e mostrar ao proprietário. **Não fazer merge/deploy de mudança de oferta sem aprovação expressa.** No GitHub Pages, o deploy acontece quando alterações chegam à `main`.
-6. Não recolher dados sem informar; se o backend de captação estiver inativo, não exibir formulário sem recebimento nem transferir a venda para o LinkedIn; mostrar estado indisponível e bloquear publicação comercial até ativação e teste real. Ver docs/GO_LIVE_INTERVIEW.md.
+6. Não recolher dados sem informar; se o backend de captação estiver inativo, não exibir formulário sem recebimento nem transferir a venda para o LinkedIn; mostrar estado indisponível e bloquear publicação comercial até ativação e teste real. Ver docs/TALLY_FORMS_MIGRATION.md.
 
 Preservar versões, traduções e conteúdo aprovado; não introduzir complexidade técnica só para descrever o funcionamento. Não usar o portfólio pessoal como painel de governança de outros projetos.
