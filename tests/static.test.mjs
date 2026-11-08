@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 
 const prefix = '/';
-const intakeConfigured=Boolean(process.env.PUBLIC_LESSON_API_URL && process.env.PUBLIC_TURNSTILE_SITE_KEY);
+const intakeConfigured=process.env.PUBLIC_TALLY_INTAKE_APPROVED==='true';
 const origin = 'https://lucas-mateus-hq.github.io';
 const routes = ['', 'en/', 'portfolio/', 'portfolio/pt/', 'privacy/', 'privacidade/', 'renda-extra-com-ia/'];
 const fileFor = (path) => `dist/${path}${path.endsWith('/') || !path ? 'index.html' : ''}`;
@@ -13,10 +13,10 @@ test('unconfigured publication keeps LinkedIn contact, accurate privacy and reti
   for(const route of routes) {
     assert.doesNotMatch(html(route),/mailto:|wa\.me|META_ACCESS_TOKEN|WHATSAPP_TO/);
     if(route==='') {
-      if(intakeConfigured)assert.match(html(route),/data-mock-form/);
+      if(intakeConfigured)assert.match(html(route),/data-interview-application/);
       else { assert.match(html(route),/Aplicações em preparação/); assert.doesNotMatch(html(route),/data-mock-form|<form\b/); }
     } else if(route==='en/') {
-      assert.doesNotMatch(html(route),/id="aplicacao"|<form\b/);
+      assert.doesNotMatch(html(route),/id="aplicacao"|data-interview-application|<form\b/);
     } else assert.doesNotMatch(html(route),/<input\b|<form\b/);
   }
   for(const route of ['privacidade/','privacy/']){
@@ -25,7 +25,7 @@ test('unconfigured publication keeps LinkedIn contact, accurate privacy and reti
     assert.ok(source.includes('https://www.linkedin.com/in/lucasmateus/'));
     assert.ok(source.includes('https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement'));
     assert.ok(source.includes('2026'));
-    assert.match(source,/GitHub Pages/);assert.doesNotMatch(source,/wa\.me|id="relay"/);if(!intakeConfigured)assert.doesNotMatch(source,/WhatsApp/);else assert.match(source,/id="lesson-inquiries"/);assert.match(source,/LGPD/);
+    assert.match(source,/GitHub Pages/);assert.doesNotMatch(source,/wa\.me|id="relay"/);if(!intakeConfigured)assert.doesNotMatch(source,/WhatsApp/);else assert.match(source,/id="interview-applications"/);assert.match(source,/LGPD/);
   }
   for(const path of ['live-telemetry.js','telemetry.json','responsive-guard.css'])assert.equal(existsSync('dist/'+path),false,path);
 });
@@ -106,7 +106,7 @@ test('actual editorial identity and product text pairs meet WCAG AA contrast', (
     ['0b2429','f7f3ea'],['0b2429','bdccc9'],['0b2429','c58a45'],
     ['0f6b61','f7f3ea'],['73cdba','071b20'],
     ['102a43','d0dce8'],['102a43','abcbe5'],['d3e5d2','203d35'],
-    ['e7641b','0c2037'],['081a2b','b9cbd9'],
+    ['f7f3ea','344d50'],['f7f3ea','0f6b61'],['e7641b','0c2037'],['081a2b','b9cbd9'],
     // REIA palette actual pairs
     ['F5F0E8','93351F'],['F5F0E8','172027'],['F5F0E8','465057'],
     ['EADFCC','93351F'],['EADFCC','172027'],['EADFCC','465057'],
@@ -130,7 +130,8 @@ test('locale pairs have reciprocal language links and preserve assets and eviden
     const sections=x=>[...x.matchAll(/<section[^>]*id="([^"]+)"/g)].map(m=>m[1]);
     if(pt===''){ assert.deepEqual(sections(a),['trabalho','aplicacao','criacoes','escritos','sobre','contato']); assert.deepEqual(sections(b),['criacoes','escritos','sobre','contato']); }
     else assert.deepEqual(sections(a),sections(b));
-    assert.doesNotMatch(a+b,/translate\.google|localStorage|document\.cookie/);
+    assert.doesNotMatch(a+b,/translate\.google/);
+    if(process.env.PUBLIC_ANALYTICS_APPROVED!=='true')assert.doesNotMatch(a+b,/localStorage|document\.cookie/);
   }
   assert.match(html('en/'), /Available in Portuguese/);
   assert.match(html('portfolio/pt/'), /14 de 15 \(93%\)/);
@@ -261,4 +262,8 @@ test('REIA cover is 1200 square and contains only image data, with no embedded m
   assert.equal(cover.toString('hex', 23, 26), '9d012a');
   assert.equal(cover.readUInt16LE(26) & 0x3fff, 1200);
   assert.equal(cover.readUInt16LE(28) & 0x3fff, 1200);
+});
+
+test('built public pages contain no active Cloudflare transport or old service form',()=>{
+ for(const route of routes)assert.doesNotMatch(html(route),/workers\.dev|challenges\.cloudflare|turnstile|data-mock-form|data-lesson-form/i);
 });
