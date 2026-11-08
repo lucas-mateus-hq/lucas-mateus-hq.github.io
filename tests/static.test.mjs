@@ -154,6 +154,8 @@ test('lessons expose existing and one-off offers and keep the owner phone and in
  for(const route of ['', 'en/']){
   const page=html(route);
   for(const content of ['id="aulas"','Business English','id="reia"'])assert.ok(page.includes(content));
+  assert.ok(page.includes(route==='en/'?'<p class="lesson-separation">Lessons involve working directly with me.</p>':'<p class="lesson-separation">Nas aulas, você trabalha diretamente comigo.</p>'));
+  assert.doesNotMatch(page.match(/<p class="lesson-separation">.*?<\/p>/)?.[0]??'',/Reta Final|Reta Final toolkit/);
   assert.doesNotMatch(page,/wa\.me|api\.whatsapp\.com|META_ACCESS_TOKEN|WHATSAPP_TO|R\$\s*550/);
   if(intakeConfigured)assert.match(page,/data-mock-form/);
   else { assert.match(page,/Agendamento online em preparação|Online booking is being prepared/);assert.doesNotMatch(page,/data-mock-form/); }

@@ -207,6 +207,7 @@ test('English lessons are discoverable in both languages without collecting data
   await page.locator('.primary-navigation').getByRole('link',{name:label,exact:true}).click();
   await expect(page).toHaveURL(/#aulas$/);
   await expect(page.locator('#aulas')).toContainText(title);
+  await expect(page.locator('#aulas .lesson-separation')).toHaveText(route==='./'?'Nas aulas, você trabalha diretamente comigo.':'Lessons involve working directly with me.');
   const active=Boolean(process.env.PUBLIC_LESSON_API_URL && process.env.PUBLIC_TURNSTILE_SITE_KEY);
   await expect(page.locator('#aulas form')).toHaveCount(active?2:0);
   await expect(page.locator('#aulas .mock-offer a.button')).toHaveAttribute('href','#pedido-simulacao');
