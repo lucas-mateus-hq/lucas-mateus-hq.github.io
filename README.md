@@ -1,18 +1,34 @@
-# Lucas Mateus · personal portfolio
+# Lucas Mateus: site pessoal
 
-Bilingual personal site at https://lucas-mateus-hq.github.io/. Astro static build with local fonts and images. A verified private intake is required before publishing the paid interview offer; no visitor analytics.
+Site bilíngue em Astro, publicado no GitHub Pages: https://lucas-mateus-hq.github.io/.
 
-Migrated from lucas-capability-os-pages, source release 37dbd2d96347234cc8f39b42711d265b9ad6f174. Visual identity and content unchanged. Legacy laboratory utilities and unrelated automations were not copied.
+## Estado deste candidato
 
-Node 22: `npm ci --ignore-scripts --no-audit --no-fund`, `npm run build`, `npm run test:static`. CI also runs personal browser journeys, responsive geometry, retired-route checks and Lighthouse gates.
+A home apresenta um único serviço: **Acompanhamento Individual para Entrevistas em Inglês**, R$320, sessão inicial de 30 minutos + duas de 60 minutos pelo Google Meet. Relatório e Interview Map em até 3 dias úteis após a última sessão. Aplicação antes do pagamento, combinado pela Hotmart após aprovação. REIA é o único produto disponível nesta versão. Reta Final não está anunciado; sua integração comercial futura depende da oferta e do pacote aprovados.
 
-GitHub Pages publishing source must be GitHub Actions. PRs validate; main validates then deploys. The release receipt checks deployed SHA, all eight locale routes, assets and removed technical paths.
+**Aplicações: Tally, ainda sem ativação real verificada.** São dois formulários localizados para o mesmo serviço. Worker, D1 e Turnstile não participam do site nem do workflow de publicação. O código histórico do Worker continua em `backend/lesson-intake/`; nenhum recurso ou dado Cloudflare foi excluído. O vínculo externo Cloudflare Workers Builds é uma configuração da conta, não é removido editando o site.
 
+**Medição:** código de consentimento reaproveitado do PR #18, desabilitado por padrão. Ativar somente após verificar Enhanced measurement desligado no destino GA4 e revisar a configuração. Testes locais não provam recebimento no Analytics.
 
-## Mock interview offer (approved for gated release)
+Veja [ativação das aplicações](docs/TALLY_FORMS_MIGRATION.md) e [integração e revisão dos lotes](artifacts/site-consolidation/REVIEW.md). Não tratar os runbooks antigos de aulas/Worker como instruções de ativação desta versão.
 
-The bilingual home page now includes a **60-minute one-off mock job interview in English** priced at **R$80**, distinct from ongoing English lessons and the self-guided Reta Final toolkit. The dedicated request form asks for name, email, target role and scheduling availability, plus optional context. This is a new commercial service; prior hiring and English-teaching experience must not be described as a sales record for mock interviews. After each completed session, the owner commits to send a concise, human-reviewed personalized written feedback report by email **within two hours of the session ending**, whether or not any future transcription tool is used.
+## Desenvolvimento
 
-When PUBLIC_LESSON_API_URL and PUBLIC_TURNSTILE_SITE_KEY are configured, the new form sends the same allowlisted lesson-request payload to the existing private Cloudflare Worker; the context field identifies the mock-interview service. No new backend permissions, storage tables or payment integrations are introduced.
+Node 22 ou superior e Python 3 para servir o build estático nos testes:
 
-While intake is not activated, the site shows a clear 'online booking being prepared' notice and **does not accept any mock interview inquiries**. The GitHub Pages deployment job is gated on real Worker/Turnstile configuration and an explicit owner readiness variable. See docs/GO_LIVE_INTERVIEW.md for account setup, preflight and post-release tests. No real payments or confirmed bookings are implied. Meeting bots, recording, automatic transcripts, analytics and email delivery are not configured by this PR. Take manual notes for the first sessions; never add a recording bot without explicit informed agreement and a documented provider/storage/retention policy. See docs/MOCK_INTERVIEW_DELIVERY.md.
+```
+npm ci --ignore-scripts --no-audit --no-fund
+npm run build
+npm run test:static
+npm run test:intake
+npm run test:analytics
+npm run test:e2e
+npm run test:fresh-eyes
+npm run test:relay
+```
+
+`npm run test:tally-ui` exige build com IDs sintéticos documentados no workflow; todos os pedidos ao provedor são interceptados. `npm run test:legacy-intake` executa apenas a regressão histórica local do Worker/SQL, sem ativá-lo.
+
+PRs validam; alterações aprovadas na `main` publicam no GitHub Pages. Os lotes são candidatos locais até envio, revisão e aprovação expressa de Luke. Não fazer merge/deploy automático.
+
+Para futuras ofertas, veja [integração de produtos](docs/PRODUCT_INTEGRATION.md). O catálogo separa conteúdo comercial, página própria, imagem, idioma e checkout; não cria novas contas ou backend.

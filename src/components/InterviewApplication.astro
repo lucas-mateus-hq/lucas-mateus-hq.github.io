@@ -1,0 +1,18 @@
+---
+import {getInterviewForm} from '../config/interview-intake';
+interface Props {lang:'pt-BR'|'en-US'}
+const {lang}=Astro.props;
+const en=lang==='en-US';
+const form=getInterviewForm(lang);
+---
+<section id="aplicacao" class="application-panel" aria-labelledby="application-title" data-locale-section>
+ <p class="label">{en?'Individual English Interview Preparation':'Acompanhamento Individual para Entrevistas em Inglês'}</p>
+ <h3 id="application-title">{form?(en?'Apply for individual support':'Aplique para o acompanhamento'):(en?'Applications are being prepared':'Aplicações em preparação')}</h3>
+ {form?<>
+  <p>{en?'Share your name, email, current role and availability, a résumé link with a brief description of your experience, and a real or hypothetical job description (text or link). You may also include an interview date if one is scheduled. I review the fit and reply by email before any payment.':'Informe nome, e-mail, cargo atual e disponibilidade, um link do currículo com um breve resumo da sua experiência e o descritivo de uma vaga real ou hipotética (texto ou link). Se já tiver entrevista marcada, pode informar a data. Avalio o encaixe e respondo por e-mail antes de qualquer pagamento.'}</p>
+  <p>{en?'The form is hosted by Tally. Submit only relevant professional information. Remove address, ID numbers, and unnecessary sensitive details from your résumé; do not share confidential company documents.':'O formulário é hospedado pelo Tally. Envie apenas informações profissionais relevantes. Retire endereço, documentos de identidade e dados sensíveis desnecessários do currículo; não compartilhe documentos confidenciais de empresas.'} <a href={en?'/privacy/#interview-applications':'/privacidade/#interview-applications'}>{en?'How your application data is handled':'Como os dados da aplicação são tratados'}</a>.</p>
+  <iframe src={form.embedded} data-interview-application loading="lazy" width="100%" height="1100" title={en?'Interview preparation application hosted by Tally':'Aplicação para acompanhamento de entrevistas no Tally'} referrerpolicy="no-referrer"></iframe>
+  <p><a class="text-link" href={form.external} target="_blank" rel="noopener noreferrer">{en?'Open the application directly in Tally':'Abrir aplicação diretamente no Tally'} ↗</a></p>
+ </>:<p>{en?'You can’t submit an application on this page yet. Applications will open once the form is ready to receive them.':'Ainda não é possível enviar sua aplicação por esta página. O acompanhamento abrirá quando o recebimento estiver pronto.'}</p>}
+</section>
+<style>.application-panel iframe{display:block;width:100%;max-width:100%;border:0;background:#f7f3ea;border-radius:12px;color-scheme:light}.application-panel p{max-width:78ch}</style>

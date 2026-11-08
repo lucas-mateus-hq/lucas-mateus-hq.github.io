@@ -7,12 +7,14 @@ on:
       - 'public/telemetry.json'
       - 'src/data/telemetry_source.json'
   pull_request:
-    branches: [main]
+    branches: [main, 'mission/**']
   workflow_dispatch:
 
 env:
-  PUBLIC_LESSON_API_URL: ${{ vars.INTAKE_RELEASE_APPROVED == 'true' && vars.PUBLIC_LESSON_API_URL || '' }}
-  PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.INTAKE_RELEASE_APPROVED == 'true' && vars.PUBLIC_TURNSTILE_SITE_KEY || '' }}
+  PUBLIC_TALLY_INTAKE_APPROVED: ${{ vars.TALLY_INTAKE_APPROVED == 'true' && 'true' || 'false' }}
+  PUBLIC_TALLY_INTERVIEW_PT_ID: ${{ vars.TALLY_INTAKE_APPROVED == 'true' && vars.TALLY_INTERVIEW_PT_ID || '' }}
+  PUBLIC_TALLY_INTERVIEW_EN_ID: ${{ vars.TALLY_INTAKE_APPROVED == 'true' && vars.TALLY_INTERVIEW_EN_ID || '' }}
+  PUBLIC_ANALYTICS_APPROVED: ${{ vars.ANALYTICS_CONFIG_VERIFIED == 'true' && 'true' || 'false' }}
 
 permissions:
   contents: read
@@ -25,11 +27,10 @@ concurrency:
 
 jobs:
   validate:
-    # General navigation contracts verify the unavailable intake state.
-    # The intake-ui job independently verifies configured forms with intercepted providers.
+    # Static validation must never activate a real provider during PR checks.
     env:
-      PUBLIC_LESSON_API_URL: ''
-      PUBLIC_TURNSTILE_SITE_KEY: ''
+      PUBLIC_TALLY_INTAKE_APPROVED: 'false'
+      PUBLIC_ANALYTICS_APPROVED: 'false'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -50,8 +51,8 @@ jobs:
           fi
       - name: Install dependencies from lock
         run: npm ci --ignore-scripts --no-audit --no-fund
-      - name: Intake contracts and local SQL regression
-        run: npm run test:intake
+      - name: Application and optional measurement contracts
+        run: npm run test:intake && npm run test:analytics
       - name: Astro type and build gate
         run: npm run build
       - name: Public identity, links, content and contrast contracts
@@ -66,7 +67,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          npm run preview > /tmp/personal-home-preview.log 2>&1 &
+          python3 -m http.server 4321 --bind 127.0.0.1 --directory dist > /tmp/personal-home-preview.log 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
           for attempt in $(seq 1 30); do
@@ -93,10 +94,10 @@ jobs:
           retention-days: 14
 
   deploy:
-    # Keep public portfolio deploys operational. Without approved private intake,
-    # the form is not built and the page states that booking is not yet available.
+    # Static portfolio may publish with applications explicitly unavailable.
+    # Commercial application activation requires verified real delivery and owner release approval.
     if: github.event_name != 'pull_request'
-    needs: [validate, intake-ui]
+    needs: [validate, tally-ui]
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -111,34 +112,21 @@ jobs:
           node-version: '22'
       - name: Install dependencies from lock
         run: npm ci --ignore-scripts --no-audit --no-fund
-      - name: Verify real form endpoint before publishing
-        id: intake_preflight
-        if: ${{ vars.INTAKE_RELEASE_APPROVED == 'true' }}
-        continue-on-error: true
-        env:
-          PUBLIC_LESSON_API_URL: ${{ vars.PUBLIC_LESSON_API_URL }}
-          PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
-        run: node scripts/check-intake-release.mjs
-      - name: Disable intake if independent release cannot prove it works
-        if: ${{ vars.INTAKE_RELEASE_APPROVED == 'true' && steps.intake_preflight.outcome != 'success' }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          echo "::warning title=Intake disabled::Preflight failed. Publishing static pages with intake forms disabled; interview requests cannot be submitted."
-          echo "PUBLIC_LESSON_API_URL=" >> "$GITHUB_ENV"
-          echo "PUBLIC_TURNSTILE_SITE_KEY=" >> "$GITHUB_ENV"
+      - name: Verify owner-approved Tally form IDs
+        if: ${{ vars.TALLY_INTAKE_APPROVED == 'true' }}
+        run: node scripts/check-tally-release.mjs
       - name: Build static site
         run: npm run build
-      - name: Fail closed if unavailable intake is present in HTML
-        if: ${{ vars.INTAKE_RELEASE_APPROVED == 'true' && steps.intake_preflight.outcome != 'success' }}
+      - name: Fail closed without Tally owner approval
+        if: ${{ vars.TALLY_INTAKE_APPROVED != 'true' }}
         shell: bash
         run: |
           set -euo pipefail
-          if grep -R -n -E 'data-lesson-form|data-mock-form' dist --include='*.html'; then
-            echo "ERROR: Intake is unavailable but an intake form is still rendered." >&2
+          if grep -R -n 'data-interview-application' dist --include='*.html'; then
+            echo "ERROR: Tally forms rendered without owner approval" >&2
             exit 1
           fi
-          echo "INTAKE_DISABLED_VERIFIED: Static commercial pages can publish independently."
+          echo "TALLY_DISABLED_VERIFIED: no third-party forms are exposed."
       - name: Identify the exact release
         run: python3 scripts/verify-publication.py --prepare
       - name: Configure Pages
@@ -164,12 +152,14 @@ jobs:
           retention-days: 14
 
 
-  intake-ui:
+  tally-ui:
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     env:
-      PUBLIC_LESSON_API_URL: https://intake-test.example.workers.dev/v1/lesson-requests
-      PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
+      PUBLIC_TALLY_INTAKE_APPROVED: 'true'
+      PUBLIC_TALLY_INTERVIEW_PT_ID: Ab1001
+      PUBLIC_TALLY_INTERVIEW_EN_ID: Ef1003
+      PUBLIC_ANALYTICS_APPROVED: 'true'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
@@ -177,6 +167,7 @@ jobs:
           node-version: '22'
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npm run build
+      - run: npm run test:static
       - run: npx playwright install --with-deps chromium
-      - name: Configured form UI with intercepted external providers; no real submissions
-        run: npm run test:intake-ui
+      - name: Two localized application embeds with intercepted provider; no real submissions
+        run: npm run test:tally-ui && npm run test:analytics-ui
