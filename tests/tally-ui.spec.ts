@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-for(const [route,id,title] of [['./','Ab1001','Aplicação para acompanhamento de entrevistas no Tally'],['en/','Ef1003','Interview preparation application hosted by Tally']] as const) {
+for(const [route,id,title] of [['./','Ab1001','Aplicação para acompanhamento de entrevistas no Tally']] as const) {
  for(const javascript of [true,false])test(`localized application and external fallback: ${route}, JS ${javascript}`,async({browser})=>{
  const context=await browser.newContext({javaScriptEnabled:javascript,viewport:{width:390,height:844}});
  const page=await context.newPage();const requests:string[]=[];
@@ -17,3 +17,9 @@ for(const [route,id,title] of [['./','Ab1001','Aplicação para acompanhamento d
  await context.close();
  });
 }
+
+test('english home carries no application area',async({page})=>{
+ await page.goto('http://127.0.0.1:4321/en/');
+ await expect(page.locator('#aplicacao')).toHaveCount(0);
+ await expect(page.locator('iframe[data-interview-application]')).toHaveCount(0);
+});
