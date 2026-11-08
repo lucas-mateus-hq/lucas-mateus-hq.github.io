@@ -1,3 +1,5 @@
+> HISTÓRICO: este documento descreve a oferta/arquitetura anterior. Para o candidato atual de acompanhamento R$320 e Tally, use [TALLY_FORMS_MIGRATION.md](TALLY_FORMS_MIGRATION.md). Não reativar Worker/Turnstile a partir deste registro.
+
 # Simulação de entrevista em inglês — entrega operacional (rascunho)
 
 Estado: **oferta em revisão, não publicada**. Preço inicial: **R$ 80**. Sessão: **60 minutos**. Entregável: **relatório individual escrito por e-mail em até 2 horas após o término da chamada**. A experiência anterior em Talent Acquisition e aulas de inglês não equivale a histórico comercial prévio de simulações; não declarar números de alunos, resultados ou satisfação inexistentes.

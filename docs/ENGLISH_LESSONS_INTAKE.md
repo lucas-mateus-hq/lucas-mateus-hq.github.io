@@ -1,3 +1,5 @@
+> HISTÓRICO: este documento descreve a oferta/arquitetura anterior. Para o candidato atual de acompanhamento R$320 e Tally, use [TALLY_FORMS_MIGRATION.md](TALLY_FORMS_MIGRATION.md). Não reativar Worker/Turnstile a partir deste registro.
+
 # English lessons: screening and private WhatsApp alerts
 
 ## Decisão vigente: R$ 0 por mês (21 de outubro de 2026)

@@ -1,3 +1,5 @@
+> HISTÓRICO: este documento descreve a oferta/arquitetura anterior. Para o candidato atual de acompanhamento R$320 e Tally, use [TALLY_FORMS_MIGRATION.md](TALLY_FORMS_MIGRATION.md). Não reativar Worker/Turnstile a partir deste registro.
+
 # One-time Cloudflare Git import — interview intake (26/10/2026)
 
 Goal: avoid manual copying/deploying Worker source, avoid manual local shell and minimize owner setup. The existing D1 `lucas-lessons-intake` was created in the Cloudflare dashboard, and its public UUID is pinned in `backend/lesson-intake/wrangler.toml`. All sensitive values remain outside the repository.
