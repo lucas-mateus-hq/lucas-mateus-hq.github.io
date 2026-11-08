@@ -12,9 +12,11 @@ const html = (route) => readFileSync(fileFor(route), 'utf8');
 test('unconfigured publication keeps LinkedIn contact, accurate privacy and retired dashboard assets', () => {
   for(const route of routes) {
     assert.doesNotMatch(html(route),/mailto:|wa\.me|META_ACCESS_TOKEN|WHATSAPP_TO/);
-    if(['', 'en/'].includes(route)) {
+    if(route==='') {
       if(intakeConfigured)assert.match(html(route),/data-mock-form/);
-      else { assert.match(html(route),/Agendamento online em preparação|Online booking is being prepared/); assert.doesNotMatch(html(route),/data-mock-form|<form\b/); }
+      else { assert.match(html(route),/Aplicações em preparação/); assert.doesNotMatch(html(route),/data-mock-form|<form\b/); }
+    } else if(route==='en/') {
+      assert.doesNotMatch(html(route),/id="aplicacao"|<form\b/);
     } else assert.doesNotMatch(html(route),/<input\b|<form\b/);
   }
   for(const route of ['privacidade/','privacy/']){
@@ -126,7 +128,8 @@ test('locale pairs have reciprocal language links and preserve assets and eviden
     const images = x=>[...x.matchAll(/<img[^>]*src="([^"]+)"/g)].map(m=>m[1]);
     assert.deepEqual(images(a),images(b));
     const sections=x=>[...x.matchAll(/<section[^>]*id="([^"]+)"/g)].map(m=>m[1]);
-    assert.deepEqual(sections(a),sections(b));
+    if(pt===''){ assert.deepEqual(sections(a),['trabalho','aplicacao','criacoes','escritos','sobre','contato']); assert.deepEqual(sections(b),['criacoes','escritos','sobre','contato']); }
+    else assert.deepEqual(sections(a),sections(b));
     assert.doesNotMatch(a+b,/translate\.google|localStorage|document\.cookie/);
   }
   assert.match(html('en/'), /Available in Portuguese/);
@@ -143,31 +146,28 @@ test('home creations retain REIA and exclude the retired product', () => {
     assert.ok(page.includes('href="/renda-extra-com-ia/"'));
     assert.doesNotMatch(page, /public-case|case-links|Este portfólio, por dentro|This portfolio, from the inside/);
     assert.doesNotMatch(page, /github\.com\/lucas-mateus-hq\/lucas-capability-os-pages\/pull\/28|actions\/workflows\/pages\.yml/);
-    for(const section of ['trabalho', 'criacoes', 'sobre', 'contato']) {
+    for(const section of (route==='' ? ['trabalho', 'criacoes', 'sobre', 'contato'] : ['criacoes', 'sobre', 'contato'])) {
       assert.ok(page.includes(`id="${section}"`));
     }
+    if(route==='en/') assert.ok(!page.includes('id="trabalho"'));
   }
 });
 
 
-test('lessons expose existing and one-off offers and keep the owner phone and inactive collection out of public pages',()=>{
- for(const route of ['', 'en/']){
-  const page=html(route);
-  for(const content of ['id="aulas"','Business English','id="reia"'])assert.ok(page.includes(content));
-  assert.ok(page.includes(route==='en/'?'<p class="lesson-separation">Lessons involve working directly with me.</p>':'<p class="lesson-separation">Nas aulas, você trabalha diretamente comigo.</p>'));
-  assert.doesNotMatch(page.match(/<p class="lesson-separation">.*?<\/p>/)?.[0]??'',/Reta Final|Reta Final toolkit/);
-  assert.doesNotMatch(page,/wa\.me|api\.whatsapp\.com|META_ACCESS_TOKEN|WHATSAPP_TO|R\$\s*550/);
-  if(intakeConfigured)assert.match(page,/data-mock-form/);
-  else { assert.match(page,/Agendamento online em preparação|Online booking is being prepared/);assert.doesNotMatch(page,/data-mock-form/); }
-  assert.match(page,/R\$ 80/);
-  assert.ok(page.includes(route==='en/'?'Practice your next job interview in English':'Treine sua próxima entrevista em inglês'));
-  assert.ok(page.includes(route==='en/'?'within 2 hours of the end of the session':'em até 2 horas após a sessão'));
-  assert.doesNotMatch(page,/R\$ 149|BRL 149|45-minute mock/);
-  assert.ok(page.includes(route==='en/'?'one 60-minute session + written report':'1 hora de prática + relatório'));
-  assert.ok(page.includes(intakeConfigured?(route==='en/'?'Request a session':'Solicitar simulação'):(route==='en/'?'Booking opens soon':'Agendamento em breve')));
-  if(!intakeConfigured){assert.doesNotMatch(page,/data-lesson-form/);assert.match(page,/href="https:\/\/www.linkedin.com\/in\/lucasmateus\/"/);}
-  else {assert.match(page,/data-lesson-form/);assert.match(page,/data-active="true"/);}
- }
+test('single interview package replaces lessons and the one-off offer',()=>{
+ const page=html('');
+  for(const content of ['Interview Map','videochamada','id="aplicacao"']) assert.ok(page.includes(content),content);
+  assert.ok(!page.includes('R$ 320'),'published price must not appear');
+  assert.ok(!page.includes('Google Meet'),'Meet must not be named');
+  assert.doesNotMatch(page,/id="aulas"|R\$ 80|Business English|data-mock-form|data-lesson-form|Reta Final/);
+  assert.match(page,/3 dias úteis/);
+  assert.match(page,/30 min/);assert.match(page,/2 × 60 min/);
+  for(const name of ['Chris Silva Upson','Gustavo Chaves','Leo Labra'])assert.ok(page.includes(name));
+  const enPage=html('en/');
+  assert.ok(!enPage.includes('id="trabalho"'),'EN home must not offer the package');
+  assert.ok(!enPage.includes('id="aplicacao"'),'EN home must not carry the application area');
+  assert.ok(!enPage.includes('R$ 320'));assert.ok(!enPage.includes('Google Meet'));
+  for(const name of ['Chris Silva Upson','Gustavo Chaves','Leo Labra'])assert.ok(enPage.includes(name));
 });
 
 test('portfolio explains AI work to ordinary visitors without internal engineering jargon',()=>{

@@ -37,6 +37,8 @@ test.describe('REIA Sales Page (/renda-extra-com-ia/)', () => {
     await expect(page.locator('.author-card .meta-note')).toHaveCount(0);
     await expect(page.locator('.author-card')).not.toContainText('Nota de transparência');
     const portrait = page.locator('.author-portrait');
+    await portrait.scrollIntoViewIfNeeded();
+    await expect.poll(()=>portrait.evaluate((img:HTMLImageElement)=>img.complete && img.naturalWidth > 0)).toBe(true);
     await expect(portrait).toHaveAttribute('alt', 'Foto de Lucas Mateus');
     await expect(portrait).toBeVisible();
     const visual = await portrait.evaluate((img: HTMLImageElement) => ({
