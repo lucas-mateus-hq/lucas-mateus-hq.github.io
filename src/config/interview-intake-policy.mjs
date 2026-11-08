@@ -1,7 +1,7 @@
 // Shared by the static build and release preflight. Public form IDs, never answers.
 export function interviewIntakeConfig(env) {
- const ids={'pt-BR':env.PUBLIC_TALLY_INTERVIEW_PT_ID || '', 'en-US':env.PUBLIC_TALLY_INTERVIEW_EN_ID || ''};
- const configured=Object.values(ids).every(id=>/^[A-Za-z0-9]{6,24}$/.test(id)) && ids['pt-BR']!==ids['en-US'];
+ const ids={'pt-BR':env.PUBLIC_TALLY_INTERVIEW_PT_ID || ''};
+ const configured=Boolean(ids['pt-BR'] && /^[A-Za-z0-9]{6,24}$/.test(ids['pt-BR']));
  return {active:env.PUBLIC_TALLY_INTAKE_APPROVED==='true' && configured,ids};
 }
 export function interviewForm(config,lang) {
