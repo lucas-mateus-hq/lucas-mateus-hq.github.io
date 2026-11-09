@@ -11,5 +11,3 @@ test-results/
 .dev.vars*
 .wrangler/
 # The backend Wrangler file now contains only non-secret public configuration.
-
-.lighthouseci/

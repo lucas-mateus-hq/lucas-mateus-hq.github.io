@@ -6,15 +6,12 @@
   "scripts": {
     "build": "astro check && astro build",
     "preview": "astro preview --host 127.0.0.1 --port 4321",
-    "test:e2e": "playwright test tests/personal.spec.ts tests/reia.spec.ts",
+    "test:e2e": "playwright test tests/personal.spec.ts",
     "test:fresh-eyes": "playwright test tests/fresh-eyes.spec.ts",
     "test:relay": "playwright test tests/relay-zero-cost.spec.ts",
     "test:static": "node --test tests/static.test.mjs",
-    "test:legacy-intake": "node --test tests/intake.test.mjs",
-    "test:intake": "node --test tests/interview-intake.test.mjs",
-    "test:tally-ui": "playwright test tests/tally-ui.spec.ts",
-    "test:analytics": "node --test tests/analytics-consent.test.mjs",
-    "test:analytics-ui": "playwright test tests/analytics-ui.spec.ts"
+    "test:intake": "node --test tests/intake.test.mjs",
+    "test:intake-ui": "playwright test tests/intake-ui.spec.ts"
   },
   "engines": {
     "node": ">=22"

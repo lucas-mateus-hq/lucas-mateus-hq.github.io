@@ -1,5 +1,3 @@
-> HISTÓRICO: este documento descreve a oferta/arquitetura anterior. Para o candidato atual de acompanhamento R$320 e Tally, use [TALLY_FORMS_MIGRATION.md](TALLY_FORMS_MIGRATION.md). Não reativar Worker/Turnstile a partir deste registro.
-
 # Simulação de entrevista — publicação segura (26/10/2026)
 
 **Escopo comercial:** 60 minutos · R$ 80 · relatório individual por e-mail em até duas horas após a sessão. O relatório é feito/revisado pelo responsável; não existe bot de transcrição, envio automático nem pagamento integrado.
