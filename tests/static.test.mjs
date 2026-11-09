@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 
 const prefix = '/';
-const intakeConfigured=process.env.PUBLIC_TALLY_INTAKE_APPROVED==='true';
+const intakeConfigured=Boolean(process.env.PUBLIC_LESSON_API_URL && process.env.PUBLIC_TURNSTILE_SITE_KEY);
 const origin = 'https://lucas-mateus-hq.github.io';
 const routes = ['', 'en/', 'portfolio/', 'portfolio/pt/', 'privacy/', 'privacidade/', 'renda-extra-com-ia/'];
 const fileFor = (path) => `dist/${path}${path.endsWith('/') || !path ? 'index.html' : ''}`;
@@ -12,11 +12,9 @@ const html = (route) => readFileSync(fileFor(route), 'utf8');
 test('unconfigured publication keeps LinkedIn contact, accurate privacy and retired dashboard assets', () => {
   for(const route of routes) {
     assert.doesNotMatch(html(route),/mailto:|wa\.me|META_ACCESS_TOKEN|WHATSAPP_TO/);
-    if(route==='') {
-      if(intakeConfigured)assert.match(html(route),/data-interview-application/);
-      else { assert.match(html(route),/Aplicações em preparação/); assert.doesNotMatch(html(route),/data-mock-form|<form\b/); }
-    } else if(route==='en/') {
-      assert.doesNotMatch(html(route),/id="aplicacao"|data-interview-application|<form\b/);
+    if(['', 'en/'].includes(route)) {
+      if(intakeConfigured)assert.match(html(route),/data-mock-form/);
+      else { assert.match(html(route),/Agendamento online em preparação|Online booking is being prepared/); assert.doesNotMatch(html(route),/data-mock-form|<form\b/); }
     } else assert.doesNotMatch(html(route),/<input\b|<form\b/);
   }
   for(const route of ['privacidade/','privacy/']){
@@ -25,7 +23,7 @@ test('unconfigured publication keeps LinkedIn contact, accurate privacy and reti
     assert.ok(source.includes('https://www.linkedin.com/in/lucasmateus/'));
     assert.ok(source.includes('https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement'));
     assert.ok(source.includes('2026'));
-    assert.match(source,/GitHub Pages/);assert.doesNotMatch(source,/wa\.me|id="relay"/);if(!intakeConfigured)assert.doesNotMatch(source,/WhatsApp/);else assert.match(source,/id="interview-applications"/);assert.match(source,/LGPD/);
+    assert.match(source,/GitHub Pages/);assert.doesNotMatch(source,/wa\.me|id="relay"/);if(!intakeConfigured)assert.doesNotMatch(source,/WhatsApp/);else assert.match(source,/id="lesson-inquiries"/);assert.match(source,/LGPD/);
   }
   for(const path of ['live-telemetry.js','telemetry.json','responsive-guard.css'])assert.equal(existsSync('dist/'+path),false,path);
 });
@@ -106,7 +104,7 @@ test('actual editorial identity and product text pairs meet WCAG AA contrast', (
     ['0b2429','f7f3ea'],['0b2429','bdccc9'],['0b2429','c58a45'],
     ['0f6b61','f7f3ea'],['73cdba','071b20'],
     ['102a43','d0dce8'],['102a43','abcbe5'],['d3e5d2','203d35'],
-    ['f7f3ea','344d50'],['f7f3ea','0f6b61'],['e7641b','0c2037'],['081a2b','b9cbd9'],
+    ['e7641b','0c2037'],['081a2b','b9cbd9'],
     // REIA palette actual pairs
     ['F5F0E8','93351F'],['F5F0E8','172027'],['F5F0E8','465057'],
     ['EADFCC','93351F'],['EADFCC','172027'],['EADFCC','465057'],
@@ -128,10 +126,8 @@ test('locale pairs have reciprocal language links and preserve assets and eviden
     const images = x=>[...x.matchAll(/<img[^>]*src="([^"]+)"/g)].map(m=>m[1]);
     assert.deepEqual(images(a),images(b));
     const sections=x=>[...x.matchAll(/<section[^>]*id="([^"]+)"/g)].map(m=>m[1]);
-    if(pt===''){ assert.deepEqual(sections(a),['trabalho','aplicacao','criacoes','escritos','sobre','contato']); assert.deepEqual(sections(b),['criacoes','escritos','sobre','contato']); }
-    else assert.deepEqual(sections(a),sections(b));
-    assert.doesNotMatch(a+b,/translate\.google/);
-    if(process.env.PUBLIC_ANALYTICS_APPROVED!=='true')assert.doesNotMatch(a+b,/localStorage|document\.cookie/);
+    assert.deepEqual(sections(a),sections(b));
+    assert.doesNotMatch(a+b,/translate\.google|localStorage|document\.cookie/);
   }
   assert.match(html('en/'), /Available in Portuguese/);
   assert.match(html('portfolio/pt/'), /14 de 15 \(93%\)/);
@@ -147,28 +143,31 @@ test('home creations retain REIA and exclude the retired product', () => {
     assert.ok(page.includes('href="/renda-extra-com-ia/"'));
     assert.doesNotMatch(page, /public-case|case-links|Este portfólio, por dentro|This portfolio, from the inside/);
     assert.doesNotMatch(page, /github\.com\/lucas-mateus-hq\/lucas-capability-os-pages\/pull\/28|actions\/workflows\/pages\.yml/);
-    for(const section of (route==='' ? ['trabalho', 'criacoes', 'sobre', 'contato'] : ['criacoes', 'sobre', 'contato'])) {
+    for(const section of ['trabalho', 'criacoes', 'sobre', 'contato']) {
       assert.ok(page.includes(`id="${section}"`));
     }
-    if(route==='en/') assert.ok(!page.includes('id="trabalho"'));
   }
 });
 
 
-test('single interview package replaces lessons and the one-off offer',()=>{
- const page=html('');
-  for(const content of ['Interview Map','videochamada','id="aplicacao"']) assert.ok(page.includes(content),content);
-  assert.ok(!page.includes('R$ 320'),'published price must not appear');
-  assert.ok(!page.includes('Google Meet'),'Meet must not be named');
-  assert.doesNotMatch(page,/id="aulas"|R\$ 80|Business English|data-mock-form|data-lesson-form|Reta Final/);
-  assert.match(page,/3 dias úteis/);
-  assert.match(page,/30 min/);assert.match(page,/2 × 60 min/);
-  for(const name of ['Chris Silva Upson','Gustavo Chaves','Leo Labra'])assert.ok(page.includes(name));
-  const enPage=html('en/');
-  assert.ok(!enPage.includes('id="trabalho"'),'EN home must not offer the package');
-  assert.ok(!enPage.includes('id="aplicacao"'),'EN home must not carry the application area');
-  assert.ok(!enPage.includes('R$ 320'));assert.ok(!enPage.includes('Google Meet'));
-  for(const name of ['Chris Silva Upson','Gustavo Chaves','Leo Labra'])assert.ok(enPage.includes(name));
+test('lessons expose existing and one-off offers and keep the owner phone and inactive collection out of public pages',()=>{
+ for(const route of ['', 'en/']){
+  const page=html(route);
+  for(const content of ['id="aulas"','Business English','id="reia"'])assert.ok(page.includes(content));
+  assert.ok(page.includes(route==='en/'?'<p class="lesson-separation">Lessons involve working directly with me.</p>':'<p class="lesson-separation">Nas aulas, você trabalha diretamente comigo.</p>'));
+  assert.doesNotMatch(page.match(/<p class="lesson-separation">.*?<\/p>/)?.[0]??'',/Reta Final|Reta Final toolkit/);
+  assert.doesNotMatch(page,/wa\.me|api\.whatsapp\.com|META_ACCESS_TOKEN|WHATSAPP_TO|R\$\s*550/);
+  if(intakeConfigured)assert.match(page,/data-mock-form/);
+  else { assert.match(page,/Agendamento online em preparação|Online booking is being prepared/);assert.doesNotMatch(page,/data-mock-form/); }
+  assert.match(page,/R\$ 80/);
+  assert.ok(page.includes(route==='en/'?'Practice your next job interview in English':'Treine sua próxima entrevista em inglês'));
+  assert.ok(page.includes(route==='en/'?'within 2 hours of the end of the session':'em até 2 horas após a sessão'));
+  assert.doesNotMatch(page,/R\$ 149|BRL 149|45-minute mock/);
+  assert.ok(page.includes(route==='en/'?'one 60-minute session + written report':'1 hora de prática + relatório'));
+  assert.ok(page.includes(intakeConfigured?(route==='en/'?'Request a session':'Solicitar simulação'):(route==='en/'?'Booking opens soon':'Agendamento em breve')));
+  if(!intakeConfigured){assert.doesNotMatch(page,/data-lesson-form/);assert.match(page,/href="https:\/\/www.linkedin.com\/in\/lucasmateus\/"/);}
+  else {assert.match(page,/data-lesson-form/);assert.match(page,/data-active="true"/);}
+ }
 });
 
 test('portfolio explains AI work to ordinary visitors without internal engineering jargon',()=>{
@@ -262,8 +261,4 @@ test('REIA cover is 1200 square and contains only image data, with no embedded m
   assert.equal(cover.toString('hex', 23, 26), '9d012a');
   assert.equal(cover.readUInt16LE(26) & 0x3fff, 1200);
   assert.equal(cover.readUInt16LE(28) & 0x3fff, 1200);
-});
-
-test('built public pages contain no active Cloudflare transport or old service form',()=>{
- for(const route of routes)assert.doesNotMatch(html(route),/workers\.dev|challenges\.cloudflare|turnstile|data-mock-form|data-lesson-form/i);
 });

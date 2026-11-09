@@ -44,6 +44,6 @@ Omitir detalhes de implementação que não mudem a decisão. Nunca afirmar que 
 
 **Revisão editorial:** remover siglas/termos internos sem função para o público, frases sobre arquitetura/segredos, disclaimers repetidos e instruções de operação disfarçadas de copy.
 
-**Teste de publicação:** para a oferta de entrevista, não substituir a aplicação por um desvio obrigatório ao LinkedIn. O lançamento comercial requer Tally configurado, formulário e privacidade conferidos, resposta armazenada no painel e notificação por e-mail verificadas. Ver docs/TALLY_FORMS_MIGRATION.md.
+**Teste de publicação:** para a oferta de entrevista, não substituir a ficha de captação por um desvio obrigatório ao LinkedIn. O lançamento comercial requer backend real configurado, preflight do endpoint, publicação protegida e verificação posterior de um protocolo efetivamente armazenado na D1. Ver docs/GO_LIVE_INTERVIEW.md.
 
 Automação pode checar termos proibidos e links; a decisão editorial precisa de revisão humana. CI verde isoladamente **não é** aprovação comercial. Este documento governa revisões futuras, mas **não aprova nem publica** a PR #7.

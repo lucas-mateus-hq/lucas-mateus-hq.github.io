@@ -1,5 +1,3 @@
-> HISTÓRICO: este documento descreve a oferta/arquitetura anterior. Para o candidato atual de acompanhamento R$320 e Tally, use [TALLY_FORMS_MIGRATION.md](TALLY_FORMS_MIGRATION.md). Não reativar Worker/Turnstile a partir deste registro.
-
 # Oferta de simulação em inglês — revisão de linguagem (25/10/2026)
 
 ## Objetivo

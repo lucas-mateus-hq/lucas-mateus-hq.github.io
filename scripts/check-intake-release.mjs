@@ -1,4 +1,3 @@
-// HISTORICAL WORKER CHECK: not used by the current Tally/Pages release. See docs/TALLY_FORMS_MIGRATION.md.
 // Release-only gate. Does not process or persist visitor data.
 // The separate owner-run end-to-end check in private D1 is mandatory as well.
 const origin = 'https://lucas-mateus-hq.github.io';

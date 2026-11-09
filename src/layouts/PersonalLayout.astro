@@ -1,5 +1,4 @@
 ---
-import AnalyticsConsent from '../components/AnalyticsConsent.astro';
 import SocialMeta from '../components/SocialMeta.astro';
 import NavigationEnhancements from '../components/NavigationEnhancements.astro';
 import '../styles/identity.css';
@@ -45,7 +44,7 @@ const canonical = new URL(`${base}/${path}`, Astro.site).href;
     <header class="site-header wrap">
       <a class="identity" href={home} aria-label={en?'Lucas Mateus · Home':'Lucas Mateus · início'}><span class="monogram" aria-hidden="true">lm.</span><span>Lucas Mateus</span></a>
       <nav class="primary-navigation" aria-label={en?'Main navigation':'Navegação principal'}>
-        {!en && <a href={`${home}#trabalho`}>Acompanhamento</a>}<a href={`${home}#criacoes`}>{en?'Products':'Produtos'}</a><a href={`${home}#sobre`}>{en?'About':'Sobre'}</a><a href={`${home}#contato`}>{en?'Contact':'Contato'}</a>
+        <a href={`${home}#trabalho`}>{en?'Work':'Trabalho'}</a><a href={`${home}#aulas`}>{en?'Lessons':'Aulas'}</a><a href={`${home}#criacoes`}>{en?'Creations':'Criações'}</a><a href={`${home}#sobre`}>{en?'About':'Sobre'}</a><a href={`${home}#contato`}>{en?'Contact':'Contato'}</a>
       </nav>
       <LanguageSwitcher lang={lang} pt={pt} en={english} />
       <a class="header-contact" href="https://www.linkedin.com/in/lucasmateus/">LinkedIn <span aria-hidden="true">↗</span><span class="screen-reader-only">{en?' (opens LinkedIn in new tab/window)':' (abre o LinkedIn)'}</span></a>
@@ -57,6 +56,5 @@ const canonical = new URL(`${base}/${path}`, Astro.site).href;
       <small>São Paulo, {en?'Brazil':'Brasil'} · {new Date().getFullYear()}</small>
     </footer>
     <NavigationEnhancements />
-    <AnalyticsConsent lang={lang} />
   </body>
 </html>
