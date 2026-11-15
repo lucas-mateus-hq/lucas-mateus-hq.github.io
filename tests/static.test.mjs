@@ -262,3 +262,25 @@ test('REIA cover is 1200 square and contains only image data, with no embedded m
   assert.equal(cover.readUInt16LE(26) & 0x3fff, 1200);
   assert.equal(cover.readUInt16LE(28) & 0x3fff, 1200);
 });
+
+// The Reta Final sales route is prepared ahead of launch: no domain, no checkout, not listed anywhere.
+test('Reta Final sales route carries no fixed domain and stays unavailable and unlisted until a checkout is configured', () => {
+  const page = html('reta-final/');
+  assert.match(page, /<html lang="pt-BR">/);
+  assert.equal((page.match(/<h1[\s>]/g) ?? []).length, 1);
+  const absolute = (page.match(/https?:\/\/[^\s"'<>)]+/g) ?? []).filter(url => !url.startsWith('http://www.w3.org/'));
+  assert.deepEqual(absolute, [], 'no absolute URL or domain may be written in the page');
+  assert.doesNotMatch(page, /rel="canonical"|og:url|github\.io|hreflang/);
+  assert.match(page, /<meta name="robots" content="noindex,nofollow"/);
+  assert.match(page, /data-rf-state="closed"/);
+  assert.doesNotMatch(page, /data-rf-checkout/);
+  assert.equal((page.match(/data-rf-unavailable/g) ?? []).length, 3);
+  assert.match(page, /As vendas do Reta Final ainda não foram abertas/);
+  for (const fact of ['57,00', 'R$ 127,00', '48 páginas', '4 etapas e 10 ferramentas', 'Garantia incondicional de 7 dias', '12 perguntas mais recorrentes']) assert.ok(page.includes(fact), fact);
+  assert.equal((page.match(/class="rf-tool"/g) ?? []).length, 10);
+  assert.equal((page.match(/class="rf-item"/g) ?? []).length, 7);
+  assert.doesNotMatch(page, /\p{Extended_Pictographic}/u, 'the design system uses icons, never emoji');
+  assert.doesNotMatch(readFileSync('dist/sitemap.xml', 'utf8'), /reta-final/);
+  for (const route of routes) assert.ok(!html(route).includes('href="/reta-final/"'), route);
+  for (const asset of ['fonts/inter-latin-opsz-normal.woff2', 'images/reta-final-lockup-white.svg', 'images/reta-final-mark.svg']) assert.ok(page.includes('/' + asset) && existsSync('dist/' + asset), asset);
+});
