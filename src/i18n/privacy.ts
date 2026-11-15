@@ -97,3 +97,17 @@ if (lessonIntake.active) {
   privacyCopy[text]="As solicitações são enviadas por HTTPS para um Cloudflare Worker e guardadas em uma base privada Cloudflare D1. O acesso deve ficar restrito a Lucas e operadores autorizados por ele. Os registros ativos de triagem têm exclusão programada após 30 dias; cópias de segurança e registros técnicos seguem as regras próprias do provedor. Se houver contratação, registros necessários a essa relação exigem tratamento separado. Um aviso operacional pelo WhatsApp poderá conter apenas o protocolo, sem suas respostas ou e-mail. A aceitação de um aviso pelo provedor não comprova entrega ou leitura. Os provedores podem tratar informações fora do Brasil. As solicitações não são armazenadas no repositório público do GitHub nem publicadas neste site.";
   privacySections.splice(4,0,{id:'lesson-inquiries',title:'Lesson inquiries and retention',text});
 }
+
+
+if (import.meta.env.PUBLIC_ANALYTICS_APPROVED === 'true') {
+  const text="With your permission, the sales page for the guide \"Renda Extra com IA\" uses Google Analytics 4 to count visits and clicks on the button that leads to the Hotmart checkout. Nothing is loaded before you choose Accept; if you decline, no analytics script or cookie is set. Advertising signals and personalization are disabled, and form answers, names or emails are never sent. Google may process this data outside Brazil under its own privacy policy. Your choice is kept in your browser for up to 180 days and can be changed at any time in Privacy choices at the bottom of the page.";
+  privacyCopy["Audience measurement (optional)"]="Medição de audiência (opcional)";
+  privacyCopy[text]="Com a sua permissão, a página de vendas do guia \"Renda Extra com IA\" usa o Google Analytics 4 para contar visitas e cliques no botão que leva ao checkout da Hotmart. Nada é carregado antes de você escolher Aceitar; se recusar, nenhum script ou cookie de análise é criado. Sinais e personalização de anúncios ficam desativados, e respostas de formulários, nomes ou e-mails nunca são enviados. O Google pode tratar esses dados fora do Brasil conforme a política de privacidade dele. Sua escolha fica guardada no seu navegador por até 180 dias e pode ser alterada a qualquer momento em Preferências de privacidade, no rodapé da página.";
+  const browsing=privacySections.find(section=>section.id==='browsing');
+  if (browsing) {
+    const english=browsing.text.replace('audience analytics script','audience analytics script except the optional measurement described below');
+    privacyCopy[english]=(privacyCopy[browsing.text]||browsing.text).replace('script de análise de audiência','script de análise de audiência, exceto a medição opcional descrita abaixo');
+    browsing.text=english;
+  }
+  privacySections.splice(3,0,{id:'analytics',title:'Audience measurement (optional)',text});
+}
