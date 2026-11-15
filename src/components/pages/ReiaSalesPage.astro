@@ -1,4 +1,5 @@
 ---
+import AnalyticsConsent from '../AnalyticsConsent.astro';
 interface Props {
   canonicalUrl?: string;
 }
@@ -827,6 +828,7 @@ const coverUrl = `${base}/images/reia-cover.webp`;
             <div class="hero-actions">
               <a
                 href={canonicalUrl}
+                data-cta="topo"
                 class="cta-button"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -1107,6 +1109,7 @@ const coverUrl = `${base}/images/reia-cover.webp`;
             <div class="guarantee-actions">
               <a
                 href={canonicalUrl}
+                data-cta="final"
                 class="cta-button"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -1137,5 +1140,13 @@ const coverUrl = `${base}/images/reia-cover.webp`;
         </div>
       </div>
     </footer>
+    <AnalyticsConsent lang="pt-BR" />
+    <script is:inline>
+      document.addEventListener('click', (event) => {
+        const link = event.target.closest('a[data-cta]');
+        if (!link || typeof window.gtag !== 'function') return;
+        window.gtag('event', 'clique_checkout_hotmart', { posicao: link.dataset.cta, transport_type: 'beacon' });
+      });
+    </script>
   </body>
 </html>

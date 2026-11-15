@@ -128,6 +128,8 @@ jobs:
           echo "PUBLIC_LESSON_API_URL=" >> "$GITHUB_ENV"
           echo "PUBLIC_TURNSTILE_SITE_KEY=" >> "$GITHUB_ENV"
       - name: Build static site
+        env:
+          PUBLIC_ANALYTICS_APPROVED: ${{ vars.ANALYTICS_CONFIG_VERIFIED == 'true' && 'true' || '' }}
         run: npm run build
       - name: Fail closed if unavailable intake is present in HTML
         if: ${{ vars.INTAKE_RELEASE_APPROVED == 'true' && steps.intake_preflight.outcome != 'success' }}
