@@ -25,10 +25,11 @@ export const privacyCopy:Record<string,string>={
   "Your choices and rights": "Suas escolhas e seus direitos",
   "For personal data within Lucas’s responsibility, you may request information about processing, access, correction or deletion, as applicable under the LGPD. Use the LinkedIn contact below and describe the request without including unnecessary sensitive data. Requests are assessed within the applicable legal requirements; deletion may be limited by legal retention obligations or third-party systems. Infrastructure requests can also be directed to GitHub through its privacy channels. You may contact Brazil’s ANPD if your rights are not adequately addressed. This notice does not replace the policies of those providers.": "Para dados pessoais sob responsabilidade de Lucas, você pode solicitar informações sobre o tratamento, acesso, correção ou exclusão, conforme aplicável na LGPD. Use o contato no LinkedIn abaixo e descreva o pedido sem incluir dados sensíveis desnecessários. Os pedidos são avaliados conforme os requisitos legais aplicáveis; a exclusão pode ter limites decorrentes de obrigações legais de retenção ou de sistemas de terceiros. Solicitações sobre a infraestrutura também podem ser encaminhadas ao GitHub pelos canais de privacidade dele. Você pode recorrer à ANPD se seus direitos não forem adequadamente atendidos. Este aviso não substitui as políticas desses provedores.",
   "Changes to this notice": "Alterações neste aviso",
-  "This notice will be reviewed if the site’s collection, hosting or integrations change. The revision date identifies this version. A future purchase or product registration will be governed by the notice shown at that destination; no purchase or payment is processed by the current portfolio.": "Este aviso será revisto se houver mudanças na coleta, hospedagem ou integrações do site. A data de revisão identifica esta versão. Uma futura compra ou inscrição em produto será regida pelo aviso apresentado naquele destino; o portfólio atual não processa compras ou pagamentos."
+  "This notice will be reviewed if the site’s collection, hosting or integrations change. The revision date identifies this version. Purchases of the guide are made on Hotmart, as described in the section on buying the guide; this site does not process payments.": "Este aviso será revisto se houver mudanças na coleta, hospedagem ou integrações do site. A data de revisão identifica esta versão. A compra do guia é feita na Hotmart, como descrito na seção sobre a compra do guia; este site não processa pagamentos."
 };
 
 
+export const privacySummary:string[]=[];
 export const privacySections=[
   {
     "id": "responsibility",
@@ -63,7 +64,7 @@ export const privacySections=[
   {
     "id": "changes",
     "title": "Changes to this notice",
-    "text": "This notice will be reviewed if the site’s collection, hosting or integrations change. The revision date identifies this version. A future purchase or product registration will be governed by the notice shown at that destination; no purchase or payment is processed by the current portfolio."
+    "text": "This notice will be reviewed if the site’s collection, hosting or integrations change. The revision date identifies this version. Purchases of the guide are made on Hotmart, as described in the section on buying the guide; this site does not process payments."
   }
 ];
 
@@ -111,4 +112,38 @@ if (import.meta.env.PUBLIC_ANALYTICS_APPROVED === 'true') {
     browsing.text=english;
   }
   privacySections.splice(3,0,{id:'analytics',title:'Audience measurement (optional)',text});
+}
+
+
+// Guide-related disclosures (sales page: Hotmart checkout, fonts, what is not collected) and reading order.
+{
+  const purchaseTitle="Buying the guide (Hotmart)";
+  const purchaseText="The guide \"Renda Extra com IA\" is sold on Hotmart. The button on the sales page opens the Hotmart checkout, where Hotmart handles payment and purchase registration under its own terms and privacy policy. This site does not receive or store your payment data. As the producer, Lucas can see purchase details on Hotmart, such as your name and email, to deliver the guide, give support and handle the 7-day guarantee. The sales page also loads the Outfit typeface from Google Fonts when it opens, so Google receives your IP address and browser data for that request even if you decline analytics.";
+  privacyCopy[purchaseTitle]="Compra do guia (Hotmart)";
+  privacyCopy[purchaseText]="O guia \"Renda Extra com IA\" é vendido na Hotmart. O botão da página de vendas abre o checkout da Hotmart, onde a Hotmart trata o pagamento e o registro da compra conforme os próprios termos e a própria política de privacidade. Este site não recebe nem guarda seus dados de pagamento. Como produtor, Lucas pode ver na Hotmart os dados da compra, como nome e e-mail, para entregar o guia, dar suporte e atender a garantia de 7 dias. A página de vendas também carrega a fonte Outfit do Google Fonts ao abrir, então o Google recebe seu endereço IP e dados do navegador nessa requisição, mesmo que você recuse a medição de audiência.";
+  privacySections.push({id:'purchase',title:purchaseTitle,text:purchaseText});
+
+  const notTitle="What the guide page does not collect";
+  const notText="The sales page has no registration, form, advertising pixel or remarketing. It does not send names, emails, form answers or payment data to analytics, and it does not receive your payment data. Technical records kept by the hosting provider are described in the hosting section.";
+  privacyCopy[notTitle]="O que a página do guia não coleta";
+  privacyCopy[notText]="A página de vendas não tem cadastro, formulário, pixel de anúncios nem remarketing. Ela não envia nomes, e-mails, respostas de formulário ou dados de pagamento para a análise de audiência e não recebe seus dados de pagamento. Os registros técnicos mantidos pela hospedagem estão descritos na seção de hospedagem.";
+  privacySections.push({id:'not-collected',title:notTitle,text:notText});
+
+  // Summary box (shown on top of the page).
+  const lines:[string,string][]=[
+    ["Reading this site or the guide's sales page requires no registration.","Ler este site ou a página de vendas do guia não exige cadastro."],
+    ["The guide is bought on Hotmart, which handles payment and purchase data. This site does not receive your payment data.","O guia é comprado na Hotmart, que trata o pagamento e os dados da compra. Este site não recebe seus dados de pagamento."]
+  ];
+  if (import.meta.env.PUBLIC_ANALYTICS_APPROVED === 'true') lines.splice(1,0,["Google Analytics runs only if you choose Accept. You can decline and still browse and buy.","O Google Analytics só roda se você escolher Aceitar. Você pode recusar e continuar navegando e comprando."]);
+  for (const [en,pt] of lines) privacyCopy[en]=pt;
+  privacyCopy["In short"]="Em resumo";
+  privacyCopy["Contact by email:"]="Contato por e-mail:";
+  privacyCopy["Or write to"]="Ou escreva para";
+  privacyCopy["Hotmart terms of use"]="Termos de uso da Hotmart";
+  privacySummary.push(...lines.map(l=>l[0]));
+
+  // Reading order: what matters to a buyer of the guide first, other services of the site after.
+  const order=['responsibility','analytics','purchase','not-collected','hosting','browsing','contact','rights','lesson-inquiries','mock-report','publishing','changes'];
+  const rank=(id:string)=>{const i=order.indexOf(id);return i===-1?order.length:i;};
+  privacySections.sort((a,b)=>rank(a.id)-rank(b.id));
 }
