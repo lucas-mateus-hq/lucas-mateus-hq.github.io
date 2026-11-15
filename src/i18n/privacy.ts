@@ -105,8 +105,9 @@ if (import.meta.env.PUBLIC_ANALYTICS_APPROVED === 'true') {
   privacyCopy[text]="Com a sua permissão, a página de vendas do guia \"Renda Extra com IA\" usa o Google Analytics 4 para contar visitas e cliques no botão que leva ao checkout da Hotmart. Nada é carregado antes de você escolher Aceitar; se recusar, nenhum script ou cookie de análise é criado. Sinais e personalização de anúncios ficam desativados, e respostas de formulários, nomes ou e-mails nunca são enviados. O Google pode tratar esses dados fora do Brasil conforme a política de privacidade dele. Sua escolha fica guardada no seu navegador por até 180 dias e pode ser alterada a qualquer momento em Preferências de privacidade, no rodapé da página.";
   const browsing=privacySections.find(section=>section.id==='browsing');
   if (browsing) {
-    const english=browsing.text.replace('audience analytics script','audience analytics script except the optional measurement described below');
-    privacyCopy[english]=(privacyCopy[browsing.text]||browsing.text).replace('script de análise de audiência','script de análise de audiência, exceto a medição opcional descrita abaixo');
+    // Covers both browsing texts: portfolio default and lesson-intake variant.
+    const english=browsing.text.replace(/audience analytics( script)?/,match=>`${match} except the optional measurement described below`);
+    privacyCopy[english]=(privacyCopy[browsing.text]||browsing.text).replace(/(script de )?análise de audiência/,match=>`${match}, exceto a medição opcional descrita abaixo`);
     browsing.text=english;
   }
   privacySections.splice(3,0,{id:'analytics',title:'Audience measurement (optional)',text});
