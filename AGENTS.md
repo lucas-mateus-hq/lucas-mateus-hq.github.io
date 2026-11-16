@@ -17,3 +17,6 @@ O padrão editorial obrigatório é [docs/PUBLIC_EXPERIENCE_STANDARD.md](docs/PU
 6. Não recolher dados sem informar; se o backend de captação estiver inativo, não exibir formulário sem recebimento nem transferir a venda para o LinkedIn; mostrar estado indisponível e bloquear publicação comercial até ativação e teste real. Ver docs/GO_LIVE_INTERVIEW.md.
 
 Preservar versões, traduções e conteúdo aprovado; não introduzir complexidade técnica só para descrever o funcionamento. Não usar o portfólio pessoal como painel de governança de outros projetos.
+
+## Sitemap do domínio do Reta Final
+O build do perfil `reta-final` (`npm run build:reta-final`) monta o `sitemap.xml` a partir das páginas construídas, só com o checkout ativo. Sempre que uma rota pública for criada, renomeada ou alterada, declare-a em `scripts/prune-profile.mjs` (campo `sources`, usado no `<lastmod>`) e rode `npm run test:profile`: uma rota sem declaração derruba o build, e uma página `noindex` nunca entra no sitemap.
