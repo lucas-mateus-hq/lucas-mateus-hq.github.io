@@ -25,7 +25,7 @@ test.describe('Reta Final sales page (/reta-final/)', () => {
       const audio = page.locator('.rf-item.is-audio');
       await audio.scrollIntoViewIfNeeded();
       await expect(audio).toBeVisible();
-      await expect(audio).toContainText('25 áudios de prática em MP3');
+      await expect(audio).toContainText('25 áudios de prática');
       await expect(audio.locator('.rf-audio-groups li')).toHaveCount(3);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
       expect(await page.evaluate(() => document.fonts.check('16px Inter'))).toBe(true);
@@ -41,7 +41,7 @@ test.describe('Reta Final sales page (/reta-final/)', () => {
     await page.getByRole('link', { name: 'Ver a oferta' }).click();
     await expect(page.locator('#oferta')).toBeInViewport();
     await expect(page.locator('#oferta .rf-price')).toContainText('97,00');
-    await expect(page.locator('#oferta')).toContainText('7 ferramentas, 25 áudios');
+    await expect(page.locator('#oferta')).toContainText('7 materiais, 25 áudios');
     for (const link of await page.locator('.rf a[href]').all()) expect(await link.getAttribute('href')).toMatch(/^(#|\/)/);
   });
 

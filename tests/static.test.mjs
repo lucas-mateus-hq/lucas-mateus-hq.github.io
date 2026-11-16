@@ -276,7 +276,7 @@ test('Reta Final sales route carries no fixed domain and stays unavailable and u
   assert.doesNotMatch(page, /data-rf-checkout/);
   assert.equal((page.match(/data-rf-unavailable/g) ?? []).length, 3);
   assert.match(page, /As vendas do Reta Final ainda não foram abertas/);
-  for (const fact of ['97,00', 'Preço de lançamento', '48 páginas', '4 etapas e 10 ferramentas', 'Garantia incondicional de 7 dias', '12 perguntas mais recorrentes', '7 ferramentas, 25 áudios']) assert.ok(page.includes(fact), fact);
+  for (const fact of ['97,00', 'Preço de lançamento', '48 páginas', '4 etapas e 10 ferramentas', 'Garantia incondicional de 7 dias', '12 perguntas mais recorrentes', '7 materiais, 25 áudios']) assert.ok(page.includes(fact), fact);
   for (const gone of ['57,00', '127,00', 'até 6x', 'aula particular', 'sem professor', 'R$ 120']) assert.ok(!page.includes(gone), gone);
   assert.equal((page.match(/data-rf-status/g) ?? []).length, 2);
   assert.equal((page.match(/class="rf-tool"/g) ?? []).length, 10);
@@ -284,12 +284,14 @@ test('Reta Final sales route carries no fixed domain and stays unavailable and u
   assert.equal((page.match(/class="rf-reason[ "]/g) ?? []).length, 5);
   // The 25 audios are part of the product: listed in the inventory with their real grouping, never framed as a gift.
   const inventory = page.slice(page.indexOf('id="rf-recebe"'), page.indexOf('id="rf-uso"'));
-  assert.match(inventory, /25 áudios de prática em MP3/);
+  assert.match(inventory, /25 áudios de prática/);
   for (const [count, group] of [['12', 'Módulos de entrevista'], ['10', 'Mock interviews'], ['3', 'Useful English Labs']]) assert.match(inventory, new RegExp(`<b>${count}</b><span><strong[^>]*>${group}</strong>`), group);
-  assert.match(page.slice(page.indexOf('id="oferta"')), /7 ferramentas, 25 áudios/);
+  assert.match(page.slice(page.indexOf('id="oferta"')), /7 materiais, 25 áudios/);
   const text = page.replace(/<[^>]+>/g, ' ');
   assert.doesNotMatch(text, /b[ôo]nus|brinde|gr[áa]tis|de presente|\bextras?\b/i, 'audios are part of the product, not a giveaway');
   assert.doesNotMatch(page, /evid[êe]ncia/i);
+  // Buyers see materials and audios, not file formats or file counts; no author credit in the footer.
+  assert.doesNotMatch(text, /MP3|7 PDFs|criação de Lucas Mateus/);
   // Demonstrations are a small, fixed set of real pages: cover, contents, and tool pages filled with a fictional example.
   // The caption, not the image, says the example is fictional; no other page of the paid material ships.
   const images = [...page.matchAll(/<figure class="rf-page"><img src="(\/images\/reta-final\/[a-z0-9-]+\.webp)"[^>]*>(?:<\/img>)?<figcaption>(.*?)<\/figcaption><\/figure>/g)];
