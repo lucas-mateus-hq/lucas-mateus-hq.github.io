@@ -1,0 +1,71 @@
+---
+// Privacidade do build do domínio próprio do Reta Final. Só descreve o que este site faz.
+import { retaFinalContactEmail, greennPrivacyUrl } from '../../config/reta-final';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const canonical = new URL(`${base}/privacidade/`, Astro.site).href;
+const title = 'Política de Privacidade · Reta Final';
+const description = 'Aviso de privacidade da página de vendas do Reta Final: compra na Greenn, o que esta página não coleta e hospedagem.';
+const summary = [
+  'Ler esta página não exige cadastro.',
+  'O Reta Final é comprado na Greenn, que trata o pagamento e os dados da compra. Esta página não recebe seus dados de pagamento.',
+  'Esta página não usa formulário, pixel de anúncios, remarketing nem cookies de análise.',
+];
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="index,follow" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={`${base}/images/reta-final-mark.svg`} />
+    <link rel="canonical" href={canonical} />
+    <link rel="stylesheet" href={`${base}/fonts/fonts.css`} />
+    <title>{title}</title>
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <style>
+      :root { font-family: "Source Sans 3", Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; color: #f7f3ea; background: #071b20; }
+      * { box-sizing: border-box; }
+      body { margin: 0; }
+      .skip-link{position:fixed;z-index:110;left:12px;top:12px;background:#f7f3ea;color:#071b20;padding:14px 20px;text-decoration:none;font-weight:600;font-size:14px;transform:translateY(-180%)}.skip-link:focus{transform:none}
+      main:focus-visible{outline:3px solid #73cdba;outline-offset:-3px}
+      main { width: min(760px, calc(100% - 40px)); margin: 0 auto; padding: 28px 0 96px; }
+      a { color: inherit; }
+      .back { display: inline-flex; align-items: center; min-height: 44px; margin-bottom: 40px; font-size: .92rem; }
+      .eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: .75rem; }
+      h1 { font-weight:700; font-size: clamp(2.4rem, 7vw, 4.5rem); line-height: 1.15; letter-spacing: -.045em; margin: 12px 0 20px; }
+      .lead { font-size: 1.16rem; line-height: 1.65; max-width: 680px; }
+      .updated { margin: 28px 0; font-size: .9rem; opacity: .7; }
+      .summary{border:1px solid #41595e;border-radius:12px;padding:20px 24px;margin:0 0 40px;background:#0c262c}.summary h2{margin:0 0 8px;font-size:1.05rem}.summary ul{margin:0;padding-left:20px}.summary li{font-size:17px;line-height:1.6;margin:0 0 6px}
+      section { border-top: 1px solid #41595e; padding: 28px 0; }
+      h2 { font-weight:600; margin: 0 0 12px; font-size: 1.15rem; }
+      p { font-size: 18px; line-height: 1.7; margin: 0; max-width: 62ch; }
+      p + p { margin-top: 14px; }
+      p a { overflow-wrap: anywhere; }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <main id="conteudo" tabindex="-1">
+      <a class="back" href={`${base}/`}>← Voltar ao Reta Final</a>
+      <p class="eyebrow">Reta Final · Privacidade</p>
+      <h1>Política de Privacidade</h1>
+      <p class="lead">Este aviso explica o que acontece com seus dados ao visitar a página de vendas do Reta Final e ao comprar.</p>
+      <p class="updated"><strong>Última atualização:</strong> 16 de novembro de 2026</p>
+      <aside class="summary" aria-labelledby="summary-title"><h2 id="summary-title">Em resumo</h2><ul>{summary.map((line) => <li>{line}</li>)}</ul></aside>
+      <section id="responsibility"><h2>Quem é responsável</h2><p>Lucas Mateus da Silva é responsável pelo conteúdo desta página de vendas e pelo produto Reta Final. Ler a página não exige conta nem cadastro.</p></section>
+      <section id="purchase"><h2>Compra do Reta Final (Greenn)</h2>
+        <p>O produto "Reta Final" é vendido na Greenn. O botão da página de vendas abre o checkout da Greenn, onde a Greenn trata o pagamento e o registro da compra conforme os próprios termos e a <a href={greennPrivacyUrl} rel="noopener noreferrer">política de privacidade da Greenn</a>. Esta página não recebe nem guarda seus dados de pagamento.</p>
+        <p>Como produtor, Lucas pode ver na Greenn os dados da compra, como nome e e-mail, para entregar os arquivos e dar suporte. Os arquivos são entregues por e-mail e WhatsApp após a confirmação do pagamento.</p>
+        <p>O registro das compras (por exemplo, nome, e-mail e status do pagamento) também pode ser copiado para uma planilha privada do produtor, no Google Sheets, para controle das vendas e suporte.</p>
+      </section>
+      <section id="not-collected"><h2>O que esta página não coleta</h2><p>A página de vendas não tem cadastro, formulário, pixel de anúncios nem remarketing, e não envia nomes, e-mails ou dados de pagamento para serviços de análise. Os registros técnicos mantidos pela hospedagem estão descritos na seção seguinte.</p></section>
+      <section id="hosting"><h2>Hospedagem e registros técnicos</h2><p>A página é entregue por um provedor de hospedagem, que pode registrar dados técnicos de acesso, como endereço IP, para entregar e proteger o serviço. A fonte e as imagens são servidas pelo próprio site, sem carregar recursos de terceiros.</p></section>
+      <section id="rights"><h2>Seus direitos e contato</h2><p>Você pode exercer os direitos previstos na LGPD, como confirmar, acessar e corrigir dados, perante o controlador de cada serviço: a Greenn, para os dados da compra, e Lucas Mateus, para os dados que recebe como produtor. Para falar com Lucas sobre seus dados, escreva para <a href={`mailto:${retaFinalContactEmail}`}>{retaFinalContactEmail}</a>.</p></section>
+      <section id="changes"><h2>Mudanças neste aviso</h2><p>Este aviso será revisto se a coleta, a hospedagem ou as integrações da página mudarem. A data de revisão identifica esta versão.</p></section>
+    </main>
+  </body>
+</html>

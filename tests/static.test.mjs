@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 
 const prefix = '/';
 const intakeConfigured=Boolean(process.env.PUBLIC_LESSON_API_URL && process.env.PUBLIC_TURNSTILE_SITE_KEY);
@@ -19,11 +19,11 @@ test('unconfigured publication keeps LinkedIn contact, accurate privacy and reti
   }
   for(const route of ['privacidade/','privacy/']){
     const source=html(route);
-    for(const id of ['responsibility','hosting','browsing','contact','mock-report','publishing','rights','changes'])assert.ok(source.includes(`id="${id}"`),route+': '+id);
+    for(const id of ['purchase-reta-final','responsibility','hosting','browsing','contact','mock-report','publishing','rights','changes'])assert.ok(source.includes(`id="${id}"`),route+': '+id);
     assert.ok(source.includes('https://www.linkedin.com/in/lucasmateus/'));
     assert.ok(source.includes('https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement'));
     assert.ok(source.includes('2026'));
-    assert.match(source,/GitHub Pages/);assert.doesNotMatch(source,/wa\.me|id="relay"/);if(!intakeConfigured)assert.doesNotMatch(source,/WhatsApp/);else assert.match(source,/id="lesson-inquiries"/);assert.match(source,/LGPD/);
+    assert.match(source,/GitHub Pages/);assert.doesNotMatch(source,/wa\.me|id="relay"/);if(!intakeConfigured)assert.doesNotMatch(source.replace(/<section id="purchase-reta-final"[^>]*>.*?<\/section>/s,''),/WhatsApp/);else assert.match(source,/id="lesson-inquiries"/);assert.match(source,/LGPD/);
   }
   for(const path of ['live-telemetry.js','telemetry.json','responsive-guard.css'])assert.equal(existsSync('dist/'+path),false,path);
 });
@@ -261,4 +261,58 @@ test('REIA cover is 1200 square and contains only image data, with no embedded m
   assert.equal(cover.toString('hex', 23, 26), '9d012a');
   assert.equal(cover.readUInt16LE(26) & 0x3fff, 1200);
   assert.equal(cover.readUInt16LE(28) & 0x3fff, 1200);
+});
+
+// The Reta Final sales route is prepared ahead of launch: no domain, no checkout, not listed anywhere.
+test('Reta Final sales route carries no fixed domain and stays unavailable and unlisted until a checkout is configured', () => {
+  const page = html('reta-final/');
+  assert.match(page, /<html lang="pt-BR">/);
+  assert.equal((page.match(/<h1[\s>]/g) ?? []).length, 1);
+  const absolute = (page.match(/https?:\/\/[^\s"'<>)]+/g) ?? []).filter(url => !url.startsWith('http://www.w3.org/'));
+  assert.deepEqual(absolute, [], 'no absolute URL or domain may be written in the page');
+  assert.doesNotMatch(page, /rel="canonical"|og:url|github\.io|hreflang/);
+  assert.match(page, /<meta name="robots" content="noindex,nofollow"/);
+  assert.match(page, /data-rf-state="closed"/);
+  assert.doesNotMatch(page, /data-rf-checkout/);
+  assert.equal((page.match(/data-rf-unavailable/g) ?? []).length, 3);
+  assert.match(page, /As vendas do Reta Final ainda não foram abertas/);
+  for (const fact of ['97,00', 'Preço de lançamento', '48 páginas', '4 etapas e 10 ferramentas', 'Garantia incondicional de 7 dias', '12 perguntas mais recorrentes', '7 materiais, 25 áudios']) assert.ok(page.includes(fact), fact);
+  for (const gone of ['57,00', '127,00', 'até 6x', 'aula particular', 'sem professor', 'R$ 120']) assert.ok(!page.includes(gone), gone);
+  assert.equal((page.match(/data-rf-status/g) ?? []).length, 2);
+  assert.equal((page.match(/class="rf-tool"/g) ?? []).length, 10);
+  assert.equal((page.match(/class="rf-item[ "]/g) ?? []).length, 7);
+  assert.equal((page.match(/class="rf-reason[ "]/g) ?? []).length, 5);
+  // The 25 audios are part of the product: listed in the inventory with their real grouping, never framed as a gift.
+  const inventory = page.slice(page.indexOf('id="rf-recebe"'), page.indexOf('id="rf-uso"'));
+  assert.match(inventory, /25 áudios de prática/);
+  for (const [count, group] of [['12', 'Módulos de entrevista'], ['10', 'Mock interviews'], ['3', 'Useful English Labs']]) assert.match(inventory, new RegExp(`<b>${count}</b><span><strong[^>]*>${group}</strong>`), group);
+  assert.match(page.slice(page.indexOf('id="oferta"')), /7 materiais, 25 áudios/);
+  const text = page.replace(/<[^>]+>/g, ' ');
+  assert.doesNotMatch(text, /b[ôo]nus|brinde|gr[áa]tis|de presente|\bextras?\b/i, 'audios are part of the product, not a giveaway');
+  assert.doesNotMatch(page, /evid[êe]ncia/i);
+  // Buyers see materials and audios, not file formats or file counts; no author credit in the footer.
+  assert.doesNotMatch(text, /MP3|7 PDFs|criação de Lucas Mateus/);
+  // Demonstrations are a small, fixed set of real pages: cover, contents, and tool pages filled with a fictional example.
+  // The caption, not the image, says the example is fictional; no other page of the paid material ships.
+  const images = [...page.matchAll(/<figure class="rf-page"><img src="(\/images\/reta-final\/[a-z0-9-]+\.webp)"[^>]*>(?:<\/img>)?<figcaption>(.*?)<\/figcaption><\/figure>/g)];
+  const sampled = ['preparation-plan', 'interview-map', 'star-20', 'star-21', 'interview-day-card'];
+  assert.deepEqual(images.map(([, src]) => src.replace(/.*exemplo-|\.webp/g, '')).sort(), ['capa', 'sumario', ...sampled].sort());
+  for (const [tag, src, caption] of images) {
+    assert.ok(existsSync('dist' + src), src);
+    assert.match(tag, /alt="[^"]{20,}"/); assert.match(tag, /width="480" height="680"/); assert.match(tag, /loading="lazy"/);
+    assert.equal(sampled.some(name => src.endsWith(`exemplo-${name}.webp`)), caption.includes('Exemplo fictício'), src);
+    // Lossy WebP stores the width at bytes 26-27; previews stay at 480px.
+    const file = readFileSync('dist' + src);
+    assert.equal(file.toString('ascii', 12, 16), 'VP8 ', src);
+    assert.ok((file.readUInt16LE(26) & 0x3fff) <= 480, `${src} is wider than a preview`);
+    assert.ok(file.length < 40_000, `${src} is heavier than a preview`);
+  }
+  assert.deepEqual(readdirSync('dist/images/reta-final').filter(f => !f.startsWith('exemplo-')), [], 'no other page of the material ships');
+  const walk = dir => readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(`${dir}/${e.name}`) : [`${dir}/${e.name}`]);
+  assert.deepEqual(walk('dist').filter(f => /\.(mp3|m4a|wav|zip)$/i.test(f)), []);
+  assert.doesNotMatch(page, /\.mp3|lucasmateus\.app/);
+  assert.doesNotMatch(page, /\p{Extended_Pictographic}/u, 'the design system uses icons, never emoji');
+  assert.doesNotMatch(readFileSync('dist/sitemap.xml', 'utf8'), /reta-final/);
+  for (const route of routes) assert.ok(!html(route).includes('href="/reta-final/"'), route);
+  for (const asset of ['fonts/inter-latin-opsz-normal.woff2', 'images/reta-final-lockup-white.svg', 'images/reta-final-mark.svg']) assert.ok(page.includes('/' + asset) && existsSync('dist/' + asset), asset);
 });

@@ -123,6 +123,12 @@ if (import.meta.env.PUBLIC_ANALYTICS_APPROVED === 'true') {
   privacyCopy[purchaseText]="O guia \"Renda Extra com IA\" é vendido na Hotmart. O botão da página de vendas abre o checkout da Hotmart, onde a Hotmart trata o pagamento e o registro da compra conforme os próprios termos e a própria política de privacidade. Este site não recebe nem guarda seus dados de pagamento. Como produtor, Lucas pode ver na Hotmart os dados da compra, como nome e e-mail, para entregar o guia, dar suporte e atender a garantia de 7 dias. A página de vendas também carrega a fonte Outfit do Google Fonts ao abrir, então o Google recebe seu endereço IP e dados do navegador nessa requisição, mesmo que você recuse a medição de audiência.";
   privacySections.push({id:'purchase',title:purchaseTitle,text:purchaseText});
 
+  const retaTitle="Buying Reta Final (Greenn)";
+  const retaText="The product \"Reta Final\" is sold on Greenn. The button on its sales page opens the Greenn checkout, where Greenn handles payment and purchase registration under its own terms and privacy policy. This site does not receive or store your payment data. As the producer, Lucas can see purchase details on Greenn, such as your name and email, to deliver the files and give support. The files are delivered by email and WhatsApp.";
+  privacyCopy[retaTitle]="Compra do Reta Final (Greenn)";
+  privacyCopy[retaText]="O produto \"Reta Final\" é vendido na Greenn. O botão da página de vendas abre o checkout da Greenn, onde a Greenn trata o pagamento e o registro da compra conforme os próprios termos e a própria política de privacidade. Este site não recebe nem guarda seus dados de pagamento. Como produtor, Lucas pode ver na Greenn os dados da compra, como nome e e-mail, para entregar os arquivos e dar suporte. Os arquivos são entregues por e-mail e WhatsApp.";
+  privacySections.push({id:'purchase-reta-final',title:retaTitle,text:retaText});
+
   const notTitle="What the guide page does not collect";
   const notText="The sales page has no registration, form, advertising pixel or remarketing. It does not send names, emails, form answers or payment data to analytics, and it does not receive your payment data. Technical records kept by the hosting provider are described in the hosting section.";
   privacyCopy[notTitle]="O que a página do guia não coleta";
@@ -132,7 +138,8 @@ if (import.meta.env.PUBLIC_ANALYTICS_APPROVED === 'true') {
   // Summary box (shown on top of the page).
   const lines:[string,string][]=[
     ["Reading this site or the guide's sales page requires no registration.","Ler este site ou a página de vendas do guia não exige cadastro."],
-    ["The guide is bought on Hotmart, which handles payment and purchase data. This site does not receive your payment data.","O guia é comprado na Hotmart, que trata o pagamento e os dados da compra. Este site não recebe seus dados de pagamento."]
+    ["The guide is bought on Hotmart, which handles payment and purchase data. This site does not receive your payment data.","O guia é comprado na Hotmart, que trata o pagamento e os dados da compra. Este site não recebe seus dados de pagamento."],
+    ["Reta Final is bought on Greenn, which handles payment and purchase data. This site does not receive your payment data.","O Reta Final é comprado na Greenn, que trata o pagamento e os dados da compra. Este site não recebe seus dados de pagamento."]
   ];
   if (import.meta.env.PUBLIC_ANALYTICS_APPROVED === 'true') lines.splice(1,0,["Google Analytics runs only if you choose Accept. You can decline and still browse and buy.","O Google Analytics só roda se você escolher Aceitar. Você pode recusar e continuar navegando e comprando."]);
   for (const [en,pt] of lines) privacyCopy[en]=pt;
@@ -143,7 +150,7 @@ if (import.meta.env.PUBLIC_ANALYTICS_APPROVED === 'true') {
   privacySummary.push(...lines.map(l=>l[0]));
 
   // Reading order: what matters to a buyer of the guide first, other services of the site after.
-  const order=['responsibility','analytics','purchase','not-collected','hosting','browsing','contact','rights','lesson-inquiries','mock-report','publishing','changes'];
+  const order=['responsibility','analytics','purchase','purchase-reta-final','not-collected','hosting','browsing','contact','rights','lesson-inquiries','mock-report','publishing','changes'];
   const rank=(id:string)=>{const i=order.indexOf(id);return i===-1?order.length:i;};
   privacySections.sort((a,b)=>rank(a.id)-rank(b.id));
 }

@@ -1,0 +1,9 @@
+---
+// Rota exclusiva do build do perfil reta-final: no build padrão não gera nenhuma página.
+// O script scripts/prune-profile.mjs move o resultado para /privacidade/.
+import RetaFinalPrivacyPage from '../../components/pages/RetaFinalPrivacyPage.astro';
+export function getStaticPaths() {
+  return import.meta.env.PUBLIC_SITE_PROFILE === 'reta-final' ? [{ params: { page: 'privacidade' } }] : [];
+}
+---
+<RetaFinalPrivacyPage />

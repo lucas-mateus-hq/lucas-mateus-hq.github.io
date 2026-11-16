@@ -1,5 +1,6 @@
 node_modules/
 dist/
+dist-reta-final/
 .astro/
 artifacts/fresh-eyes/
 artifacts/lighthouse/

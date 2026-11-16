@@ -1,0 +1,339 @@
+---
+// Página de vendas do Reta Final. O corpo espelha o canvas de design aprovado;
+// nenhum domínio é escrito aqui: caminhos são relativos à base e o checkout vem de configuração.
+import '../../styles/reta-final.css';
+import { retaFinalCheckoutUrl } from '../../config/reta-final';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const checkoutUrl = retaFinalCheckoutUrl;
+const open = checkoutUrl !== '';
+const pageTitle = 'Reta Final · Preparação para Entrevistas em Inglês';
+const pageDescription = 'Sistema prático em 4 etapas, com Workbook preenchível e 25 áudios de treino, para estruturar suas experiências reais e praticar em voz alta para entrevistas em inglês.';
+const logoUrl = `${base}/images/reta-final-lockup-white.svg`;
+const fontUrl = `${base}/fonts/inter-latin-opsz-normal.woff2`;
+const homeUrl = `${base}/`;
+// canonical e og:url só existem no build do domínio próprio (Astro.site vem da configuração do perfil).
+const ownDomain = import.meta.env.PUBLIC_SITE_PROFILE === 'reta-final';
+const canonical = ownDomain ? new URL(`${base}/`, Astro.site).href : '';
+const privacyUrl = `${base}/privacidade/`;
+const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}`;
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta name="robots" content={open ? 'index,follow' : 'noindex,nofollow'} />
+    <meta name="theme-color" content="#0c2038" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    {ownDomain && <link rel="canonical" href={canonical} />}
+    {ownDomain && <meta property="og:url" content={canonical} />}
+    <link rel="icon" type="image/svg+xml" href={`${base}/images/reta-final-mark.svg`} />
+    <link rel="preload" href={fontUrl} as="font" type="font/woff2" crossorigin="anonymous" />
+    <style is:inline set:html={fontFace}></style>
+    <style is:inline>
+      html { scroll-behavior: smooth; }
+      body { margin: 0; background: #0c2038; }
+      .rf-skip { position: absolute; left: -9999px; top: 0; z-index: 10; padding: 12px 16px; background: #ffffff; color: #0c2038; font: 700 16px/1.2 "Inter", system-ui, sans-serif; }
+      .rf-skip:focus { left: 8px; top: 8px; }
+      @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    </style>
+  </head>
+  <body>
+    <a class="rf-skip" href="#conteudo">Pular para o conteúdo</a>
+    <div class="rf" data-rf-state={open ? 'open' : 'closed'}>
+<header class="rf-top">
+<div class="rf-wrap rf-top-in">
+<img class="rf-logo" src={logoUrl} alt="Reta Final" width="142" height="20">
+<a class="rf-toplink" href="#oferta">Ver a oferta</a>
+</div>
+</header>
+
+<main id="conteudo">
+<section class="rf-hero" aria-labelledby="rf-h1">
+<div class="rf-wrap rf-hero-grid">
+<div class="rf-hero-copy">
+<p class="rf-eyebrow rf-kicker">Para quem tem entrevista em inglês marcada ou busca vagas internacionais</p>
+<h1 class="rf-h1" id="rf-h1">Pare de improvisar na entrevista em inglês: estruture suas experiências reais e pratique em voz alta.</h1>
+<p class="rf-lede">Um sistema prático em 4 etapas, com <strong>Workbook preenchível</strong> (no celular, no computador ou impresso) e <strong>25 áudios de treino</strong>, para responder com clareza sem decorar scripts.</p>
+{open ? <a class="rf-cta on-dark" href={checkoutUrl} data-rf-checkout><span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12H19M13 6L19 12L13 18"></path></svg></span><span>Começar minha preparação · R$ 97,00</span></a> : <p class="rf-cta is-off on-dark" data-rf-unavailable><span>Compra ainda não disponível</span></p>}
+{open ? <p class="rf-terms">Download imediato (7 materiais + 25 áudios) · Pagamento único, sem mensalidade · Garantia de 7 dias</p> : <p class="rf-terms" data-rf-status>As vendas do Reta Final ainda não foram abertas. Esta página apresenta o material; a compra será liberada aqui.</p>}
+</div>
+<svg class="rf-stairs" viewBox="-6 8 186 100" fill="none" aria-hidden="true"><path d="M-4 104H58V88H96V70H132V48H168V30" stroke="#1d4a74" stroke-width="0.6"></path><path d="M-4 96H50V82H88V64H124V42H160V24" stroke="#16395c" stroke-width="0.45"></path><path d="M46 98L82 62L102 82L178 14M158 14H178V34" stroke="#e8641b" stroke-width="2.4" stroke-linecap="square"></path></svg>
+</div>
+<div class="rf-hero-foot"><div class="rf-wrap"><p>4 etapas · 10 ferramentas · 25 áudios</p></div></div>
+</section>
+
+<section class="rf-sec" aria-labelledby="rf-dor">
+<div class="rf-wrap">
+<p class="rf-eyebrow">Por que as pessoas travam</p>
+<h2 class="rf-title" id="rf-dor">Você sabe inglês. O que falta é estrutura para falar sob pressão.</h2>
+<ol class="rf-errors">
+<li><span class="n" aria-hidden="true">1</span><h3>Estuda inglês genérico na véspera</h3><p>Listas de vocabulário e vídeos soltos de gramática não ajudam a explicar um projeto real.</p></li>
+<li><span class="n" aria-hidden="true">2</span><h3>Decora respostas da internet</h3><p>O texto pronto desmonta quando o recrutador muda a pergunta ou faz um <span lang="en">follow-up</span>.</p></li>
+<li><span class="n" aria-hidden="true">3</span><h3>Se perde ao contar o que fez</h3><p>Fala demais do contexto, esconde a própria contribuição e improvisa salário e <span lang="en">notice period</span>.</p></li>
+</ol>
+<div class="rf-callout">
+<p>Entrevistadores não estão avaliando se você fala como nativo. Querem entender quem você é, o que resolveu e como decide.</p>
+<p class="big">Clareza supera perfeição.</p>
+</div>
+</div>
+</section>
+
+<section class="rf-sec is-mist" aria-labelledby="rf-razoes">
+<div class="rf-wrap">
+<p class="rf-eyebrow">5 razões</p>
+<h2 class="rf-title" id="rf-razoes">5 razões para preparar sua próxima entrevista com o Reta Final</h2>
+<p class="rf-lede">Algumas razões mostram a página real do material, preenchida com um exemplo fictício.</p>
+<ol class="rf-reasons">
+
+<li class="rf-reason">
+<div class="rf-reason-copy">
+<span class="rf-reason-num" aria-hidden="true">1</span>
+<h3>Você não precisa estudar “inglês geral”: precisa filtrar o que esta vaga exige</h3>
+<p>O <span class="en" lang="en">Interview map</span> cruza os sinais da descrição da vaga com a sua experiência e deixa só os 3 a 5 temas que importam. O <span class="en" lang="en">Preparation plan</span> ajusta o roteiro ao tempo que você tem:</p>
+<ul class="rf-routes-mini">
+<li>Até 24 horas</li><li>2 a 3 dias</li><li>4 a 7 dias</li><li>Preparação antecipada</li>
+</ul>
+</div>
+<div class="rf-pages">
+<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-preparation-plan.webp`} alt="Página do Workbook preenchida com exemplo fictício: Preparation plan, com a rota de 2 a 3 dias marcada e o checklist do que ter em mãos" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">Preparation plan</span> · p. 4<span class="rf-sample">Exemplo fictício</span></figcaption></figure>
+<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-interview-map.webp`} alt="Página do Workbook preenchida com exemplo fictício: Interview map, com a vaga de analista de operações logísticas e cinco sinais prioritários da vaga" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">Interview map</span> · p. 8<span class="rf-sample">Exemplo fictício</span></figcaption></figure>
+</div>
+</li>
+
+<li class="rf-reason">
+<div class="rf-reason-copy">
+<span class="rf-reason-num" aria-hidden="true">2</span>
+<h3>Recrutadores não avaliam inglês bonito: avaliam exemplos reais da sua experiência</h3>
+<p>O <span class="en" lang="en">STAR story builder</span> transforma uma situação que você viveu em uma história curta, com o foco onde o entrevistador olha: o que você decidiu e fez, e o que mudou depois. Você monta tudo em palavras-chave, sem texto para decorar.</p>
+<div class="rf-star" aria-label="Estrutura STAR: Situation e Task em poucas palavras, Action e Result com mais peso">
+<div class="blk st"><strong lang="en">Situation + Task</strong>contexto suficiente</div>
+<span class="arrow" aria-hidden="true">→</span>
+<div class="blk act"><strong lang="en">Action</strong>o que você fez e decidiu</div>
+<span class="arrow" aria-hidden="true">→</span>
+<div class="blk res"><strong lang="en">Result</strong>o que mudou e o que você aprendeu</div>
+</div>
+</div>
+<div class="rf-pages">
+<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-star-20.webp`} alt="Página do Workbook preenchida com exemplo fictício: STAR story builder, partes Situation e Task da história de atrasos nas entregas" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">STAR story builder</span> · p. 20<span class="rf-sample">Exemplo fictício</span></figcaption></figure>
+<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-star-21.webp`} alt="Página do Workbook preenchida com exemplo fictício: STAR story builder, partes Action e Result, com as ações e o resultado do piloto" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">STAR story builder</span> · p. 21<span class="rf-sample">Exemplo fictício</span></figcaption></figure>
+</div>
+</li>
+
+<li class="rf-reason is-text">
+<div class="rf-reason-copy">
+<span class="rf-reason-num" aria-hidden="true">3</span>
+<h3>Ler respostas prontas em silêncio não prepara você para falar sob pressão</h3>
+<p>A etapa 3 é feita em voz alta. Os 25 áudios trabalham em três tempos, e cada faixa tem transcrição em PDF para ler antes ou depois:</p>
+<ol class="rf-modes">
+<li><strong lang="en">Listening</strong><span>Ouça uma resposta e observe a estrutura. Não é roteiro para decorar.</span></li>
+<li><strong lang="en">Speaking Practice</strong><span>Responda em voz alta com exemplos da sua experiência. Pause o player se precisar de mais tempo.</span></li>
+<li><strong>Ouça e repita</strong><span>Nos <span lang="en">Useful English Labs</span>, ouça, repita e adapte só o que fizer sentido para você.</span></li>
+</ol>
+<ul class="rf-tracks" aria-label="Exemplos de faixas do pacote">
+<li class="rf-track"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#0c2038"></circle><path d="M10.08 8.69 L10.08 15.22 L15.22 11.95Z" fill="#ffffff"></path></svg><b>M1</b><span lang="en">Recruiter screen · Listening</span></li>
+<li class="rf-track"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#0c2038"></circle><path d="M10.08 8.69 L10.08 15.22 L15.22 11.95Z" fill="#ffffff"></path></svg><b>M1</b><span lang="en">Recruiter screen · Speaking Practice</span></li>
+<li class="rf-track"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#0c2038"></circle><path d="M10.08 8.69 L10.08 15.22 L15.22 11.95Z" fill="#ffffff"></path></svg><b>L1 / S1</b><span lang="en">Your background and relevance</span></li>
+<li class="rf-track"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#0c2038"></circle><path d="M10.08 8.69 L10.08 15.22 L15.22 11.95Z" fill="#ffffff"></path></svg><b>P1</b><span lang="en">Ownership and results</span></li>
+</ul>
+</div>
+</li>
+
+<li class="rf-reason is-text">
+<div class="rf-reason-copy">
+<span class="rf-reason-num" aria-hidden="true">4</span>
+<h3>Travar, não entender uma pergunta ou improvisar salário não precisa encerrar sua chance</h3>
+<p>O <span class="en" lang="en">Pause, clarify &amp; continue</span> reúne frases curtas para ganhar tempo, pedir que repitam a pergunta e retomar o raciocínio. O <span class="en" lang="en">Interview Fact Sheet</span> resolve antes da chamada o que ninguém deve improvisar: <span lang="en">notice period</span>, disponibilidade, modelo de trabalho, <span lang="en">work authorization</span> e expectativa salarial.</p>
+</div>
+</li>
+
+<li class="rf-reason">
+<div class="rf-reason-copy">
+<span class="rf-reason-num" aria-hidden="true">5</span>
+<h3>Na véspera, reler páginas inteiras só gera ansiedade: você precisa de palavras-chave</h3>
+<p>O <span class="en" lang="en">Interview day card</span> reúne em uma ficha só o que você já preparou: sua apresentação em palavras-chave, suas histórias prioritárias e os fatos confirmados. Ele está no Workbook e também em PDF separado, para imprimir ou abrir no celular.</p>
+</div>
+<div class="rf-pages is-single">
+<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-interview-day-card.webp`} alt="Página do Workbook preenchida com exemplo fictício: Interview day card, com dados da entrevista, apresentação em palavras-chave e duas histórias prioritárias" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">Interview day card</span> · p. 46<span class="rf-sample">Exemplo fictício</span></figcaption></figure>
+</div>
+</li>
+</ol>
+</div>
+</section>
+
+<section class="rf-sec" aria-labelledby="rf-solucao">
+<div class="rf-wrap">
+<p class="rf-eyebrow">Como funciona</p>
+<h2 class="rf-title" id="rf-solucao">4 etapas e 10 ferramentas, na ordem em que você vai usar</h2>
+
+<div class="rf-stage">
+<div class="rf-stage-head"><span class="rf-stage-num" aria-hidden="true">1</span><p class="rf-eyebrow">Etapa 1 de 4</p><h3>Saiba o que preparar</h3><p>Sem perder tempo com perguntas aleatórias.</p></div>
+<div>
+<div class="rf-tool"><span class="rf-seal">01</span><h4 lang="en">Preparation plan</h4><p>Define o que fazer e o que ignorar de acordo com o seu prazo.</p></div>
+<div class="rf-tool"><span class="rf-seal">02</span><h4 lang="en">Interview map</h4><p>Cruza a descrição da vaga com a sua experiência para filtrar os 3 a 5 temas que importam.</p></div>
+</div>
+</div>
+
+<div class="rf-stage">
+<div class="rf-stage-head"><span class="rf-stage-num" aria-hidden="true">2</span><p class="rf-eyebrow">Etapa 2 de 4</p><h3>Prepare suas respostas</h3><p>Em palavras-chave, nunca em scripts decorados.</p></div>
+<div>
+<div class="rf-tool"><span class="rf-seal">03</span><h4 lang="en">Tell me about yourself</h4><p>Três blocos para apresentar sua trajetória em versão curta, padrão ou expandida.</p>
+<div class="rf-ner"><div class="blk"><strong lang="en">NOW</strong>onde você está profissionalmente agora.</div><span class="arrow" aria-hidden="true">→</span><div class="blk exp"><strong lang="en">EXPERIENCE</strong>a experiência que sustenta seu perfil.</div><span class="arrow" aria-hidden="true">→</span><div class="blk rel"><strong lang="en">RELEVANCE</strong>por que isso importa para esta oportunidade.</div></div></div>
+<div class="rf-tool"><span class="rf-seal">04</span><h4 lang="en">STAR story builder</h4><p>Transforma experiências reais em histórias objetivas, destacando o que você decidiu e entregou.</p></div>
+<div class="rf-tool"><span class="rf-seal">05</span><h4 lang="en">Interview Fact Sheet</h4><p>Resolve antes da chamada os fatos que ninguém deve improvisar.</p></div>
+<div class="rf-tool"><span class="rf-seal">06</span><h4 lang="en">Pause, clarify &amp; continue</h4><p>Frases curtas para ganhar tempo, pedir reformulação ou retomar o raciocínio.</p></div>
+<div class="rf-tool"><span class="rf-seal">07</span><h4 lang="en">Golden interview questions</h4><p>Perguntas para fazer ao recrutador ou <span lang="en">hiring manager</span> no fim da conversa.</p></div>
+</div>
+</div>
+
+<div class="rf-stage">
+<div class="rf-stage-head"><span class="rf-stage-num" aria-hidden="true">3</span><p class="rf-eyebrow">Etapa 3 de 4</p><h3>Pratique em voz alta</h3><p>Com os áudios <span lang="en">Speaking Practice</span> e uma correção por vez.</p></div>
+<div>
+<div class="rf-tool"><span class="rf-seal">08</span><h4 lang="en">Interview speaking practice</h4><p>Ciclo de treino em voz alta com os áudios <span lang="en">Speaking Practice</span>: a pergunta muda, aparece um <span lang="en">follow-up</span> e você segue sem texto decorado.</p></div>
+<div class="rf-tool"><span class="rf-seal">09</span><h4 lang="en">Answer review</h4><p>Depois de cada tentativa, você escolhe uma correção prioritária e tenta de novo, sem travar em pequenos erros de gramática.</p></div>
+</div>
+</div>
+
+<div class="rf-stage">
+<div class="rf-stage-head"><span class="rf-stage-num" aria-hidden="true">4</span><p class="rf-eyebrow">Etapa 4 de 4</p><h3>Faça sua revisão final</h3><p>Só o que você já preparou e precisa lembrar rapidamente.</p></div>
+<div>
+<div class="rf-tool"><span class="rf-seal">10</span><h4 lang="en">Interview day card</h4><p>Uma ficha com suas palavras-chave, fatos confirmados e frases de apoio para revisar antes de entrar na chamada.</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="rf-sec" aria-labelledby="rf-recebe">
+<div class="rf-wrap">
+<p class="rf-eyebrow">O que você recebe</p>
+<h2 class="rf-title" id="rf-recebe">7 materiais e 25 áudios, tudo incluído no mesmo pacote</h2>
+<p class="rf-lede">Depois da confirmação do pagamento, você baixa o pacote completo e usa no computador, no tablet ou no celular, inclusive offline.</p>
+<div class="rf-items">
+<div class="rf-item is-wide"><span class="rf-seal">01</span><div class="rf-item-h"><h3>Core Workbook · Reta Final</h3><span class="rf-chip">48 páginas</span><span class="rf-chip">PDF preenchível</span></div><p>O guia central com as 4 etapas, as 10 ferramentas, exemplos de estrutura e campos para montar suas respostas.</p>
+<div class="rf-pages is-pair">
+<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-capa.webp`} alt="Capa do Core Workbook Reta Final: Preparação para Entrevistas em Inglês, 4 etapas e 10 ferramentas" width="480" height="680" loading="lazy" decoding="async"><figcaption>Capa</figcaption></figure>
+<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-sumario.webp`} alt="Sumário do Core Workbook: as 4 etapas e as 10 ferramentas com o número da página de cada uma" width="480" height="680" loading="lazy" decoding="async"><figcaption>Sumário · p. 2</figcaption></figure>
+</div></div>
+<div class="rf-item"><span class="rf-seal">02</span><div class="rf-item-h"><h3 lang="en">Interview Day Card</h3><span class="rf-chip">PDF preenchível</span></div><p>Versão separada da ficha de revisão para o dia da entrevista.</p></div>
+<div class="rf-item"><span class="rf-seal">03</span><div class="rf-item-h"><h3 lang="en">Most Common Job Interview Questions</h3><span class="rf-chip">12 perguntas</span><span class="rf-chip">PDF preenchível</span></div><p>As 12 perguntas mais recorrentes de entrevistas em inglês, com variações de como o recrutador pergunta.</p></div>
+<div class="rf-item"><span class="rf-seal">04</span><div class="rf-item-h"><h3>Business English para Entrevistas</h3><span class="rf-chip">PDF preenchível</span></div><p><span lang="en">Phrasal verbs</span>, expressões e <span lang="en">idioms</span> para explicar decisões e resultados sem soar robótico.</p></div>
+<div class="rf-item is-wide is-audio"><span class="rf-seal">05</span><div class="rf-item-h"><svg class="play" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#0c2038"></circle><path d="M10.08 8.69 L10.08 15.22 L15.22 11.95Z" fill="#ffffff"></path></svg><h3>25 áudios de prática</h3><span class="rf-chip">Parte do produto</span></div>
+<p>Para ouvir a estrutura das respostas, responder em voz alta e repetir expressões úteis. Organizados em três pastas:</p>
+<ul class="rf-audio-groups">
+<li><b>12</b><span><strong>Módulos de entrevista</strong>L1 a L6 em <span lang="en">Listening</span> e S1 a S6 em <span lang="en">Speaking Practice</span>, de <span lang="en">Your background and relevance</span> a <span lang="en">Practical questions and closing</span>.</span></li>
+<li><b>10</b><span><strong lang="en">Mock interviews</strong>M1 a M5, cada uma em <span lang="en">Listening</span> e <span lang="en">Speaking Practice</span>, de <span lang="en">Recruiter screen</span> a <span lang="en">Making a recommendation</span>.</span></li>
+<li><b>3</b><span><strong lang="en">Useful English Labs</strong>P1 a P3 em Ouça e repita: <span lang="en">Ownership and results; Pause, clarify and continue; Interview facts and professional vocabulary</span>.</span></li>
+</ul>
+</div>
+<div class="rf-item"><span class="rf-seal">06</span><div class="rf-item-h"><h3>3 PDFs de transcrição</h3></div><p>O texto de cada faixa: módulos de entrevista, <span lang="en">mock interviews</span> e <span lang="en">Useful English Labs</span>.</p></div>
+<div class="rf-item"><span class="rf-seal">07</span><div class="rf-item-h"><h3>Guia “Comece aqui”</h3></div><p>Por onde começar, como usar os áudios e como preencher e salvar no computador ou no celular.</p></div>
+</div>
+</div>
+</section>
+
+<section class="rf-sec is-mist" aria-labelledby="rf-uso">
+<div class="rf-wrap">
+<p class="rf-eyebrow">Como usar</p>
+<h2 class="rf-title" id="rf-uso">No celular, no computador ou impresso</h2>
+<div class="rf-use">
+<div><span class="rf-label">PDFs</span><p>Preencha no computador ou no celular, com o Adobe Acrobat Reader, ou imprima em A4 e escreva à mão.</p></div>
+<div><span class="rf-label">Áudios</span><p>Arquivos de áudio separados: abrem em qualquer player, inclusive offline. Leia a transcrição antes ou depois da escuta.</p></div>
+<div><span class="rf-label">Ritmo</span><p>Material autoguiado, para praticar no seu próprio ritmo, sem depender de agenda de aulas.</p></div>
+</div>
+</div>
+</section>
+
+<section class="rf-sec" aria-labelledby="rf-fit">
+<div class="rf-wrap">
+<p class="rf-eyebrow">Para quem é</p>
+<h2 class="rf-title" id="rf-fit">Veja se o Reta Final é para o seu momento</h2>
+<div class="rf-fit">
+<div class="yes">
+<span class="rf-label">O Reta Final é para você se</span>
+<ul>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="#2f6f6d" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5L9 17.5L20 6.5"></path></svg><span>Você tem inglês intermediário ou avançado, mas trava ao organizar e contar suas experiências sob pressão.</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="#2f6f6d" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5L9 17.5L20 6.5"></path></svg><span>Você tem uma entrevista em inglês nos próximos dias ou semanas e precisa de um plano prático.</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="#2f6f6d" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5L9 17.5L20 6.5"></path></svg><span>Você quer responder com seus próprios exemplos, e não com frases de outra pessoa.</span></li>
+</ul>
+</div>
+<div class="no">
+<span class="rf-label">Não é para você se</span>
+<ul>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="#a14f3a" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 12H18"></path></svg><span>Você procura um curso de inglês básico: o material parte do inglês que você já tem.</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="#a14f3a" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 12H18"></path></svg><span>Você quer scripts prontos para decorar ou uma fórmula para passar sem conhecimento da sua área.</span></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+
+<section class="rf-sec is-mist" id="oferta" aria-labelledby="rf-oferta">
+<div class="rf-wrap">
+<p class="rf-eyebrow">Oferta</p>
+<h2 class="rf-title" id="rf-oferta">Tudo o que você precisa para a reta final, em um pagamento único</h2>
+<div class="rf-offer">
+<div class="rf-offer-copy">
+<p>Você leva o sistema completo de 4 etapas, os 7 materiais e os 25 áudios de prática. Sem mensalidade e sem agenda: os arquivos ficam com você para esta entrevista e para as próximas.</p>
+<div class="rf-guarantee">
+<span class="rf-label"><svg viewBox="0 0 24 24" fill="none" stroke="#2f6f6d" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5L9 17.5L20 6.5"></path></svg>Garantia incondicional de 7 dias</span>
+<p>Baixe o Workbook, ouça os áudios e monte o seu <span lang="en">Interview map</span>. Se em até 7 dias você sentir que o material não deixou sua preparação mais clara, peça o reembolso na própria plataforma de pagamento e você recebe 100% do valor de volta.</p>
+</div>
+</div>
+<div class="rf-card">
+<div class="rf-card-h"><strong>Reta Final</strong><span class="rf-label">Pagamento único</span></div>
+<div class="rf-card-b">
+<p class="rf-was">Preço de lançamento</p>
+<p class="rf-price"><small>R$</small>97,00</p>
+<p class="rf-pay">Pix, cartão, boleto e outros meios no checkout</p>
+{open ? <a class="rf-cta" href={checkoutUrl} data-rf-checkout><span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12H19M13 6L19 12L13 18"></path></svg></span><span>Começar minha preparação · R$ 97,00</span></a> : <p class="rf-cta is-off" data-rf-unavailable><span>Compra ainda não disponível</span></p>}
+<ul>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="#2f6f6d" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5L9 17.5L20 6.5"></path></svg><span>7 materiais, 25 áudios</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="#2f6f6d" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5L9 17.5L20 6.5"></path></svg><span>Acesso imediato após a confirmação do pagamento</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="#2f6f6d" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5L9 17.5L20 6.5"></path></svg><span>Arquivos para baixar e usar offline</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="#2f6f6d" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5L9 17.5L20 6.5"></path></svg><span>Garantia de 7 dias</span></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="rf-sec" aria-labelledby="rf-faq">
+<div class="rf-wrap">
+<p class="rf-eyebrow">Perguntas frequentes</p>
+<h2 class="rf-title" id="rf-faq">Antes de decidir</h2>
+<div class="rf-faq">
+<details open><summary>Como recebo e ouço os áudios?</summary><p>Depois da confirmação do pagamento, você recebe pela Greenn o acesso ao pacote completo. Os 25 áudios vêm em arquivos separados, em três pastas: módulos de entrevista, <span lang="en">mock interviews</span> e <span lang="en">Useful English Labs</span>. Abra em qualquer player, no celular ou no computador, e acompanhe a faixa no PDF de transcrição correspondente.</p></details>
+<details><summary>Os áudios são um curso de inglês?</summary><p>Não. Eles fazem parte da preparação para a entrevista: em <span lang="en">Listening</span>, você ouve modelos e observa a estrutura das respostas; em <span lang="en">Speaking Practice</span>, responde em voz alta às perguntas; nos <span lang="en">Useful English Labs</span>, ouve e repete expressões úteis. Nenhuma faixa é roteiro para decorar.</p></details>
+<details><summary>Preciso ter inglês fluente para usar o material?</summary><p>Não. O material foi feito para quem tem inglês intermediário ou avançado e trava ao organizar as próprias experiências sob pressão. As instruções estão em português; exemplos, expressões e áudios estão em inglês.</p></details>
+<details><summary>Minha entrevista é amanhã ou daqui a dois dias. Dá tempo de aproveitar?</summary><p>Sim. O <span lang="en">Preparation plan</span>, na página 4 do Workbook, tem uma rota para até 24 horas e outra para 2 a 3 dias. Você faz só o que cabe no seu prazo.</p></details>
+<details><summary>Funciona no celular ou preciso imprimir?</summary><p>Funciona dos dois jeitos. Os campos podem ser preenchidos no computador ou no celular, com o Adobe Acrobat Reader; os áudios tocam em qualquer aparelho; e a diagramação foi pensada para impressão em A4.</p></details>
+</div>
+</div>
+</section>
+
+<section class="rf-close" aria-labelledby="rf-fecho">
+<div class="rf-wrap rf-close-in">
+<div><h2 id="rf-fecho">Entrevista em inglês chegando?</h2><p>Workbook, Interview Day Card, complementos e 25 áudios de prática para organizar sua experiência real e responder com clareza.</p></div>
+<div class="rf-close-cta">
+{open ? <a class="rf-cta on-dark" href={checkoutUrl} data-rf-checkout><span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12H19M13 6L19 12L13 18"></path></svg></span><span>Começar minha preparação · R$ 97,00</span></a> : <p class="rf-cta is-off on-dark" data-rf-unavailable><span>Compra ainda não disponível</span></p>}
+{open ? <p class="rf-terms">Download imediato · Pagamento único, sem mensalidade · Garantia de 7 dias</p> : <p class="rf-terms" data-rf-status>As vendas do Reta Final ainda não foram abertas. Esta página apresenta o material; a compra será liberada aqui.</p>}
+</div>
+</div>
+</section>
+</main>
+
+<footer class="rf-foot">
+<div class="rf-wrap rf-foot-in">
+<p>Reta Final | Preparação para Entrevistas em Inglês</p>
+<nav aria-label="Rodapé"><a href={homeUrl}>Lucas Mateus</a><a href={privacyUrl}>Privacidade</a><a href="#conteudo">Voltar ao topo</a></nav>
+</div>
+</footer>
+    </div>
+  </body>
+</html>

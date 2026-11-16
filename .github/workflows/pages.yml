@@ -56,6 +56,8 @@ jobs:
         run: npm run build
       - name: Public identity, links, content and contrast contracts
         run: npm run test:static
+      - name: Reta Final profile build contracts (builds to dist-reta-final, never published)
+        run: npm run test:profile
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Real browser personal navigation and compatibility
