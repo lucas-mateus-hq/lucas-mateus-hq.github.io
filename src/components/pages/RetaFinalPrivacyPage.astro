@@ -1,6 +1,6 @@
 ---
 // Privacidade do build do domínio próprio do Reta Final. Só descreve o que este site faz.
-// Contato e link da política da Greenn entram quando forem aprovados/informados (pendentes).
+import { retaFinalContactEmail, greennPrivacyUrl } from '../../config/reta-final';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const canonical = new URL(`${base}/privacidade/`, Astro.site).href;
 const title = 'Política de Privacidade · Reta Final';
@@ -9,14 +9,6 @@ const summary = [
   'Ler esta página não exige cadastro.',
   'O Reta Final é comprado na Greenn, que trata o pagamento e os dados da compra. Esta página não recebe seus dados de pagamento.',
   'Esta página não usa formulário, pixel de anúncios, remarketing nem cookies de análise.',
-];
-const sections = [
-  { id: 'responsibility', title: 'Quem é responsável', text: 'Lucas Mateus da Silva é responsável pelo conteúdo desta página de vendas e pelo produto Reta Final. Ler a página não exige conta nem cadastro.' },
-  { id: 'purchase', title: 'Compra do Reta Final (Greenn)', text: 'O produto "Reta Final" é vendido na Greenn. O botão da página de vendas abre o checkout da Greenn, onde a Greenn trata o pagamento e o registro da compra conforme os próprios termos e a própria política de privacidade. Esta página não recebe nem guarda seus dados de pagamento. Como produtor, Lucas pode ver na Greenn os dados da compra, como nome e e-mail, para entregar os arquivos e dar suporte. Os arquivos são entregues por e-mail e WhatsApp.' },
-  { id: 'not-collected', title: 'O que esta página não coleta', text: 'A página de vendas não tem cadastro, formulário, pixel de anúncios nem remarketing, e não envia nomes, e-mails ou dados de pagamento para serviços de análise. Os registros técnicos mantidos pela hospedagem estão descritos na seção seguinte.' },
-  { id: 'hosting', title: 'Hospedagem e registros técnicos', text: 'A página é entregue por um provedor de hospedagem, que pode registrar dados técnicos de acesso, como endereço IP, para entregar e proteger o serviço. A fonte e as imagens são servidas pelo próprio site, sem carregar recursos de terceiros.' },
-  { id: 'rights', title: 'Seus direitos', text: 'Você pode exercer os direitos previstos na LGPD, como confirmar, acessar e corrigir dados, perante o controlador de cada serviço: a Greenn, para os dados da compra, e Lucas Mateus, para os dados que recebe como produtor. O canal de contato será informado aqui assim que estiver disponível.' },
-  { id: 'changes', title: 'Mudanças neste aviso', text: 'Este aviso será revisto se a coleta, a hospedagem ou as integrações da página mudarem. A data de revisão identifica esta versão.' },
 ];
 ---
 <!doctype html>
@@ -51,6 +43,8 @@ const sections = [
       section { border-top: 1px solid #41595e; padding: 28px 0; }
       h2 { font-weight:600; margin: 0 0 12px; font-size: 1.15rem; }
       p { font-size: 18px; line-height: 1.7; margin: 0; max-width: 62ch; }
+      p + p { margin-top: 14px; }
+      p a { overflow-wrap: anywhere; }
     </style>
   </head>
   <body>
@@ -62,7 +56,16 @@ const sections = [
       <p class="lead">Este aviso explica o que acontece com seus dados ao visitar a página de vendas do Reta Final e ao comprar.</p>
       <p class="updated"><strong>Última atualização:</strong> 16 de novembro de 2026</p>
       <aside class="summary" aria-labelledby="summary-title"><h2 id="summary-title">Em resumo</h2><ul>{summary.map((line) => <li>{line}</li>)}</ul></aside>
-      {sections.map((section) => <section id={section.id}><h2>{section.title}</h2><p>{section.text}</p></section>)}
+      <section id="responsibility"><h2>Quem é responsável</h2><p>Lucas Mateus da Silva é responsável pelo conteúdo desta página de vendas e pelo produto Reta Final. Ler a página não exige conta nem cadastro.</p></section>
+      <section id="purchase"><h2>Compra do Reta Final (Greenn)</h2>
+        <p>O produto "Reta Final" é vendido na Greenn. O botão da página de vendas abre o checkout da Greenn, onde a Greenn trata o pagamento e o registro da compra conforme os próprios termos e a <a href={greennPrivacyUrl} rel="noopener noreferrer">política de privacidade da Greenn</a>. Esta página não recebe nem guarda seus dados de pagamento.</p>
+        <p>Como produtor, Lucas pode ver na Greenn os dados da compra, como nome e e-mail, para entregar os arquivos e dar suporte. Os arquivos são entregues por e-mail após a confirmação do pagamento.</p>
+        <p>O registro das compras (por exemplo, nome, e-mail e status do pagamento) também pode ser copiado para uma planilha privada do produtor, no Google Sheets, para controle das vendas e suporte.</p>
+      </section>
+      <section id="not-collected"><h2>O que esta página não coleta</h2><p>A página de vendas não tem cadastro, formulário, pixel de anúncios nem remarketing, e não envia nomes, e-mails ou dados de pagamento para serviços de análise. Os registros técnicos mantidos pela hospedagem estão descritos na seção seguinte.</p></section>
+      <section id="hosting"><h2>Hospedagem e registros técnicos</h2><p>A página é entregue por um provedor de hospedagem, que pode registrar dados técnicos de acesso, como endereço IP, para entregar e proteger o serviço. A fonte e as imagens são servidas pelo próprio site, sem carregar recursos de terceiros.</p></section>
+      <section id="rights"><h2>Seus direitos e contato</h2><p>Você pode exercer os direitos previstos na LGPD, como confirmar, acessar e corrigir dados, perante o controlador de cada serviço: a Greenn, para os dados da compra, e Lucas Mateus, para os dados que recebe como produtor. Para falar com Lucas sobre seus dados, escreva para <a href={`mailto:${retaFinalContactEmail}`}>{retaFinalContactEmail}</a>.</p></section>
+      <section id="changes"><h2>Mudanças neste aviso</h2><p>Este aviso será revisto se a coleta, a hospedagem ou as integrações da página mudarem. A data de revisão identifica esta versão.</p></section>
     </main>
   </body>
 </html>

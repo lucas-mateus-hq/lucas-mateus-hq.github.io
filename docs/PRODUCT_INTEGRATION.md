@@ -70,3 +70,15 @@ Pendências para o dia da publicação (não resolvidas no PR #29): `canonical` 
 - O build padrão (sem a variável de perfil) não muda: a rota interna `perfil-reta-final/[page].astro` não gera nada nele. Conferido por hash de todo o `dist/`.
 - Testes: `npm run test:profile` (faz seus próprios builds em `dist-reta-final/`). Ainda não roda no CI; o workflow do GitHub Pages não foi alterado.
 - Pendências: contato e termos (T4), link da política da Greenn, texto de hospedagem do perfil (hoje neutro: "provedor de hospedagem") até saber onde o domínio será hospedado.
+
+## Deploy do perfil Reta Final na Cloudflare (a pessoa executa; nada foi publicado)
+- Projeto **separado** na Cloudflare, mesmo repositório. Quem cria o projeto é a pessoa responsável; o repositório só documenta.
+- Comando de build: `npm run build:reta-final`. Diretório de saída: `dist-reta-final`.
+- `PUBLIC_RETA_FINAL_CHECKOUT_URL` definida **só neste projeto**, e só depois da compra de teste aprovada (ordem de ativação acima).
+- O domínio `lucasmateus.app` aponta só para este projeto. O `.app` exige HTTPS, que a Cloudflare emite. Para usar o domínio comprado no name.com `[PREMISSA]`: adicioná-lo como site na conta da Cloudflare e trocar os nameservers no name.com.
+- **Opção A (preferida): Cloudflare Pages com Git.** Raiz do repositório, comando `npm run build:reta-final`, saída `dist-reta-final`. Não exige arquivo novo.
+- **Opção B: Workers com static assets**, só se a tela de criação não oferecer Pages: um `wrangler.reta-final.jsonc` mínimo com `assets.directory` em `./dist-reta-final`, sem tocar `backend/lesson-intake/wrangler.toml`. O arquivo seria mostrado antes de entrar no repositório.
+- O site pessoal é publicado pelo GitHub Pages (`.github/workflows/pages.yml`, job `deploy`, artefato de `dist`). A única configuração Cloudflare do repositório é o Worker do formulário de aulas (`backend/lesson-intake`). `[LACUNA]` Como o Worker `lucas-mateus-hq-github-io` do painel foi criado não está no repositório.
+- O CI roda `npm run test:profile` só como teste; ele constrói em `dist-reta-final` e nunca publica nada.
+- A política de privacidade do perfil não nomeia a Cloudflare até a decisão depois do primeiro deploy fechado.
+- Antes de definir o checkout: o teste recusa o build se a privacidade tiver o placeholder de contato ou não tiver o e-mail.
