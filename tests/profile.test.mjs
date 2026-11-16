@@ -48,7 +48,17 @@ test('perfil reta-final com checkout (build descartável): index,follow e sitema
   build('https://pay.example.test/checkout');
   const home = read('index.html');
   assert.match(home, /name="robots" content="index,follow"/);
-  assert.equal(read('sitemap.xml').match(/<loc>[^<]+<\/loc>/g).join(''), '<loc>https://lucasmateus.app/</loc><loc>https://lucasmateus.app/privacidade/</loc>');
+  const sitemap = read('sitemap.xml');
+  assert.match(sitemap, /^<\?xml version="1.0" encoding="UTF-8"\?>\n<urlset xmlns="http:\/\/www.sitemaps.org\/schemas\/sitemap\/0.9">/);
+  assert.deepEqual(sitemap.match(/<loc>[^<]+<\/loc>/g), ['<loc>https://lucasmateus.app/</loc>', '<loc>https://lucasmateus.app/privacidade/</loc>']);
+  for (const [, date] of sitemap.matchAll(/<lastmod>([^<]*)<\/lastmod>/g)) assert.match(date, /^\d{4}-\d{2}-\d{2}$/);
+  assert.doesNotMatch(sitemap, /github\.io|pages\.dev|noindex/);
+  // Toda página indexável do build está no sitemap; nenhuma página noindex entra.
+  for (const file of walk(out).filter((f) => f.endsWith('index.html'))) {
+    const route = '/' + file.slice(out.length + 1).replace(/index\.html$/, '');
+    const indexable = !/<meta name="robots" content="[^"]*noindex/.test(readFileSync(file, 'utf8'));
+    assert.equal(sitemap.includes(`<loc>https://lucasmateus.app${route}</loc>`), indexable, route);
+  }
   assertPublishable(read('privacidade/index.html'), true);
   assert.match(read('robots.txt'), /Sitemap: https:\/\/lucasmateus\.app\/sitemap\.xml/);
   assert.equal((home.match(/href="https:\/\/pay\.example\.test\/checkout"/g) ?? []).length, 3);

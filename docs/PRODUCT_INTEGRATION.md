@@ -82,3 +82,9 @@ Pendências para o dia da publicação (não resolvidas no PR #29): `canonical` 
 - O CI roda `npm run test:profile` só como teste; ele constrói em `dist-reta-final` e nunca publica nada.
 - A política de privacidade do perfil não nomeia a Cloudflare até a decisão depois do primeiro deploy fechado.
 - Antes de definir o checkout: o teste recusa o build se a privacidade tiver o placeholder de contato ou não tiver o e-mail.
+
+## Sitemap e robots do domínio do Reta Final
+- Método: script pós-build (`scripts/prune-profile.mjs`), sem plugin, para não alterar o build padrão do site pessoal.
+- O `sitemap.xml` lista as páginas indexáveis realmente construídas (hoje `/` e `/privacidade/`), com `<lastmod>` da data do último commit que tocou os arquivos de origem de cada rota. Sem checkout ativo, não há sitemap e o `robots.txt` bloqueia tudo.
+- Com checkout ativo, o `robots.txt` libera o rastreamento e aponta para `https://lucasmateus.app/sitemap.xml`.
+- Endereço para o Google Search Console: `https://lucasmateus.app/sitemap.xml` (no campo "Adicionar um novo sitemap", digitar `sitemap.xml`).
