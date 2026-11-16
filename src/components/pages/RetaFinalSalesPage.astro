@@ -12,6 +12,9 @@ const pageDescription = 'Sistema prático em 4 etapas, com Workbook preenchível
 const logoUrl = `${base}/images/reta-final-lockup-white.svg`;
 const fontUrl = `${base}/fonts/inter-latin-opsz-normal.woff2`;
 const homeUrl = `${base}/`;
+// canonical e og:url só existem no build do domínio próprio (Astro.site vem da configuração do perfil).
+const ownDomain = import.meta.env.PUBLIC_SITE_PROFILE === 'reta-final';
+const canonical = ownDomain ? new URL(`${base}/`, Astro.site).href : '';
 const privacyUrl = `${base}/privacidade/`;
 const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}`;
 ---
@@ -27,6 +30,8 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
     <meta property="og:type" content="website" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
+    {ownDomain && <link rel="canonical" href={canonical} />}
+    {ownDomain && <meta property="og:url" content={canonical} />}
     <link rel="icon" type="image/svg+xml" href={`${base}/images/reta-final-mark.svg`} />
     <link rel="preload" href={fontUrl} as="font" type="font/woff2" crossorigin="anonymous" />
     <style is:inline set:html={fontFace}></style>

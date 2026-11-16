@@ -62,3 +62,11 @@ São 7 PDFs (113 páginas), 25 MP3 (cerca de 83 MB) e o guia. A fonte é a pasta
 4. Conferir `robots` = `index,follow` e os 3 botões abrindo o checkout.
 
 Pendências para o dia da publicação (não resolvidas no PR #29): `canonical` e `og:url` (dependem do domínio final e do `site`), `og:image` aprovada, contato no rodapé, link de termos/reembolso e a URL da política de privacidade da Greenn. A privacidade já nomeia a Greenn para o Reta Final e mantém a Hotmart só para a REIA. Não copiar `sck` da REIA para o Reta Final antes de testar na Greenn.
+
+## Build do domínio próprio do Reta Final (perfil `reta-final`)
+- Comando: `npm run build:reta-final` (equivale a `PUBLIC_SITE_PROFILE=reta-final` + `astro build` + `scripts/prune-profile.mjs`). Saída: `dist-reta-final/`, ignorada pelo git.
+- Publica só `/` (página de vendas) e `/privacidade/` (`RetaFinalPrivacyPage.astro`, sem REIA, Hotmart, GA4 nem aulas), com `site=https://lucasmateus.app`, `canonical` e `og:url`. O domínio vive apenas em `astro.config.mjs`; nenhuma página escrita à mão o contém.
+- `robots.txt` bloqueia tudo e não há `sitemap.xml` enquanto `PUBLIC_RETA_FINAL_CHECKOUT_URL` estiver vazia. Com o checkout definido, o script gera o sitemap com `/` e `/privacidade/` e a linha `Sitemap` no `robots.txt`.
+- O build padrão (sem a variável de perfil) não muda: a rota interna `perfil-reta-final/[page].astro` não gera nada nele. Conferido por hash de todo o `dist/`.
+- Testes: `npm run test:profile` (faz seus próprios builds em `dist-reta-final/`). Ainda não roda no CI; o workflow do GitHub Pages não foi alterado.
+- Pendências: contato e termos (T4), link da política da Greenn, texto de hospedagem do perfil (hoje neutro: "provedor de hospedagem") até saber onde o domínio será hospedado.
