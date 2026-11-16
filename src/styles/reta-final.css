@@ -126,6 +126,10 @@
 .rf-fit li svg { width: 20px; height: 20px; margin-top: 3px; }
 
 /* Oferta */
+/* Sobre o autor */
+.rf-author { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 32px 56px; align-items: center; }
+.rf-author-photo { display: block; width: 240px; height: 240px; border-radius: 50%; border: 1px solid var(--rule); object-fit: cover; background: var(--paper); }
+.rf-author-copy .rf-lede { max-width: 34em; }
 .rf-offer { margin-top: 40px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 440px); gap: 32px 56px; align-items: start; }
 .rf-offer-copy p + p { margin-top: 16px; }
 .rf-card { background: var(--white); border: 1px solid var(--midnight); border-radius: var(--radius-md); overflow: hidden; }
@@ -229,6 +233,8 @@
   .rf-stage { grid-template-columns: minmax(0, 1fr); }
   .rf-stage-num { font-size: 56px; }
   .rf-items, .rf-fit, .rf-offer { grid-template-columns: minmax(0, 1fr); }
+  .rf-author { grid-template-columns: minmax(0, 1fr); justify-items: start; }
+  .rf-author-photo { width: 180px; height: 180px; }
 }
 @media (max-width: 560px) {
   .rf { font-size: 16px; }

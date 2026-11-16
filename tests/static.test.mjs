@@ -307,7 +307,18 @@ test('Reta Final sales route carries no fixed domain and stays unavailable and u
     assert.ok((file.readUInt16LE(26) & 0x3fff) <= 480, `${src} is wider than a preview`);
     assert.ok(file.length < 40_000, `${src} is heavier than a preview`);
   }
-  assert.deepEqual(readdirSync('dist/images/reta-final').filter(f => !f.startsWith('exemplo-')), [], 'no other page of the material ships');
+  assert.deepEqual(readdirSync('dist/images/reta-final').filter(f => !f.startsWith('exemplo-')), ['autor-lucas-mateus.webp'], 'only the author portrait ships besides the previews');
+  // Author section: before the offer, exact copy, light square portrait, no call to action.
+  const author = page.match(/<section class="rf-sec" aria-labelledby="rf-autor">(.*?)<\/section>/s)?.[1] ?? '';
+  assert.ok(author && page.indexOf('aria-labelledby="rf-autor"') < page.indexOf('id="oferta"'), 'author section sits before the offer');
+  assert.match(author, /<h2[^>]*>Quem fez o Reta Final<\/h2>/);
+  assert.ok(author.includes('Lucas Mateus trabalhou com recrutamento (TikTok e Reckitt) e com aprendizagem corporativa global (Wellhub), e ensina inglês há mais de cinco anos. O Reta Final reúne o que ele aprendeu vendo, de perto, como entrevistas em inglês funcionam.'));
+  assert.match(author, /<img[^>]*src="\/images\/reta-final\/autor-lucas-mateus\.webp"[^>]*alt="Retrato ilustrado de Lucas Mateus"[^>]*>/);
+  assert.doesNotMatch(author, /<a\b|<button\b|aprovad|contratad|★|depoimento/i);
+  const portrait = readFileSync('dist/images/reta-final/autor-lucas-mateus.webp');
+  assert.equal(portrait.toString('ascii', 12, 16), 'VP8 ');
+  assert.equal(portrait.readUInt16LE(26) & 0x3fff, portrait.readUInt16LE(28) & 0x3fff, 'portrait is square');
+  assert.ok(portrait.length <= 150_000, 'portrait is at most ~150 KB');
   const walk = dir => readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(`${dir}/${e.name}`) : [`${dir}/${e.name}`]);
   assert.deepEqual(walk('dist').filter(f => /\.(mp3|m4a|wav|zip)$/i.test(f)), []);
   assert.doesNotMatch(page, /\.mp3|lucasmateus\.app/);
