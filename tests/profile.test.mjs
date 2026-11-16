@@ -31,6 +31,7 @@ test('perfil reta-final fechado: só / e /privacidade/, domínio próprio, sem s
   assert.match(privacy, /<link rel="canonical" href="https:\/\/lucasmateus\.app\/privacidade\/">/);
   assert.match(privacy, /Greenn/);
   assert.ok(privacy.includes(`href="${greenn}"`) && /rel="noopener noreferrer"/.test(privacy));
+  assert.match(privacy, /entregues por e-mail e WhatsApp/);
   assert.match(privacy, /planilha privada do produtor, no Google Sheets/);
   assert.ok(privacy.includes(`href="mailto:${email}"`));
   assert.doesNotMatch(privacy, /será informado aqui/);
