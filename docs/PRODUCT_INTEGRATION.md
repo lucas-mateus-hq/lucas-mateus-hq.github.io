@@ -54,3 +54,11 @@ São 7 PDFs (113 páginas), 25 MP3 (cerca de 83 MB) e o guia. A fonte é a pasta
 ### Card da Greenn
 
 `docs/assets/reta-final-greenn-512.png` (512×512): nome do produto, "Workbook + 25 áudios" e o motivo da escada. O card não tem preço, então não precisa ser refeito quando o preço mudar. Ele foi conferido em 96px, o tamanho em que aparece nas listagens.
+
+## Ordem de ativação do checkout do Reta Final (Greenn)
+1. Produto criado em rascunho na Greenn e link de checkout em mãos.
+2. Compra de teste concluída: arquivos íntegros, PDFs preenchíveis, áudios tocando.
+3. Só então definir `PUBLIC_RETA_FINAL_CHECKOUT_URL` na hospedagem e refazer o build.
+4. Conferir `robots` = `index,follow` e os 3 botões abrindo o checkout.
+
+Pendências para o dia da publicação (não resolvidas no PR #29): `canonical` e `og:url` (dependem do domínio final e do `site`), `og:image` aprovada, contato no rodapé, link de termos/reembolso e a URL da política de privacidade da Greenn. A privacidade já nomeia a Greenn para o Reta Final e mantém a Hotmart só para a REIA. Não copiar `sck` da REIA para o Reta Final antes de testar na Greenn.

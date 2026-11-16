@@ -19,11 +19,11 @@ test('unconfigured publication keeps LinkedIn contact, accurate privacy and reti
   }
   for(const route of ['privacidade/','privacy/']){
     const source=html(route);
-    for(const id of ['responsibility','hosting','browsing','contact','mock-report','publishing','rights','changes'])assert.ok(source.includes(`id="${id}"`),route+': '+id);
+    for(const id of ['purchase-reta-final','responsibility','hosting','browsing','contact','mock-report','publishing','rights','changes'])assert.ok(source.includes(`id="${id}"`),route+': '+id);
     assert.ok(source.includes('https://www.linkedin.com/in/lucasmateus/'));
     assert.ok(source.includes('https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement'));
     assert.ok(source.includes('2026'));
-    assert.match(source,/GitHub Pages/);assert.doesNotMatch(source,/wa\.me|id="relay"/);if(!intakeConfigured)assert.doesNotMatch(source,/WhatsApp/);else assert.match(source,/id="lesson-inquiries"/);assert.match(source,/LGPD/);
+    assert.match(source,/GitHub Pages/);assert.doesNotMatch(source,/wa\.me|id="relay"/);if(!intakeConfigured)assert.doesNotMatch(source.replace(/<section id="purchase-reta-final"[^>]*>.*?<\/section>/s,''),/WhatsApp/);else assert.match(source,/id="lesson-inquiries"/);assert.match(source,/LGPD/);
   }
   for(const path of ['live-telemetry.js','telemetry.json','responsive-guard.css'])assert.equal(existsSync('dist/'+path),false,path);
 });
