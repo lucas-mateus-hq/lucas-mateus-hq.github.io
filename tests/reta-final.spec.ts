@@ -41,7 +41,7 @@ test.describe('Reta Final sales page (/reta-final/)', () => {
     await page.getByRole('link', { name: 'Ver a oferta' }).click();
     await expect(page.locator('#oferta')).toBeInViewport();
     await expect(page.locator('#oferta .rf-price')).toContainText('97,00');
-    await expect(page.locator('#oferta')).toContainText('7 PDFs + 25 áudios MP3 + guia de início');
+    await expect(page.locator('#oferta')).toContainText('7 ferramentas, 25 áudios');
     for (const link of await page.locator('.rf a[href]').all()) expect(await link.getAttribute('href')).toMatch(/^(#|\/)/);
   });
 
