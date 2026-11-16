@@ -30,6 +30,19 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       for (let i = 0; i < parts.length; i++) document.cookie = name + '=; Max-Age=0; path=/; domain=' + parts.slice(i).join('.');
     }
   };
+  const campaignKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
+  const pageLocation = () => {
+    const out = new URLSearchParams();
+    try {
+      const params = new URLSearchParams(location.search);
+      for (const name of campaignKeys) {
+        const value = (params.get(name) || '').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 40);
+        if (value) out.set(name, value);
+      }
+    } catch {}
+    const query = out.toString();
+    return location.origin + location.pathname + (query ? '?' + query : '');
+  };
   const start = () => {
     window['ga-disable-' + id] = false;
     if (loaded) return;
@@ -42,12 +55,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       send_page_view: false,
       allow_google_signals: false,
       allow_ad_personalization_signals: false,
-      page_location: location.origin + location.pathname,
+      page_location: pageLocation(),
       page_referrer: '',
       cookie_expires: 15552000,
       cookie_update: false
     });
-    window.gtag('event', 'page_view', { page_location: location.origin + location.pathname, page_referrer: '' });
+    window.gtag('event', 'page_view', { page_location: pageLocation(), page_referrer: '' });
     const script = document.createElement('script');
     script.async = true;
     script.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;

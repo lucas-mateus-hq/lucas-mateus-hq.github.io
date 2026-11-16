@@ -1142,6 +1142,20 @@ const coverUrl = `${base}/images/reia-cover.webp`;
     </footer>
     <AnalyticsConsent lang="pt-BR" />
     <script is:inline>
+      (() => {
+        // Origin of the visit goes to Hotmart as sck (closed list, sanitized), so each sale carries where it came from.
+        const clean = (value) => (value || '').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 40);
+        try {
+          const params = new URLSearchParams(location.search);
+          const sck = [clean(params.get('utm_source')), clean(params.get('utm_content'))].filter(Boolean).join('_');
+          if (!sck) return;
+          for (const link of document.querySelectorAll('a[data-cta]')) {
+            const url = new URL(link.href);
+            url.searchParams.set('sck', sck);
+            link.href = url.toString();
+          }
+        } catch {}
+      })();
       document.addEventListener('click', (event) => {
         const link = event.target.closest('a[data-cta]');
         if (!link || typeof window.gtag !== 'function') return;
