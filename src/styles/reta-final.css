@@ -176,6 +176,10 @@
 .rf-page { margin: 0; }
 .rf-page img { width: 100%; height: auto; background: var(--white); border: 1px solid var(--rule); border-radius: var(--radius-sm); }
 .rf-page figcaption { margin-top: 8px; font-size: 13px; line-height: 1.4; font-weight: 700; color: var(--blue-deep); }
+.rf-sample { display: block; margin-top: 2px; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; color: var(--teal); }
+.rf-reason.is-text { grid-template-columns: minmax(0, 1fr); }
+.rf-reason.is-text .rf-reason-copy { max-width: 760px; }
+.rf-item .rf-pages.is-pair { grid-column: 2; max-width: 520px; margin-top: 12px; }
 .rf-routes-mini { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
 .rf-routes-mini li { padding: 6px 10px; background: var(--white); border-top: 3px solid var(--blue); font-size: 14px; line-height: 1.3; font-weight: 700; color: var(--midnight); }
 .rf-routes-mini li:last-child { border-top-color: var(--teal); }

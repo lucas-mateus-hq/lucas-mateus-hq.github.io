@@ -83,7 +83,7 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
 <div class="rf-wrap">
 <p class="rf-eyebrow">5 razões</p>
 <h2 class="rf-title" id="rf-razoes">5 razões para preparar sua próxima entrevista com o Reta Final</h2>
-<p class="rf-lede">Cada razão vem com uma prévia da página real do material que resolve o problema.</p>
+<p class="rf-lede">Algumas razões mostram a página real do material, preenchida com um exemplo fictício.</p>
 <ol class="rf-reasons">
 
 <li class="rf-reason">
@@ -96,8 +96,8 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
 </ul>
 </div>
 <div class="rf-pages">
-<figure class="rf-page"><img src={`${base}/images/reta-final/pagina-interview-map.webp`} alt="Prévia da página do Workbook: Interview map, com campos para vaga, empresa e sinais prioritários da descrição da vaga" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">Interview map</span> · p. 8</figcaption></figure>
-<figure class="rf-page"><img src={`${base}/images/reta-final/pagina-preparation-plan.webp`} alt="Prévia da página do Workbook: Preparation plan, com as rotas de até 24 horas, 2 a 3 dias, 4 a 7 dias e preparação antecipada" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">Preparation plan</span> · p. 4</figcaption></figure>
+<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-preparation-plan.webp`} alt="Página do Workbook preenchida com exemplo fictício: Preparation plan, com a rota de 2 a 3 dias marcada e o checklist do que ter em mãos" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">Preparation plan</span> · p. 4<span class="rf-sample">Exemplo fictício</span></figcaption></figure>
+<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-interview-map.webp`} alt="Página do Workbook preenchida com exemplo fictício: Interview map, com a vaga de analista de operações logísticas e cinco sinais prioritários da vaga" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">Interview map</span> · p. 8<span class="rf-sample">Exemplo fictício</span></figcaption></figure>
 </div>
 </li>
 
@@ -114,12 +114,13 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
 <div class="blk res"><strong lang="en">Result</strong>o que mudou e o que você aprendeu</div>
 </div>
 </div>
-<div class="rf-pages is-single">
-<figure class="rf-page"><img src={`${base}/images/reta-final/pagina-star-story-builder.webp`} alt="Prévia da página do Workbook: STAR story builder, com o mapa Situation e Task, Action, Result e a lista de perguntas que pedem uma história" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">STAR story builder</span> · p. 19</figcaption></figure>
+<div class="rf-pages">
+<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-star-20.webp`} alt="Página do Workbook preenchida com exemplo fictício: STAR story builder, partes Situation e Task da história de atrasos nas entregas" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">STAR story builder</span> · p. 20<span class="rf-sample">Exemplo fictício</span></figcaption></figure>
+<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-star-21.webp`} alt="Página do Workbook preenchida com exemplo fictício: STAR story builder, partes Action e Result, com as ações e o resultado do piloto" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">STAR story builder</span> · p. 21<span class="rf-sample">Exemplo fictício</span></figcaption></figure>
 </div>
 </li>
 
-<li class="rf-reason">
+<li class="rf-reason is-text">
 <div class="rf-reason-copy">
 <span class="rf-reason-num" aria-hidden="true">3</span>
 <h3>Ler respostas prontas em silêncio não prepara você para falar sob pressão</h3>
@@ -136,21 +137,13 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
 <li class="rf-track"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#0c2038"></circle><path d="M10.08 8.69 L10.08 15.22 L15.22 11.95Z" fill="#ffffff"></path></svg><b>P1</b><span lang="en">Ownership and results</span></li>
 </ul>
 </div>
-<div class="rf-pages">
-<figure class="rf-page"><img src={`${base}/images/reta-final/pagina-interview-speaking-practice.webp`} alt="Prévia da página do Workbook: Interview speaking practice, com o ciclo pergunta, reformulação, follow-up, revisão e nova tentativa" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">Interview speaking practice</span> · p. 39</figcaption></figure>
-<figure class="rf-page"><img src={`${base}/images/reta-final/pagina-transcricao-mock-m1.webp`} alt="Prévia da página de transcrição da mock interview M1, Recruiter Screen, em Listening, com o diálogo entre recrutadora e candidato" width="480" height="680" loading="lazy" decoding="async"><figcaption>Transcrição · M1 <span lang="en">Recruiter screen</span></figcaption></figure>
-</div>
 </li>
 
-<li class="rf-reason">
+<li class="rf-reason is-text">
 <div class="rf-reason-copy">
 <span class="rf-reason-num" aria-hidden="true">4</span>
 <h3>Travar, não entender uma pergunta ou improvisar salário não precisa encerrar sua chance</h3>
 <p>O <span class="en" lang="en">Pause, clarify &amp; continue</span> reúne frases curtas para ganhar tempo, pedir que repitam a pergunta e retomar o raciocínio. O <span class="en" lang="en">Interview Fact Sheet</span> resolve antes da chamada o que ninguém deve improvisar: <span lang="en">notice period</span>, disponibilidade, modelo de trabalho, <span lang="en">work authorization</span> e expectativa salarial.</p>
-</div>
-<div class="rf-pages">
-<figure class="rf-page"><img src={`${base}/images/reta-final/pagina-pause-clarify-continue.webp`} alt="Prévia da página do Workbook: Pause, clarify and continue, com frases para quando você não ouviu, precisa de tempo, perde uma palavra ou começou mal" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">Pause, clarify &amp; continue</span> · p. 31</figcaption></figure>
-<figure class="rf-page"><img src={`${base}/images/reta-final/pagina-interview-fact-sheet.webp`} alt="Prévia da página do Workbook: Interview Fact Sheet, com perguntas sobre disponibilidade, data de início, localização e modelo de trabalho" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">Interview Fact Sheet</span> · p. 26</figcaption></figure>
 </div>
 </li>
 
@@ -161,7 +154,7 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
 <p>O <span class="en" lang="en">Interview day card</span> reúne em uma ficha só o que você já preparou: sua apresentação em palavras-chave, suas histórias prioritárias e os fatos confirmados. Ele está no Workbook e também em PDF separado, para imprimir ou abrir no celular.</p>
 </div>
 <div class="rf-pages is-single">
-<figure class="rf-page"><img src={`${base}/images/reta-final/pagina-interview-day-card.webp`} alt="Prévia da página do Workbook: Interview day card, com campos para apresentação em palavras-chave, histórias prioritárias e tópicos técnicos" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">Interview day card</span> · p. 46</figcaption></figure>
+<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-interview-day-card.webp`} alt="Página do Workbook preenchida com exemplo fictício: Interview day card, com dados da entrevista, apresentação em palavras-chave e duas histórias prioritárias" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">Interview day card</span> · p. 46<span class="rf-sample">Exemplo fictício</span></figcaption></figure>
 </div>
 </li>
 </ol>
@@ -216,7 +209,11 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
 <h2 class="rf-title" id="rf-recebe">7 PDFs e 25 áudios, tudo incluído no mesmo pacote</h2>
 <p class="rf-lede">Depois da confirmação do pagamento, você baixa o pacote completo e usa no computador, no tablet ou no celular, inclusive offline.</p>
 <div class="rf-items">
-<div class="rf-item"><span class="rf-seal">01</span><div class="rf-item-h"><h3>Core Workbook · Reta Final</h3><span class="rf-chip">48 páginas</span><span class="rf-chip">PDF preenchível</span></div><p>O guia central com as 4 etapas, as 10 ferramentas, exemplos de estrutura e campos para montar suas respostas.</p></div>
+<div class="rf-item is-wide"><span class="rf-seal">01</span><div class="rf-item-h"><h3>Core Workbook · Reta Final</h3><span class="rf-chip">48 páginas</span><span class="rf-chip">PDF preenchível</span></div><p>O guia central com as 4 etapas, as 10 ferramentas, exemplos de estrutura e campos para montar suas respostas.</p>
+<div class="rf-pages is-pair">
+<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-capa.webp`} alt="Capa do Core Workbook Reta Final: Preparação para Entrevistas em Inglês, 4 etapas e 10 ferramentas" width="480" height="680" loading="lazy" decoding="async"><figcaption>Capa</figcaption></figure>
+<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-sumario.webp`} alt="Sumário do Core Workbook: as 4 etapas e as 10 ferramentas com o número da página de cada uma" width="480" height="680" loading="lazy" decoding="async"><figcaption>Sumário · p. 2</figcaption></figure>
+</div></div>
 <div class="rf-item"><span class="rf-seal">02</span><div class="rf-item-h"><h3 lang="en">Interview Day Card</h3><span class="rf-chip">PDF preenchível</span></div><p>Versão separada da ficha de revisão para o dia da entrevista.</p></div>
 <div class="rf-item"><span class="rf-seal">03</span><div class="rf-item-h"><h3 lang="en">Most Common Job Interview Questions</h3><span class="rf-chip">12 perguntas</span><span class="rf-chip">PDF preenchível</span></div><p>As 12 perguntas mais recorrentes de entrevistas em inglês, com variações de como o recrutador pergunta.</p></div>
 <div class="rf-item"><span class="rf-seal">04</span><div class="rf-item-h"><h3>Business English para Entrevistas</h3><span class="rf-chip">PDF preenchível</span></div><p><span lang="en">Phrasal verbs</span>, expressões e <span lang="en">idioms</span> para explicar decisões e resultados sem soar robótico.</p></div>

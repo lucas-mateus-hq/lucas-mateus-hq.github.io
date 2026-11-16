@@ -14,7 +14,9 @@ test.describe('Reta Final sales page (/reta-final/)', () => {
       await expect(page.locator('.rf-item')).toHaveCount(7);
       await expect(page.locator('.rf-faq details')).toHaveCount(5);
       await expect(page.locator('.rf-reason')).toHaveCount(5);
-      for (const reason of await page.locator('.rf-reason').all()) {
+      await expect(page.locator('.rf-reason.is-text')).toHaveCount(2);
+      await expect(page.locator('.rf-page figcaption', { hasText: 'Exemplo fictício' })).toHaveCount(5);
+      for (const reason of await page.locator('.rf-reason:not(.is-text)').all()) {
         await reason.scrollIntoViewIfNeeded();
         await expect(reason.locator('h3')).toBeVisible();
         await expect(reason.locator('.rf-page img').first()).toBeVisible();

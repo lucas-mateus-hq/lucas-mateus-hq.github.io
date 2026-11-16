@@ -281,7 +281,7 @@ test('Reta Final sales route carries no fixed domain and stays unavailable and u
   assert.equal((page.match(/data-rf-status/g) ?? []).length, 2);
   assert.equal((page.match(/class="rf-tool"/g) ?? []).length, 10);
   assert.equal((page.match(/class="rf-item[ "]/g) ?? []).length, 7);
-  assert.equal((page.match(/class="rf-reason"/g) ?? []).length, 5);
+  assert.equal((page.match(/class="rf-reason[ "]/g) ?? []).length, 5);
   // The 25 audios are part of the product: listed in the inventory with their real grouping, never framed as a gift.
   const inventory = page.slice(page.indexOf('id="rf-recebe"'), page.indexOf('id="rf-uso"'));
   assert.match(inventory, /25 áudios de prática em MP3/);
@@ -290,18 +290,22 @@ test('Reta Final sales route carries no fixed domain and stays unavailable and u
   const text = page.replace(/<[^>]+>/g, ' ');
   assert.doesNotMatch(text, /b[ôo]nus|brinde|gr[áa]tis|de presente|\bextras?\b/i, 'audios are part of the product, not a giveaway');
   assert.doesNotMatch(page, /evid[êe]ncia/i);
-  // Demonstrations are real pages of the material, shipped as local images; no paid audio file is ever published.
-  const images = [...page.matchAll(/src="(\/images\/reta-final\/pagina-[a-z0-9-]+\.webp)"[^>]*>/g)];
-  assert.equal(images.length, 8);
-  for (const [tag, src] of images) {
+  // Demonstrations are a small, fixed set of real pages: cover, contents, and tool pages filled with a fictional example.
+  // The caption, not the image, says the example is fictional; no other page of the paid material ships.
+  const images = [...page.matchAll(/<figure class="rf-page"><img src="(\/images\/reta-final\/[a-z0-9-]+\.webp)"[^>]*>(?:<\/img>)?<figcaption>(.*?)<\/figcaption><\/figure>/g)];
+  const sampled = ['preparation-plan', 'interview-map', 'star-20', 'star-21', 'interview-day-card'];
+  assert.deepEqual(images.map(([, src]) => src.replace(/.*exemplo-|\.webp/g, '')).sort(), ['capa', 'sumario', ...sampled].sort());
+  for (const [tag, src, caption] of images) {
     assert.ok(existsSync('dist' + src), src);
     assert.match(tag, /alt="[^"]{20,}"/); assert.match(tag, /width="480" height="680"/); assert.match(tag, /loading="lazy"/);
-    // Previews only: a legible page of the paid material must never ship. Lossy WebP stores the width at bytes 26-27.
+    assert.equal(sampled.some(name => src.endsWith(`exemplo-${name}.webp`)), caption.includes('Exemplo fictício'), src);
+    // Lossy WebP stores the width at bytes 26-27; previews stay at 480px.
     const file = readFileSync('dist' + src);
     assert.equal(file.toString('ascii', 12, 16), 'VP8 ', src);
     assert.ok((file.readUInt16LE(26) & 0x3fff) <= 480, `${src} is wider than a preview`);
-    assert.ok(file.length < 20_000, `${src} carries more detail than a preview`);
+    assert.ok(file.length < 40_000, `${src} is heavier than a preview`);
   }
+  assert.deepEqual(readdirSync('dist/images/reta-final').filter(f => !f.startsWith('exemplo-')), [], 'no other page of the material ships');
   const walk = dir => readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(`${dir}/${e.name}`) : [`${dir}/${e.name}`]);
   assert.deepEqual(walk('dist').filter(f => /\.(mp3|m4a|wav|zip)$/i.test(f)), []);
   assert.doesNotMatch(page, /\.mp3|lucasmateus\.app/);
