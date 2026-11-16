@@ -312,7 +312,11 @@ test('Reta Final sales route carries no fixed domain and stays unavailable and u
   const author = page.match(/<section class="rf-sec" aria-labelledby="rf-autor">(.*?)<\/section>/s)?.[1] ?? '';
   assert.ok(author && page.indexOf('aria-labelledby="rf-autor"') < page.indexOf('id="oferta"'), 'author section sits before the offer');
   assert.match(author, /<h2[^>]*>Quem fez o Reta Final<\/h2>/);
-  assert.ok(author.includes('Lucas Mateus trabalhou com recrutamento (TikTok e Reckitt) e com aprendizagem corporativa global (Wellhub), e ensina inglês há mais de cinco anos. O Reta Final reúne o que ele aprendeu vendo, de perto, como entrevistas em inglês funcionam.'));
+  const authorParagraphs = [...author.matchAll(/<p class="rf-lede">(.*?)<\/p>/gs)].map(m => m[1]);
+  assert.deepEqual(authorParagraphs, [
+    'Sou Lucas Mateus. Trabalhei com recrutamento (TikTok e Reckitt) e com aprendizagem corporativa global (Wellhub), e ensino inglês há mais de cinco anos. No recrutamento, no ensino de inglês e no desenvolvimento de pessoas, encontrei situações que pedem mais do que uma orientação pronta. O que funciona depende de quem está ali, do que essa pessoa já viveu e das possibilidades que tem naquele momento.',
+    'O Reta Final é um trabalho autoral que reúne o que aprendi vendo de perto como entrevistas em inglês funcionam e como aplicar técnicas usadas no mercado na preparação de quem vai passar por essa experiência.',
+  ]);
   assert.match(author, /<img[^>]*src="\/images\/reta-final\/autor-lucas-mateus\.webp"[^>]*alt="Retrato ilustrado de Lucas Mateus"[^>]*>/);
   assert.doesNotMatch(author, /<a\b|<button\b|aprovad|contratad|★|depoimento/i);
   const portrait = readFileSync('dist/images/reta-final/autor-lucas-mateus.webp');
