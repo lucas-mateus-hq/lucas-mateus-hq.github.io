@@ -93,6 +93,6 @@ Pendências para o dia da publicação (não resolvidas no PR #29): `canonical` 
 - Só no build do perfil com checkout ativo. Sem checkout: `robots.txt` bloqueia tudo, sem `llms.txt` e sem JSON-LD. O build padrão do site pessoal não muda (`dist/` idêntico por hash).
 - `scripts/aeo-layer.mjs` extrai do HTML construído o nome, a descrição, o preço, o link de checkout, os itens do pacote, as perguntas frequentes, o autor e o contato; se algo não for encontrado, o build para.
 - `llms.txt` (em `https://lucasmateus.app/llms.txt`): título, resumo, páginas principais, detalhes da oferta, itens do pacote, perguntas frequentes, autoria e contato.
-- JSON-LD: `/` com `Product`+`CreativeWork` (com `Offer`) e `FAQPage`; `/privacidade/` com `WebPage`. O valor do preço vem da página.
+- JSON-LD: `/` com `Course` (com `author`, `provider` e `Offer`) e `FAQPage`; o tipo `Product` foi evitado porque o Google o trata como listagem do comerciante e exige `image`, frete e política de devolução; `/privacidade/` com `WebPage`. O valor do preço vem da página.
 - `robots.txt` com permissão explícita para OAI-SearchBot, ChatGPT-User, ClaudeBot, PerplexityBot e Google-Extended, além de `*`.
 - O e-mail de contato aparece no `llms.txt` porque já está público na privacidade; para tirá-lo, remova a linha `Contato:` em `scripts/aeo-layer.mjs`.
