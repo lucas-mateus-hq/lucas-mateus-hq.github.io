@@ -5,6 +5,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { createServer } from 'node:http';
 import { extract, assertComplete } from '../scripts/aeo-layer.mjs';
+import { extractSocial, ogSvg } from '../scripts/generate-og.mjs';
 
 const out = 'dist-reta-final';
 const email = readFileSync('src/config/reta-final.ts', 'utf8').match(/retaFinalContactEmail = '([^']+)'/)[1];
@@ -40,6 +41,8 @@ test('perfil reta-final fechado: só / e /privacidade/, domínio próprio, sem s
   assert.equal(existsSync(join(out, 'sitemap.xml')), false);
   assert.equal(read('robots.txt'), 'User-agent: *\nDisallow: /\n');
   assert.equal(existsSync(join(out, 'llms.txt')), false, 'llms.txt só existe com o checkout ativo');
+  for (const f of ['og-image.png', 'site.webmanifest', 'favicon.ico', 'apple-touch-icon.png']) assert.equal(existsSync(join(out, f)), false, f + ' só existe com o checkout ativo');
+  for (const page of ['index.html', 'privacidade/index.html']) assert.doesNotMatch(read(page), /og:image|twitter:card/, page + ' sem tags de imagem social no build fechado');
   for (const page of ['index.html', 'privacidade/index.html']) assert.doesNotMatch(read(page), /application\/ld\+json/, page + ' sem JSON-LD no build fechado');
   for (const file of walk(out)) {
     if (/\.(html|css|js|txt|xml|svg)$/.test(file)) assert.doesNotMatch(readFileSync(file, 'utf8'), /Hotmart|renda-extra|github\.io|lucas-mateus-hq/i, file);
@@ -133,6 +136,80 @@ test('camada AEO com checkout ativo: robots para IA, llms.txt e JSON-LD fiéis a
     }
   } finally { server.close(); }
   build('');
+});
+
+const pngSize = (buf) => {
+  assert.equal(buf.subarray(0, 8).toString('hex'), '89504e470d0a1a0a', 'assinatura PNG');
+  return { w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) };
+};
+
+test('cartão social com checkout ativo: og:image 1200x630, twitter card, ícones e manifest, sem github.io', async () => {
+  build('https://pay.example.com/checkout');
+  const origin = 'https://lucasmateus.app';
+  const pages = { '/': read('index.html'), '/privacidade/': read('privacidade/index.html') };
+  for (const [route, html] of Object.entries(pages)) {
+    const tag = (attr, name) => html.match(new RegExp(`<meta ${attr}="${name}" content="([^"]*)">`))?.[1];
+    const title = tag('property', 'og:title'), description = tag('property', 'og:description');
+    assert.ok(title && description, route + ' og:title e og:description');
+    assert.equal(title, html.match(/<title>(.*?)<\/title>/)[1], route + ' og:title = <title>');
+    assert.equal(description, html.match(/<meta name="description" content="([^"]*)"/)[1], route + ' og:description = description');
+    assert.equal(tag('property', 'og:url'), origin + route);
+    assert.equal(tag('property', 'og:type'), 'website');
+    assert.equal(tag('property', 'og:site_name'), 'Reta Final');
+    assert.equal(tag('property', 'og:locale'), 'pt_BR');
+    assert.equal(tag('property', 'og:image'), `${origin}/og-image.png`);
+    assert.equal(tag('property', 'og:image:width'), '1200');
+    assert.equal(tag('property', 'og:image:height'), '630');
+    assert.equal(tag('name', 'twitter:card'), 'summary_large_image');
+    assert.equal(tag('name', 'twitter:title'), title);
+    assert.equal(tag('name', 'twitter:description'), description);
+    assert.equal(tag('name', 'twitter:image'), `${origin}/og-image.png`);
+    for (const name of ['og:title', 'og:description', 'og:image', 'og:url']) assert.equal(html.split(`property="${name}"`).length, 2, `${route} ${name} sem duplicata`);
+    assert.match(html, /<link rel="apple-touch-icon" href="\/apple-touch-icon\.png">/);
+    assert.match(html, /<link rel="manifest" href="\/site\.webmanifest">/);
+    assert.match(html, /<link rel="icon" href="\/favicon\.ico" sizes="32x32">/);
+    const social = html.match(/<(?:meta|link)[^>]*(?:og:|twitter:|icon|manifest)[^>]*>/g).join('\n');
+    assert.doesNotMatch(social, /github\.io|pages\.dev|lucas-mateus-hq|pay\.example/, route + ' sem vazamento em tags sociais');
+  }
+  // imagem: 1200x630, PNG, abaixo de 300 KB
+  const og = readFileSync(join(out, 'og-image.png'));
+  assert.deepEqual(pngSize(og), { w: 1200, h: 630 });
+  assert.ok(og.length < 300 * 1024, `og-image.png com ${og.length} bytes`);
+  assert.deepEqual(pngSize(readFileSync(join(out, 'apple-touch-icon.png'))), { w: 180, h: 180 });
+  assert.deepEqual(pngSize(readFileSync(join(out, 'icon-512.png'))), { w: 512, h: 512 });
+  assert.equal(readFileSync(join(out, 'favicon.ico')).readUInt16LE(2), 1, 'favicon.ico é um ICO');
+  // o texto da imagem vem da página
+  const social = extractSocial(pages['/'], origin);
+  assert.equal(social.brand, 'Reta Final');
+  assert.equal(social.subtitle, 'Preparação para Entrevistas em Inglês');
+  assert.equal(social.highlight, '4 etapas · 7 materiais · 25 áudios de treino');
+  assert.equal(social.domain, 'lucasmateus.app');
+  const manifest = JSON.parse(read('site.webmanifest'));
+  assert.deepEqual([manifest.name, manifest.short_name, manifest.start_url, manifest.display], ['Reta Final', 'Reta Final', '/', 'browser']);
+  for (const icon of manifest.icons) assert.ok(existsSync(join(out, icon.src.slice(1))), icon.src);
+  // servido localmente: 200 com o content-type certo
+  const server = createServer((req, res) => {
+    const file = join(out, req.url.split('?')[0]);
+    if (!existsSync(file) || !statSync(file).isFile()) { res.statusCode = 404; return res.end(); }
+    res.end(readFileSync(file));
+  });
+  await new Promise((r) => server.listen(0, '127.0.0.1', r));
+  try {
+    for (const path of ['/og-image.png', '/site.webmanifest', '/apple-touch-icon.png', '/favicon.ico']) {
+      const res = await fetch(`http://127.0.0.1:${server.address().port}${path}`);
+      assert.equal(res.status, 200, path);
+      assert.ok((await res.arrayBuffer()).byteLength > 100, path + ' com conteúdo');
+    }
+  } finally { server.close(); }
+  build('');
+});
+
+test('gerador do cartão recusa texto ausente, glifo faltando e título que não cabe', () => {
+  assert.throws(() => extractSocial('<title>x</title>', 'https://lucasmateus.app'), /Social: não consegui extrair/);
+  const base = { brand: 'Reta Final', subtitle: 'Preparação para Entrevistas em Inglês', highlight: '4 etapas', domain: 'lucasmateus.app' };
+  assert.throws(() => ogSvg({ ...base, subtitle: 'Título com 日本語' }), /falta o glifo/);
+  assert.throws(() => ogSvg({ ...base, brand: 'Reta Final Reta Final Reta Final' }), /não cabe/);
+  assert.match(ogSvg(base), /^<svg /);
 });
 
 test('trava: checkout definido com placeholder ou sem e-mail de contato é recusado', () => {
