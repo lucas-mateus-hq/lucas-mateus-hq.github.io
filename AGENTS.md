@@ -23,3 +23,6 @@ O build do perfil `reta-final` (`npm run build:reta-final`) monta o `sitemap.xml
 
 ## Camada AEO do domínio do Reta Final
 Com o checkout ativo, o build do perfil também gera `llms.txt`, o JSON-LD (`Course`, `FAQPage` e `WebPage`) e o `robots.txt` com permissão explícita para crawlers de IA. Tudo é extraído do HTML construído por `scripts/aeo-layer.mjs`, sem digitar dados à mão. Sempre que o conteúdo da oferta, o preço ou as perguntas frequentes do `lucasmateus.app` mudarem, rode `npm run test:profile`: ele confere o `llms.txt` e o JSON-LD contra o texto visível, e o build para se a extração falhar. Sem checkout ativo nada disso é gerado, e o build padrão do site pessoal não muda.
+
+## Cartão social do domínio do Reta Final
+Com o checkout ativo, o build do perfil também gera `og-image.png` (1200×630, abaixo de 300 KB), ícones, `site.webmanifest` e as tags `og:*` e `twitter:*` das duas páginas, por `scripts/generate-og.mjs`. O texto da imagem é extraído do HTML construído; se o título, o subtítulo ou os números da oferta mudarem, rode `npm run test:profile` e olhe a imagem em `dist-reta-final/og-image.png`. Sem checkout nada disso é gerado e o build padrão do site pessoal não muda.

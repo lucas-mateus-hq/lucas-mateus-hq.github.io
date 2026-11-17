@@ -96,3 +96,12 @@ Pendências para o dia da publicação (não resolvidas no PR #29): `canonical` 
 - JSON-LD: `/` com `Course` (com `author`, `provider` e `Offer`) e `FAQPage`; o tipo `Product` foi evitado porque o Google o trata como listagem do comerciante e exige `image`, frete e política de devolução; `/privacidade/` com `WebPage`. O valor do preço vem da página.
 - `robots.txt` com permissão explícita para OAI-SearchBot, ChatGPT-User, ClaudeBot, PerplexityBot e Google-Extended, além de `*`.
 - O e-mail de contato aparece no `llms.txt` porque já está público na privacidade; para tirá-lo, remova a linha `Contato:` em `scripts/aeo-layer.mjs`.
+
+## Cartão social, ícones e manifest do domínio do Reta Final
+- Só no build do perfil com checkout ativo (`scripts/generate-og.mjs`, chamado por `scripts/prune-profile.mjs`). Sem checkout nada disso é gerado e o `dist/` padrão do site pessoal não muda (idêntico por hash).
+- Arquivos gerados na raiz de `dist-reta-final`: `og-image.png` (1200×630, PNG, abaixo de 300 KB; hoje ~21 KB), `apple-touch-icon.png` (180×180), `icon-192.png`, `icon-512.png`, `favicon.ico` (32×32) e `site.webmanifest` (`name` e `short_name` "Reta Final", `start_url` `/`, `display` `browser`).
+- Texto da imagem extraído do HTML construído: marca e subtítulo do `<title>`, e "4 etapas · 7 materiais · 25 áudios de treino" dos números da própria página; domínio vem do `site`. Se algo não for encontrado, falta glifo ou o texto não cabe, o build para.
+- As letras são contornos da Inter em `scripts/og/glyphs.json` (regerar com `python3 scripts/og/make-glyphs.py`, precisa de `fonttools` e `brotli`), então o PNG não depende de fontes do sistema nem de navegador. O PNG é renderizado com o `sharp`, que já vem junto com o Astro.
+- Tags nas duas rotas (`/` e `/privacidade/`): `og:type`, `og:title`, `og:description` e `og:url` (já existiam), mais `og:site_name`, `og:locale` (`pt_BR`), `og:image` (`https://lucasmateus.app/og-image.png`), `og:image:width`, `og:image:height`, `og:image:alt`, `twitter:card` (`summary_large_image`), `twitter:title`, `twitter:description`, `twitter:image`, `rel="icon"` para o `.ico`, `apple-touch-icon` e `manifest`. O `rel="icon"` SVG do Reta Final (seta laranja) continua.
+- A imagem não entra no JSON-LD `Course` (evita risco de aviso no Teste de Pesquisa Aprimorada).
+- Depois do deploy, redes sociais guardam o cartão em cache: use o Depurador de Compartilhamento do Facebook, o Post Inspector do LinkedIn ou um link novo (`?v=2`) para forçar a releitura.

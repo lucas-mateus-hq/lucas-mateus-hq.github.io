@@ -4,6 +4,7 @@ import { readdirSync, readFileSync, rmSync, writeFileSync, existsSync, mkdirSync
 import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 import { extract, homeJsonLd, privacyJsonLd, llmsTxt } from './aeo-layer.mjs';
+import { extractSocial, socialFiles, socialTags } from './generate-og.mjs';
 
 const dir = process.argv[2] ?? 'dist-reta-final';
 const site = (process.env.PUBLIC_SITE_ORIGIN ?? 'https://lucasmateus.app').replace(/\/$/, '');
@@ -66,6 +67,10 @@ if (checkoutActive && entries.length > 0) {
   const inject = (file, tags) => writeFileSync(file, readFileSync(file, 'utf8').replace('</head>', `${tags}</head>`));
   inject(homeFile, homeJsonLd(data));
   inject(privacyFile, privacyJsonLd(data));
+  // Cartão social (og-image.png 1200x630), ícones e manifest; tags sociais nas duas páginas.
+  const social = extractSocial(readFileSync(homeFile, 'utf8'), site);
+  for (const [name, content] of Object.entries(await socialFiles(social))) writeFileSync(join(dir, name), content);
+  for (const file of [homeFile, privacyFile]) inject(file, socialTags(readFileSync(file, 'utf8'), social, site));
   writeFileSync(join(dir, 'llms.txt'), llmsTxt(data));
   const robots = ['User-agent: *\nAllow: /', ...aiCrawlers.map((agent) => `User-agent: ${agent}\nAllow: /`), `Sitemap: ${site}/sitemap.xml`].join('\n\n') + '\n';
   writeFileSync(join(dir, 'robots.txt'), robots);
