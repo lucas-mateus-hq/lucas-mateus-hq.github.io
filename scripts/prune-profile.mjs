@@ -1,8 +1,9 @@
 // Pós-build do perfil reta-final. Deixa em dist-reta-final só / e /privacidade/ e os arquivos que elas usam,
-// e gera robots.txt (e sitemap.xml somente com checkout ativo). Uso: node scripts/prune-profile.mjs [dir]
+// e gera robots.txt (e, somente com checkout ativo, sitemap.xml, llms.txt e JSON-LD). Uso: node scripts/prune-profile.mjs [dir]
 import { readdirSync, readFileSync, rmSync, writeFileSync, existsSync, mkdirSync, statSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
+import { extract, homeJsonLd, privacyJsonLd, llmsTxt } from './aeo-layer.mjs';
 
 const dir = process.argv[2] ?? 'dist-reta-final';
 const site = (process.env.PUBLIC_SITE_ORIGIN ?? 'https://lucasmateus.app').replace(/\/$/, '');
@@ -55,8 +56,19 @@ const entries = routes.filter((r) => r.indexable).map(({ route }) => {
   return `  <url><loc>${site}${route}</loc>${date ? `<lastmod>${date}</lastmod>` : ''}</url>`;
 });
 
+// Crawlers de busca e citação por IA com permissão explícita, só no build ativo do domínio próprio.
+const aiCrawlers = ['OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'PerplexityBot', 'Google-Extended'];
 if (checkoutActive && entries.length > 0) {
-  writeFileSync(join(dir, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${site}/sitemap.xml\n`);
+  // Camada AEO: JSON-LD nas duas páginas e llms.txt, tudo extraído do HTML construído.
+  const homeFile = join(dir, 'index.html');
+  const privacyFile = join(dir, 'privacidade', 'index.html');
+  const data = extract(readFileSync(homeFile, 'utf8'), readFileSync(privacyFile, 'utf8'), site);
+  const inject = (file, tags) => writeFileSync(file, readFileSync(file, 'utf8').replace('</head>', `${tags}</head>`));
+  inject(homeFile, homeJsonLd(data));
+  inject(privacyFile, privacyJsonLd(data));
+  writeFileSync(join(dir, 'llms.txt'), llmsTxt(data));
+  const robots = ['User-agent: *\nAllow: /', ...aiCrawlers.map((agent) => `User-agent: ${agent}\nAllow: /`), `Sitemap: ${site}/sitemap.xml`].join('\n\n') + '\n';
+  writeFileSync(join(dir, 'robots.txt'), robots);
   writeFileSync(join(dir, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.join('\n')}\n</urlset>\n`);
 } else {
   writeFileSync(join(dir, 'robots.txt'), 'User-agent: *\nDisallow: /\n');
