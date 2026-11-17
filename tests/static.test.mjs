@@ -282,10 +282,25 @@ test('Reta Final sales route carries no fixed domain and stays unavailable and u
   assert.equal((page.match(/class="rf-tool"/g) ?? []).length, 10);
   assert.equal((page.match(/class="rf-item[ "]/g) ?? []).length, 7);
   assert.equal((page.match(/class="rf-reason[ "]/g) ?? []).length, 5);
-  // The 25 audios are part of the product: listed in the inventory with their real grouping, never framed as a gift.
+  // The 25 audios are part of the product: one card of the inventory, tagged as audio, never framed as a gift.
   const inventory = page.slice(page.indexOf('id="rf-recebe"'), page.indexOf('id="rf-uso"'));
-  assert.match(inventory, /25 áudios de prática/);
-  for (const [count, group] of [['12', 'Módulos de entrevista'], ['10', 'Mock interviews'], ['3', 'Useful English Labs']]) assert.match(inventory, new RegExp(`<b>${count}</b><span><strong[^>]*>${group}</strong>`), group);
+  assert.match(inventory, /<div class="rf-item is-wide is-audio">.*?<h3>25 áudios de prática<\/h3><span class="rf-chip">Áudio<\/span>/s);
+  // Format tag = last chip of the card header: every card but the guide names its format.
+  assert.equal((inventory.match(/<span class="rf-chip">(?:PDF preenchível|PDF|Áudio)<\/span><\/div>/g) ?? []).length, 6);
+  // The creatives built in HTML/CSS/SVG (inventory cards, timeline, before/after) never carry percentages or audio folder names.
+  const timeline = page.match(/<ol class="rf-timeline".*?<\/ol>/s)?.[0] ?? '';
+  const beforeAfter = page.match(/<ol class="rf-errors">.*?<\/ol>/s)?.[0] ?? '';
+  const creatives = inventory + timeline + beforeAfter;
+  assert.doesNotMatch(creatives.replace(/<[^>]+>/g, ' '), /%|Módulos de entrevista|Mock interviews|Useful English Labs|audio-groups/);
+  assert.equal((beforeAfter.match(/class="rf-before"/g) ?? []).length, 3);
+  assert.equal((beforeAfter.match(/class="rf-after"/g) ?? []).length, 3);
+  assert.ok(beforeAfter.indexOf('Estuda inglês genérico na véspera') < beforeAfter.indexOf('Decora respostas da internet') && beforeAfter.indexOf('Decora respostas da internet') < beforeAfter.indexOf('Se perde ao contar o que fez'));
+  // Timeline: the 4 stages and the 10 tools, in order, same names as the detailed list below it.
+  const tlTools = [...timeline.matchAll(/<li><b>(\d\d)<\/b><span lang="en">(.*?)<\/span><\/li>/g)].map(m => [m[1], m[2]]);
+  const listTools = [...page.matchAll(/<span class="rf-seal">(\d\d)<\/span><h4 lang="en">(.*?)<\/h4>/g)].map(m => [m[1], m[2]]);
+  assert.equal(tlTools.length, 10);
+  assert.deepEqual(tlTools, listTools);
+  assert.equal((timeline.match(/class="rf-tl-node"/g) ?? []).length, 4);
   assert.match(page.slice(page.indexOf('id="oferta"')), /7 materiais, 25 áudios/);
   // The 25 audios are one of the 7 materials, so every count says "7 materiais, com 25 áudios", never a sum.
   assert.ok(page.includes('<h2 class="rf-title" id="rf-recebe">7 materiais, com 25 áudios de prática, no mesmo pacote</h2>'));
@@ -299,22 +314,20 @@ test('Reta Final sales route carries no fixed domain and stays unavailable and u
   assert.doesNotMatch(page, /evid[êe]ncia/i);
   // Buyers see materials and audios, not file formats or file counts; no author credit in the footer.
   assert.doesNotMatch(text, /MP3|7 PDFs|criação de Lucas Mateus/);
-  // Demonstrations are a small, fixed set of real pages: cover, contents, and tool pages filled with a fictional example.
-  // The caption, not the image, says the example is fictional; no other page of the paid material ships.
+  // Only the cover and the contents page of the Workbook are shown; tool pages (filled or not) are never published.
   const images = [...page.matchAll(/<figure class="rf-page"><img src="(\/images\/reta-final\/[a-z0-9-]+\.webp)"[^>]*>(?:<\/img>)?<figcaption>(.*?)<\/figcaption><\/figure>/g)];
-  const sampled = ['preparation-plan', 'interview-map', 'star-20', 'star-21', 'interview-day-card'];
-  assert.deepEqual(images.map(([, src]) => src.replace(/.*exemplo-|\.webp/g, '')).sort(), ['capa', 'sumario', ...sampled].sort());
+  assert.deepEqual(images.map(([, src]) => src.replace(/.*exemplo-|\.webp/g, '')).sort(), ['capa', 'sumario']);
+  assert.doesNotMatch(page, /Exemplo fictício|rf-sample|exemplo-(preparation|interview|star)/);
   for (const [tag, src, caption] of images) {
     assert.ok(existsSync('dist' + src), src);
     assert.match(tag, /alt="[^"]{20,}"/); assert.match(tag, /width="480" height="680"/); assert.match(tag, /loading="lazy"/);
-    assert.equal(sampled.some(name => src.endsWith(`exemplo-${name}.webp`)), caption.includes('Exemplo fictício'), src);
     // Lossy WebP stores the width at bytes 26-27; previews stay at 480px.
     const file = readFileSync('dist' + src);
     assert.equal(file.toString('ascii', 12, 16), 'VP8 ', src);
     assert.ok((file.readUInt16LE(26) & 0x3fff) <= 480, `${src} is wider than a preview`);
     assert.ok(file.length < 40_000, `${src} is heavier than a preview`);
   }
-  assert.deepEqual(readdirSync('dist/images/reta-final').filter(f => !f.startsWith('exemplo-')), ['autor-lucas-mateus.webp'], 'only the author portrait ships besides the previews');
+  assert.deepEqual(readdirSync('dist/images/reta-final').sort(), ['autor-lucas-mateus.webp', 'exemplo-capa.webp', 'exemplo-sumario.webp'], 'only the author portrait, the cover and the contents ship');
   // Author section: before the offer, exact copy, light square portrait, no call to action.
   const author = page.match(/<section class="rf-sec" aria-labelledby="rf-autor">(.*?)<\/section>/s)?.[1] ?? '';
   assert.ok(author && page.indexOf('aria-labelledby="rf-autor"') < page.indexOf('id="oferta"'), 'author section sits before the offer');
@@ -331,8 +344,14 @@ test('Reta Final sales route carries no fixed domain and stays unavailable and u
   assert.equal(portrait.readUInt16LE(26) & 0x3fff, portrait.readUInt16LE(28) & 0x3fff, 'portrait is square');
   assert.ok(portrait.length <= 150_000, 'portrait is at most ~150 KB');
   const walk = dir => readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(`${dir}/${e.name}`) : [`${dir}/${e.name}`]);
-  assert.deepEqual(walk('dist').filter(f => /\.(mp3|m4a|wav|zip)$/i.test(f)), []);
-  assert.doesNotMatch(page, /\.mp3|lucasmateus\.app/);
+  // The only audio that may ship is the single 15-second excerpt behind the mini-player: small, and the player exists only if the file does.
+  const sampleFile = 'dist/audio/reta-final/trecho-15s.mp3';
+  assert.deepEqual(walk('dist').filter(f => /\.(mp3|m4a|wav|zip|pdf)$/i.test(f)), existsSync(sampleFile) ? [sampleFile] : []);
+  if (existsSync(sampleFile)) {
+    assert.ok(readFileSync(sampleFile).length < 450_000, 'the excerpt is a 15-second clip, not a full track');
+    assert.match(page, /<audio controls preload="none" src="\/audio\/reta-final\/trecho-15s\.mp3">/);
+  } else assert.doesNotMatch(page, /<audio|rf-player/);
+  assert.doesNotMatch(page, /lucasmateus\.app/);
   assert.doesNotMatch(page, /\p{Extended_Pictographic}/u, 'the design system uses icons, never emoji');
   assert.doesNotMatch(readFileSync('dist/sitemap.xml', 'utf8'), /reta-final/);
   for (const route of routes) assert.ok(!html(route).includes('href="/reta-final/"'), route);

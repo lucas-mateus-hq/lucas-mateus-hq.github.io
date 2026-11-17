@@ -14,19 +14,30 @@ test.describe('Reta Final sales page (/reta-final/)', () => {
       await expect(page.locator('.rf-item')).toHaveCount(7);
       await expect(page.locator('.rf-faq details')).toHaveCount(5);
       await expect(page.locator('.rf-reason')).toHaveCount(5);
-      await expect(page.locator('.rf-reason.is-text')).toHaveCount(2);
-      await expect(page.locator('.rf-page figcaption', { hasText: 'Exemplo fictício' })).toHaveCount(5);
-      for (const reason of await page.locator('.rf-reason:not(.is-text)').all()) {
-        await reason.scrollIntoViewIfNeeded();
-        await expect(reason.locator('h3')).toBeVisible();
-        await expect(reason.locator('.rf-page img').first()).toBeVisible();
-        await expect.poll(() => reason.locator('.rf-page img').first().evaluate((img: HTMLImageElement) => img.complete ? img.naturalWidth : 0)).toBe(480);
+      await expect(page.locator('.rf-reason.is-text')).toHaveCount(5);
+      await expect(page.locator('.rf-page')).toHaveCount(2); // só capa e sumário do Workbook
+      await expect(page.locator('.rf-page figcaption', { hasText: 'Exemplo fictício' })).toHaveCount(0);
+      for (const figure of await page.locator('.rf-page img').all()) {
+        await figure.scrollIntoViewIfNeeded();
+        await expect(figure).toBeVisible();
+        await expect.poll(() => figure.evaluate((img: HTMLImageElement) => img.complete ? img.naturalWidth : 0)).toBe(480);
       }
+      const before = page.locator('.rf-errors li');
+      await before.first().scrollIntoViewIfNeeded();
+      await expect(before).toHaveCount(3);
+      await expect(page.locator('.rf-before')).toHaveCount(3);
+      await expect(page.locator('.rf-after')).toHaveCount(3);
+      const timeline = page.locator('.rf-timeline');
+      await timeline.scrollIntoViewIfNeeded();
+      await expect(timeline.locator('> li')).toHaveCount(4);
+      await expect(timeline.locator('ul li')).toHaveCount(10);
       const audio = page.locator('.rf-item.is-audio');
       await audio.scrollIntoViewIfNeeded();
       await expect(audio).toBeVisible();
       await expect(audio).toContainText('25 áudios de prática');
-      await expect(audio.locator('.rf-audio-groups li')).toHaveCount(3);
+      await expect(audio.locator('.rf-chip')).toHaveText('Áudio');
+      await expect(audio.locator('.rf-wave')).toBeVisible();
+      await expect(page.locator('audio')).toHaveCount(0); // o player só aparece quando o trecho de 15 s estiver no repositório
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
       expect(await page.evaluate(() => document.fonts.check('16px Inter'))).toBe(true);
       expect(external).toEqual([]);

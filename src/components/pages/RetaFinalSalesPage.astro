@@ -1,6 +1,7 @@
 ---
 // Página de vendas do Reta Final. O corpo espelha o canvas de design aprovado;
 // nenhum domínio é escrito aqui: caminhos são relativos à base e o checkout vem de configuração.
+import { existsSync } from 'node:fs';
 import '../../styles/reta-final.css';
 import { retaFinalCheckoutUrl } from '../../config/reta-final';
 
@@ -15,6 +16,11 @@ const fontUrl = `${base}/fonts/inter-latin-opsz-normal.woff2`;
 const ownDomain = import.meta.env.PUBLIC_SITE_PROFILE === 'reta-final';
 const canonical = ownDomain ? new URL(`${base}/`, Astro.site).href : '';
 const privacyUrl = `${base}/privacidade/`;
+// O mini-player só é montado quando o trecho de 15 s está no repositório: nunca um player sem áudio.
+// Barras decorativas do desenho de onda (sem relação com nenhum áudio real).
+const waveHeights = [10, 20, 28, 30, 19, 12, 15, 13, 10, 16, 19, 11, 17, 24, 29, 28, 23, 12, 16, 21, 18, 17, 11, 8, 18, 22, 22, 22, 19, 18, 27, 28, 30, 23, 13, 12, 14, 9, 14, 17, 9, 18, 27, 29, 29, 16, 15, 23];
+const sampleAudioFile = 'audio/reta-final/trecho-15s.mp3';
+const sampleAudio = existsSync(`public/${sampleAudioFile}`) ? `${base}/${sampleAudioFile}` : '';
 const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}`;
 ---
 <!doctype html>
@@ -72,9 +78,18 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
 <p class="rf-eyebrow">Por que as pessoas travam</p>
 <h2 class="rf-title" id="rf-dor">Você sabe inglês. O que falta é estrutura para falar sob pressão.</h2>
 <ol class="rf-errors">
-<li><span class="n" aria-hidden="true">1</span><h3>Estuda inglês genérico na véspera</h3><p>Listas de vocabulário e vídeos soltos de gramática não ajudam a explicar um projeto real.</p></li>
-<li><span class="n" aria-hidden="true">2</span><h3>Decora respostas da internet</h3><p>O texto pronto desmonta quando o recrutador muda a pergunta ou faz um <span lang="en">follow-up</span>.</p></li>
-<li><span class="n" aria-hidden="true">3</span><h3>Se perde ao contar o que fez</h3><p>Fala demais do contexto, esconde a própria contribuição e improvisa salário e <span lang="en">notice period</span>.</p></li>
+<li><span class="n" aria-hidden="true">1</span>
+<div class="rf-before"><p class="rf-ba-label">Antes</p><h3>Estuda inglês genérico na véspera</h3><p>Listas de vocabulário e vídeos soltos de gramática não ajudam a explicar um projeto real.</p></div>
+<svg class="rf-ba-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4V19M6 13L12 19L18 13"></path></svg>
+<div class="rf-after"><p class="rf-ba-label">Com o Reta Final</p><p class="rf-ba-title">Filtra o que esta vaga pede</p><p>O <span lang="en">Interview map</span> cruza a descrição da vaga com a sua experiência e deixa só os 3 a 5 temas que importam.</p></div></li>
+<li><span class="n" aria-hidden="true">2</span>
+<div class="rf-before"><p class="rf-ba-label">Antes</p><h3>Decora respostas da internet</h3><p>O texto pronto desmonta quando o recrutador muda a pergunta ou faz um <span lang="en">follow-up</span>.</p></div>
+<svg class="rf-ba-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4V19M6 13L12 19L18 13"></path></svg>
+<div class="rf-after"><p class="rf-ba-label">Com o Reta Final</p><p class="rf-ba-title">Monta histórias em palavras-chave</p><p>O <span lang="en">STAR story builder</span> organiza o que você viveu sem texto para decorar, e você treina em voz alta com a pergunta mudando.</p></div></li>
+<li><span class="n" aria-hidden="true">3</span>
+<div class="rf-before"><p class="rf-ba-label">Antes</p><h3>Se perde ao contar o que fez</h3><p>Fala demais do contexto, esconde a própria contribuição e improvisa salário e <span lang="en">notice period</span>.</p></div>
+<svg class="rf-ba-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4V19M6 13L12 19L18 13"></path></svg>
+<div class="rf-after"><p class="rf-ba-label">Com o Reta Final</p><p class="rf-ba-title">Foca no que você decidiu e entregou</p><p>O <span lang="en">STAR story builder</span> destaca a sua decisão e a sua entrega, e o <span lang="en">Interview Fact Sheet</span> resolve salário e <span lang="en">notice period</span> antes da chamada.</p></div></li>
 </ol>
 <div class="rf-callout">
 <p>Entrevistadores não estão avaliando se você fala como nativo. Querem entender quem você é, o que resolveu e como decide.</p>
@@ -87,10 +102,10 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
 <div class="rf-wrap">
 <p class="rf-eyebrow">5 razões</p>
 <h2 class="rf-title" id="rf-razoes">5 razões para preparar sua próxima entrevista com o Reta Final</h2>
-<p class="rf-lede">Algumas razões mostram a página real do material, preenchida com um exemplo fictício.</p>
+<p class="rf-lede">Cada razão aponta para a ferramenta do material que a resolve.</p>
 <ol class="rf-reasons">
 
-<li class="rf-reason">
+<li class="rf-reason is-text">
 <div class="rf-reason-copy">
 <span class="rf-reason-num" aria-hidden="true">1</span>
 <h3>Você não precisa estudar “inglês geral”: precisa filtrar o que esta vaga exige</h3>
@@ -99,13 +114,9 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
 <li>Até 24 horas</li><li>2 a 3 dias</li><li>4 a 7 dias</li><li>Preparação antecipada</li>
 </ul>
 </div>
-<div class="rf-pages">
-<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-preparation-plan.webp`} alt="Página do Workbook preenchida com exemplo fictício: Preparation plan, com a rota de 2 a 3 dias marcada e o checklist do que ter em mãos" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">Preparation plan</span> · p. 4<span class="rf-sample">Exemplo fictício</span></figcaption></figure>
-<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-interview-map.webp`} alt="Página do Workbook preenchida com exemplo fictício: Interview map, com a vaga de analista de operações logísticas e cinco sinais prioritários da vaga" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">Interview map</span> · p. 8<span class="rf-sample">Exemplo fictício</span></figcaption></figure>
-</div>
 </li>
 
-<li class="rf-reason">
+<li class="rf-reason is-text">
 <div class="rf-reason-copy">
 <span class="rf-reason-num" aria-hidden="true">2</span>
 <h3>Recrutadores não avaliam inglês bonito: avaliam exemplos reais da sua experiência</h3>
@@ -117,10 +128,6 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
 <span class="arrow" aria-hidden="true">→</span>
 <div class="blk res"><strong lang="en">Result</strong>o que mudou e o que você aprendeu</div>
 </div>
-</div>
-<div class="rf-pages">
-<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-star-20.webp`} alt="Página do Workbook preenchida com exemplo fictício: STAR story builder, partes Situation e Task da história de atrasos nas entregas" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">STAR story builder</span> · p. 20<span class="rf-sample">Exemplo fictício</span></figcaption></figure>
-<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-star-21.webp`} alt="Página do Workbook preenchida com exemplo fictício: STAR story builder, partes Action e Result, com as ações e o resultado do piloto" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">STAR story builder</span> · p. 21<span class="rf-sample">Exemplo fictício</span></figcaption></figure>
 </div>
 </li>
 
@@ -140,6 +147,7 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
 <li class="rf-track"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#0c2038"></circle><path d="M10.08 8.69 L10.08 15.22 L15.22 11.95Z" fill="#ffffff"></path></svg><b>L1 / S1</b><span lang="en">Your background and relevance</span></li>
 <li class="rf-track"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#0c2038"></circle><path d="M10.08 8.69 L10.08 15.22 L15.22 11.95Z" fill="#ffffff"></path></svg><b>P1</b><span lang="en">Ownership and results</span></li>
 </ul>
+{sampleAudio && <figure class="rf-player"><figcaption>Ouça um trecho de 15 segundos do pacote</figcaption><div class="rf-player-row"><svg class="rf-wave" viewBox="0 0 240 40" preserveAspectRatio="none" aria-hidden="true">{waveHeights.map((h, i) => <rect x={i * 5} y={20 - h / 2} width="3" height={h} rx="1.5"></rect>)}</svg><audio controls preload="none" src={sampleAudio}>Seu navegador não reproduz áudio.</audio></div></figure>}
 </div>
 </li>
 
@@ -151,14 +159,11 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
 </div>
 </li>
 
-<li class="rf-reason">
+<li class="rf-reason is-text">
 <div class="rf-reason-copy">
 <span class="rf-reason-num" aria-hidden="true">5</span>
 <h3>Na véspera, reler páginas inteiras só gera ansiedade: você precisa de palavras-chave</h3>
 <p>O <span class="en" lang="en">Interview day card</span> reúne em uma ficha só o que você já preparou: sua apresentação em palavras-chave, suas histórias prioritárias e os fatos confirmados. Ele está no Workbook e também em PDF separado, para imprimir ou abrir no celular.</p>
-</div>
-<div class="rf-pages is-single">
-<figure class="rf-page"><img src={`${base}/images/reta-final/exemplo-interview-day-card.webp`} alt="Página do Workbook preenchida com exemplo fictício: Interview day card, com dados da entrevista, apresentação em palavras-chave e duas histórias prioritárias" width="480" height="680" loading="lazy" decoding="async"><figcaption><span lang="en">Interview day card</span> · p. 46<span class="rf-sample">Exemplo fictício</span></figcaption></figure>
 </div>
 </li>
 </ol>
@@ -169,6 +174,12 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
 <div class="rf-wrap">
 <p class="rf-eyebrow">Como funciona</p>
 <h2 class="rf-title" id="rf-solucao">4 etapas e 10 ferramentas, na ordem em que você vai usar</h2>
+<ol class="rf-timeline" aria-label="Resumo: as 4 etapas e as 10 ferramentas em ordem">
+<li><span class="rf-tl-node" aria-hidden="true">1</span><p class="rf-tl-step">Etapa 1</p><p class="rf-tl-name">Saiba o que preparar</p><ul><li><b>01</b><span lang="en">Preparation plan</span></li><li><b>02</b><span lang="en">Interview map</span></li></ul></li>
+<li><span class="rf-tl-node" aria-hidden="true">2</span><p class="rf-tl-step">Etapa 2</p><p class="rf-tl-name">Prepare suas respostas</p><ul><li><b>03</b><span lang="en">Tell me about yourself</span></li><li><b>04</b><span lang="en">STAR story builder</span></li><li><b>05</b><span lang="en">Interview Fact Sheet</span></li><li><b>06</b><span lang="en">Pause, clarify &amp; continue</span></li><li><b>07</b><span lang="en">Golden interview questions</span></li></ul></li>
+<li><span class="rf-tl-node" aria-hidden="true">3</span><p class="rf-tl-step">Etapa 3</p><p class="rf-tl-name">Pratique em voz alta</p><ul><li><b>08</b><span lang="en">Interview speaking practice</span></li><li><b>09</b><span lang="en">Answer review</span></li></ul></li>
+<li><span class="rf-tl-node" aria-hidden="true">4</span><p class="rf-tl-step">Etapa 4</p><p class="rf-tl-name">Faça sua revisão final</p><ul><li><b>10</b><span lang="en">Interview day card</span></li></ul></li>
+</ol>
 
 <div class="rf-stage">
 <div class="rf-stage-head"><span class="rf-stage-num" aria-hidden="true">1</span><p class="rf-eyebrow">Etapa 1 de 4</p><h3>Saiba o que preparar</h3><p>Sem perder tempo com perguntas aleatórias.</p></div>
@@ -221,15 +232,11 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
 <div class="rf-item"><span class="rf-seal">02</span><div class="rf-item-h"><h3 lang="en">Interview Day Card</h3><span class="rf-chip">PDF preenchível</span></div><p>Versão separada da ficha de revisão para o dia da entrevista.</p></div>
 <div class="rf-item"><span class="rf-seal">03</span><div class="rf-item-h"><h3 lang="en">Most Common Job Interview Questions</h3><span class="rf-chip">12 perguntas</span><span class="rf-chip">PDF preenchível</span></div><p>As 12 perguntas mais recorrentes de entrevistas em inglês, com variações de como o recrutador pergunta.</p></div>
 <div class="rf-item"><span class="rf-seal">04</span><div class="rf-item-h"><h3>Business English para Entrevistas</h3><span class="rf-chip">PDF preenchível</span></div><p><span lang="en">Phrasal verbs</span>, expressões e <span lang="en">idioms</span> para explicar decisões e resultados sem soar robótico.</p></div>
-<div class="rf-item is-wide is-audio"><span class="rf-seal">05</span><div class="rf-item-h"><svg class="play" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#0c2038"></circle><path d="M10.08 8.69 L10.08 15.22 L15.22 11.95Z" fill="#ffffff"></path></svg><h3>25 áudios de prática</h3><span class="rf-chip">Parte do produto</span></div>
-<p>Para ouvir a estrutura das respostas, responder em voz alta e repetir expressões úteis. Organizados em três pastas:</p>
-<ul class="rf-audio-groups">
-<li><b>12</b><span><strong>Módulos de entrevista</strong>L1 a L6 em <span lang="en">Listening</span> e S1 a S6 em <span lang="en">Speaking Practice</span>, de <span lang="en">Your background and relevance</span> a <span lang="en">Practical questions and closing</span>.</span></li>
-<li><b>10</b><span><strong lang="en">Mock interviews</strong>M1 a M5, cada uma em <span lang="en">Listening</span> e <span lang="en">Speaking Practice</span>, de <span lang="en">Recruiter screen</span> a <span lang="en">Making a recommendation</span>.</span></li>
-<li><b>3</b><span><strong lang="en">Useful English Labs</strong>P1 a P3 em Ouça e repita: <span lang="en">Ownership and results; Pause, clarify and continue; Interview facts and professional vocabulary</span>.</span></li>
-</ul>
+<div class="rf-item is-wide is-audio"><span class="rf-seal">05</span><div class="rf-item-h"><svg class="play" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#0c2038"></circle><path d="M10.08 8.69 L10.08 15.22 L15.22 11.95Z" fill="#ffffff"></path></svg><h3>25 áudios de prática</h3><span class="rf-chip">Áudio</span></div>
+<p>Para ouvir a estrutura das respostas, responder em voz alta e repetir expressões úteis.</p>
+<svg class="rf-wave" viewBox="0 0 240 40" preserveAspectRatio="none" aria-hidden="true">{waveHeights.map((h, i) => <rect x={i * 5} y={20 - h / 2} width="3" height={h} rx="1.5"></rect>)}</svg>
 </div>
-<div class="rf-item"><span class="rf-seal">06</span><div class="rf-item-h"><h3>3 PDFs de transcrição</h3></div><p>O texto de cada faixa: módulos de entrevista, <span lang="en">mock interviews</span> e <span lang="en">Useful English Labs</span>.</p></div>
+<div class="rf-item"><span class="rf-seal">06</span><div class="rf-item-h"><h3>3 PDFs de transcrição</h3><span class="rf-chip">PDF</span></div><p>O texto de cada faixa, para ler antes ou depois de ouvir.</p></div>
 <div class="rf-item"><span class="rf-seal">07</span><div class="rf-item-h"><h3>Guia “Comece aqui”</h3></div><p>Por onde começar, como usar os áudios e como preencher e salvar no computador ou no celular.</p></div>
 </div>
 </div>
