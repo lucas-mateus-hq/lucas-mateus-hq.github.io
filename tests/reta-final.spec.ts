@@ -42,6 +42,9 @@ test.describe('Reta Final sales page (/reta-final/)', () => {
     await expect(page.locator('#oferta')).toBeInViewport();
     await expect(page.locator('#oferta .rf-price')).toContainText('97,00');
     await expect(page.locator('#oferta')).toContainText('7 materiais, 25 áudios');
+    await page.getByRole('navigation', { name: 'Rodapé' }).getByRole('link', { name: 'Lucas Mateus' }).click();
+    await expect(page).toHaveURL(/#rf-autor$/);
+    await expect(page.locator('#rf-autor')).toBeInViewport();
     for (const link of await page.locator('.rf a[href]').all()) expect(await link.getAttribute('href')).toMatch(/^(#|\/)/);
   });
 
