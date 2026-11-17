@@ -1,5 +1,5 @@
 // Pós-build do perfil reta-final. Deixa em dist-reta-final só / e /privacidade/ e os arquivos que elas usam,
-// e gera robots.txt (e, somente com checkout ativo, sitemap.xml, llms.txt e JSON-LD). Uso: node scripts/prune-profile.mjs [dir]
+// e gera robots.txt (e, somente com checkout ativo, sitemap.xml, llms.txt, _headers e JSON-LD). Uso: node scripts/prune-profile.mjs [dir]
 import { readdirSync, readFileSync, rmSync, writeFileSync, existsSync, mkdirSync, statSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
@@ -72,6 +72,12 @@ if (checkoutActive && entries.length > 0) {
   for (const [name, content] of Object.entries(await socialFiles(social))) writeFileSync(join(dir, name), content);
   for (const file of [homeFile, privacyFile]) inject(file, socialTags(readFileSync(file, 'utf8'), social, site));
   writeFileSync(join(dir, 'llms.txt'), llmsTxt(data));
+  // Cabeçalhos de segurança do Cloudflare Pages (só no build ativo). A política vem do que as páginas realmente usam:
+  // nenhum script executável (o JSON-LD é dado), nenhum formulário (a compra é um link), nenhum recurso externo,
+  // CSS e fontes próprios e <style> inline. O link do checkout não entra aqui: navegar por link não é limitado por CSP.
+  const csp = ["default-src 'self'", "script-src 'none'", "style-src 'self' 'unsafe-inline'", "img-src 'self'", "font-src 'self'", "connect-src 'none'", "manifest-src 'self'", "form-action 'none'", "frame-ancestors 'none'", "base-uri 'none'", "object-src 'none'"].join('; ');
+  const headers = ['X-Frame-Options: DENY', 'X-Content-Type-Options: nosniff', 'Referrer-Policy: strict-origin-when-cross-origin', 'Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()', 'Strict-Transport-Security: max-age=31536000', `Content-Security-Policy: ${csp}`];
+  writeFileSync(join(dir, '_headers'), `/*\n${headers.map((h) => `  ${h}`).join('\n')}\n`);
   const robots = ['User-agent: *\nAllow: /', ...aiCrawlers.map((agent) => `User-agent: ${agent}\nAllow: /`), `Sitemap: ${site}/sitemap.xml`].join('\n\n') + '\n';
   writeFileSync(join(dir, 'robots.txt'), robots);
   writeFileSync(join(dir, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.join('\n')}\n</urlset>\n`);
