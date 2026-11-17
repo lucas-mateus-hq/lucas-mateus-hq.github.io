@@ -279,11 +279,10 @@ test('Reta Final sales route carries no fixed domain and stays unavailable and u
   for (const fact of ['97,00', 'Preço de lançamento', '48 páginas', '4 etapas e 10 ferramentas', 'Garantia incondicional de 7 dias', '12 perguntas mais recorrentes', '7 materiais, 25 áudios']) assert.ok(page.includes(fact), fact);
   for (const gone of ['57,00', '127,00', 'até 6x', 'aula particular', 'sem professor', 'R$ 120']) assert.ok(!page.includes(gone), gone);
   assert.equal((page.match(/data-rf-status/g) ?? []).length, 2);
-  assert.equal((page.match(/class="rf-tool"/g) ?? []).length, 10);
   assert.equal((page.match(/class="rf-item[ "]/g) ?? []).length, 7);
   assert.equal((page.match(/class="rf-reason[ "]/g) ?? []).length, 5);
   // The 25 audios are part of the product: one card of the inventory, tagged as audio, never framed as a gift.
-  const inventory = page.slice(page.indexOf('id="rf-recebe"'), page.indexOf('id="rf-uso"'));
+  const inventory = page.slice(page.indexOf('id="rf-recebe"'), page.indexOf('id="rf-fit"'));
   assert.match(inventory, /<div class="rf-item is-wide is-audio">.*?<h3>25 áudios de prática<\/h3><span class="rf-chip">Áudio<\/span>/s);
   // Format tag = last chip of the card header: every card but the guide names its format.
   assert.equal((inventory.match(/<span class="rf-chip">(?:PDF preenchível|PDF|Áudio)<\/span><\/div>/g) ?? []).length, 6);
@@ -297,9 +296,17 @@ test('Reta Final sales route carries no fixed domain and stays unavailable and u
   assert.ok(beforeAfter.indexOf('Estuda inglês genérico na véspera') < beforeAfter.indexOf('Decora respostas da internet') && beforeAfter.indexOf('Decora respostas da internet') < beforeAfter.indexOf('Se perde ao contar o que fez'));
   // Timeline: the 4 stages and the 10 tools, in order, same names as the detailed list below it.
   const tlTools = [...timeline.matchAll(/<li><b>(\d\d)<\/b><span lang="en">(.*?)<\/span><\/li>/g)].map(m => [m[1], m[2]]);
-  const listTools = [...page.matchAll(/<span class="rf-seal">(\d\d)<\/span><h4 lang="en">(.*?)<\/h4>/g)].map(m => [m[1], m[2]]);
+  assert.deepEqual(tlTools.map(t => t[1]), ['Preparation plan', 'Interview map', 'Tell me about yourself', 'STAR story builder', 'Interview Fact Sheet', 'Pause, clarify &amp; continue', 'Golden interview questions', 'Interview speaking practice', 'Answer review', 'Interview day card']);
   assert.equal(tlTools.length, 10);
-  assert.deepEqual(tlTools, listTools);
+  assert.doesNotMatch(page, /rf-stage|rf-tool"|rf-ner/, 'the long stage-by-stage list is gone: the timeline carries only the names');
+  // Each of the 5 reasons: short copy plus an HTML/CSS visual in place of a print; "Como usar" now lives inside the inventory.
+  assert.equal((page.match(/class="rf-reason-viz"/g) ?? []).length, 5);
+  assert.doesNotMatch(page, /id="rf-uso"/);
+  assert.ok(inventory.includes('No celular, no computador ou impresso') && inventory.includes('Adobe Acrobat Reader'));
+  assert.ok(page.includes('Useful English Labs'), 'not renamed for now');
+  // Length budget: visible text (FAQ answers included, scripts and styles excluded) stays near 1,300-1,550 words.
+  const wordCount = [...page.replace(/<style[\s\S]*?<\/style>|<script[\s\S]*?<\/script>/g, ' ').replace(/<[^>]+>/g, ' ').matchAll(/\S+/g)].length;
+  assert.ok(wordCount < 1800, `page grew to ${wordCount} words`);
   assert.equal((timeline.match(/class="rf-tl-node"/g) ?? []).length, 4);
   assert.match(page.slice(page.indexOf('id="oferta"')), /7 materiais, 25 áudios/);
   // The 25 audios are one of the 7 materials, so every count says "7 materiais, com 25 áudios", never a sum.

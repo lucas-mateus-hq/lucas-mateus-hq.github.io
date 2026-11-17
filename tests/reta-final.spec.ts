@@ -10,11 +10,11 @@ test.describe('Reta Final sales page (/reta-final/)', () => {
       await page.goto('reta-final/', { waitUntil: 'networkidle' });
       await expect(page).toHaveTitle('Reta Final · Preparação para Entrevistas em Inglês');
       await expect(page.locator('h1')).toContainText('Pare de improvisar na entrevista em inglês');
-      await expect(page.locator('.rf-tool')).toHaveCount(10);
+      await expect(page.locator('.rf-timeline ul li')).toHaveCount(10);
       await expect(page.locator('.rf-item')).toHaveCount(7);
       await expect(page.locator('.rf-faq details')).toHaveCount(5);
       await expect(page.locator('.rf-reason')).toHaveCount(5);
-      await expect(page.locator('.rf-reason.is-text')).toHaveCount(5);
+      await expect(page.locator('.rf-reason .rf-reason-viz')).toHaveCount(5);
       await expect(page.locator('.rf-page')).toHaveCount(2); // só capa e sumário do Workbook
       await expect(page.locator('.rf-page figcaption', { hasText: 'Exemplo fictício' })).toHaveCount(0);
       for (const figure of await page.locator('.rf-page img').all()) {
