@@ -11,7 +11,6 @@ const pageTitle = 'Reta Final · Preparação para Entrevistas em Inglês';
 const pageDescription = 'Sistema prático em 4 etapas, com Workbook preenchível e 25 áudios de treino, para estruturar suas experiências reais e praticar em voz alta para entrevistas em inglês.';
 const logoUrl = `${base}/images/reta-final-lockup-white.svg`;
 const fontUrl = `${base}/fonts/inter-latin-opsz-normal.woff2`;
-const homeUrl = `${base}/`;
 // canonical e og:url só existem no build do domínio próprio (Astro.site vem da configuração do perfil).
 const ownDomain = import.meta.env.PUBLIC_SITE_PROFILE === 'reta-final';
 const canonical = ownDomain ? new URL(`${base}/`, Astro.site).href : '';
@@ -61,7 +60,7 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
 <h1 class="rf-h1" id="rf-h1">Pare de improvisar na entrevista em inglês: estruture suas experiências reais e pratique em voz alta.</h1>
 <p class="rf-lede">Um sistema prático em 4 etapas, com <strong>Workbook preenchível</strong> (no celular, no computador ou impresso) e <strong>25 áudios de treino</strong>, para responder com clareza sem decorar scripts.</p>
 {open ? <a class="rf-cta on-dark" href={checkoutUrl} data-rf-checkout><span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12H19M13 6L19 12L13 18"></path></svg></span><span>Começar minha preparação · R$ 97,00</span></a> : <p class="rf-cta is-off on-dark" data-rf-unavailable><span>Compra ainda não disponível</span></p>}
-{open ? <p class="rf-terms">Download imediato (7 materiais + 25 áudios) · Pagamento único, sem mensalidade · Garantia de 7 dias</p> : <p class="rf-terms" data-rf-status>As vendas do Reta Final ainda não foram abertas. Esta página apresenta o material; a compra será liberada aqui.</p>}
+{open ? <p class="rf-terms">Download imediato (7 materiais, com 25 áudios) · Pagamento único, sem mensalidade · Garantia de 7 dias</p> : <p class="rf-terms" data-rf-status>As vendas do Reta Final ainda não foram abertas. Esta página apresenta o material; a compra será liberada aqui.</p>}
 </div>
 <svg class="rf-stairs" viewBox="-6 8 186 100" fill="none" aria-hidden="true"><path d="M-4 104H58V88H96V70H132V48H168V30" stroke="#1d4a74" stroke-width="0.6"></path><path d="M-4 96H50V82H88V64H124V42H160V24" stroke="#16395c" stroke-width="0.45"></path><path d="M46 98L82 62L102 82L178 14M158 14H178V34" stroke="#e8641b" stroke-width="2.4" stroke-linecap="square"></path></svg>
 </div>
@@ -211,7 +210,7 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
 <section class="rf-sec" aria-labelledby="rf-recebe">
 <div class="rf-wrap">
 <p class="rf-eyebrow">O que você recebe</p>
-<h2 class="rf-title" id="rf-recebe">7 materiais e 25 áudios, tudo incluído no mesmo pacote</h2>
+<h2 class="rf-title" id="rf-recebe">7 materiais, com 25 áudios de prática, no mesmo pacote</h2>
 <p class="rf-lede">Depois da confirmação do pagamento, você baixa o pacote completo e usa no computador, no tablet ou no celular, inclusive offline.</p>
 <div class="rf-items">
 <div class="rf-item is-wide"><span class="rf-seal">01</span><div class="rf-item-h"><h3>Core Workbook · Reta Final</h3><span class="rf-chip">48 páginas</span><span class="rf-chip">PDF preenchível</span></div><p>O guia central com as 4 etapas, as 10 ferramentas, exemplos de estrutura e campos para montar suas respostas.</p>
@@ -292,7 +291,7 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
 <h2 class="rf-title" id="rf-oferta">Tudo o que você precisa para a reta final, em um pagamento único</h2>
 <div class="rf-offer">
 <div class="rf-offer-copy">
-<p>Você leva o sistema completo de 4 etapas, os 7 materiais e os 25 áudios de prática. Sem mensalidade e sem agenda: os arquivos ficam com você para esta entrevista e para as próximas.</p>
+<p>Você leva o sistema completo de 4 etapas e 7 materiais, com 25 áudios de prática. Sem mensalidade e sem agenda: os arquivos ficam com você para esta entrevista e para as próximas.</p>
 <div class="rf-guarantee">
 <span class="rf-label"><svg viewBox="0 0 24 24" fill="none" stroke="#2f6f6d" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5L9 17.5L20 6.5"></path></svg>Garantia incondicional de 7 dias</span>
 <p>Baixe o Workbook, ouça os áudios e monte o seu <span lang="en">Interview map</span>. Se em até 7 dias você sentir que o material não deixou sua preparação mais clara, peça o reembolso na própria plataforma de pagamento e você recebe 100% do valor de volta.</p>
@@ -345,7 +344,7 @@ const fontFace = `@font-face{font-family:"Inter";src:url("${fontUrl}") format("w
 <footer class="rf-foot">
 <div class="rf-wrap rf-foot-in">
 <p>Reta Final | Preparação para Entrevistas em Inglês</p>
-<nav aria-label="Rodapé"><a href={homeUrl}>Lucas Mateus</a><a href={privacyUrl}>Privacidade</a><a href="#conteudo">Voltar ao topo</a></nav>
+<nav aria-label="Rodapé"><a href="#rf-autor">Lucas Mateus</a><a href={privacyUrl}>Privacidade</a><a href="#conteudo">Voltar ao topo</a></nav>
 </div>
 </footer>
     </div>

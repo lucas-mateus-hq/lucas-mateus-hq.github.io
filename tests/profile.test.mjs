@@ -110,6 +110,7 @@ test('camada AEO com checkout ativo: robots para IA, llms.txt e JSON-LD fiéis a
   for (const q of faq.mainEntity) { assert.ok(visible.includes(q.name), 'pergunta visível: ' + q.name); assert.ok(visible.includes(q.acceptedAnswer.text.slice(0, 60)), 'resposta visível: ' + q.name); }
   assert.equal(privacyLd[0].url, 'https://lucasmateus.app/privacidade/');
   assert.equal(privacyLd[0].isPartOf.url, 'https://lucasmateus.app/');
+  assert.ok(read('index.html').includes('Download imediato (7 materiais, com 25 áudios)'), 'hero com compra aberta conta os áudios dentro dos 7 materiais');
   // llms.txt: estrutura da especificação e só fatos que estão na página
   const llms = read('llms.txt');
   assert.match(llms, /^# .+\n\n> .+\n\n## Páginas principais\n/);

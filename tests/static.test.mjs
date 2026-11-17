@@ -287,6 +287,13 @@ test('Reta Final sales route carries no fixed domain and stays unavailable and u
   assert.match(inventory, /25 áudios de prática/);
   for (const [count, group] of [['12', 'Módulos de entrevista'], ['10', 'Mock interviews'], ['3', 'Useful English Labs']]) assert.match(inventory, new RegExp(`<b>${count}</b><span><strong[^>]*>${group}</strong>`), group);
   assert.match(page.slice(page.indexOf('id="oferta"')), /7 materiais, 25 áudios/);
+  // The 25 audios are one of the 7 materials, so every count says "7 materiais, com 25 áudios", never a sum.
+  assert.ok(page.includes('<h2 class="rf-title" id="rf-recebe">7 materiais, com 25 áudios de prática, no mesmo pacote</h2>'));
+  assert.ok(page.includes('Você leva o sistema completo de 4 etapas e 7 materiais, com 25 áudios de prática.'));
+  assert.doesNotMatch(page, /7 materiais (\+|e) 25 áudios|os 7 materiais e os 25/);
+  // The footer author link goes to the author section of this page, not back to the page itself.
+  assert.ok(page.includes('<nav aria-label="Rodapé"><a href="#rf-autor">Lucas Mateus</a>'));
+  assert.ok(page.includes('id="rf-autor"'));
   const text = page.replace(/<[^>]+>/g, ' ');
   assert.doesNotMatch(text, /b[ôo]nus|brinde|gr[áa]tis|de presente|\bextras?\b/i, 'audios are part of the product, not a giveaway');
   assert.doesNotMatch(page, /evid[êe]ncia/i);
