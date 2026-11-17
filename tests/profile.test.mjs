@@ -89,13 +89,17 @@ test('camada AEO com checkout ativo: robots para IA, llms.txt e JSON-LD fiéis a
   assert.match(robots, /Sitemap: https:\/\/lucasmateus\.app\/sitemap\.xml\n$/);
   // JSON-LD: válido, sem vazio, tipos por rota
   const homeLd = ldBlocks(home), privacyLd = ldBlocks(privacy);
-  assert.deepEqual(homeLd.map((b) => [].concat(b['@type']).join('+')), ['Product+CreativeWork', 'FAQPage']);
+  assert.deepEqual(homeLd.map((b) => [].concat(b['@type']).join('+')), ['Course', 'FAQPage']);
   assert.deepEqual(privacyLd.map((b) => b['@type']), ['WebPage']);
   [...homeLd, ...privacyLd].forEach((b) => { assert.equal(b['@context'], 'https://schema.org'); noEmpty(b); });
   const [product, faq] = homeLd;
   assert.equal(product.url, 'https://lucasmateus.app/');
   assert.equal(product.inLanguage, 'pt-BR');
   assert.equal(product.author.name, 'Lucas Mateus');
+  assert.equal(product.provider.name, 'Lucas Mateus');
+  assert.ok(!('brand' in product) && !('image' in product), 'sem campos de Product (listagens do comerciante)');
+  assert.equal(product.offers['@type'], 'Offer');
+  assert.equal(product.offers.availability, 'https://schema.org/InStock');
   assert.equal(product.offers.priceCurrency, 'BRL');
   assert.ok(visible.includes(`R$ ${product.offers.price.replace('.', ',')}`), 'o preço do JSON-LD é o preço visível');
   assert.equal(product.offers.url, 'https://pay.example.test/checkout');

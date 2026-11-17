@@ -73,13 +73,13 @@ export function homeJsonLd(d) {
   return [
     jsonLdTag({
       '@context': 'https://schema.org',
-      '@type': ['Product', 'CreativeWork'],
+      '@type': 'Course',
       name: d.productName,
       description: d.description,
       url: d.homeUrl,
       inLanguage: 'pt-BR',
-      brand: { '@type': 'Brand', name: d.productName },
       author: { '@type': 'Person', name: d.authorName },
+      provider: { '@type': 'Person', name: d.authorName },
       offers: { '@type': 'Offer', price: d.price, priceCurrency: 'BRL', availability: 'https://schema.org/InStock', url: d.checkout },
     }),
     jsonLdTag({
