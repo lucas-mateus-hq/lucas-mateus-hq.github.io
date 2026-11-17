@@ -26,3 +26,6 @@ Com o checkout ativo, o build do perfil também gera `llms.txt`, o JSON-LD (`Cou
 
 ## Cartão social do domínio do Reta Final
 Com o checkout ativo, o build do perfil também gera `og-image.png` (1200×630, abaixo de 300 KB), ícones, `site.webmanifest` e as tags `og:*` e `twitter:*` das duas páginas, por `scripts/generate-og.mjs`. O texto da imagem é extraído do HTML construído; se o título, o subtítulo ou os números da oferta mudarem, rode `npm run test:profile` e olhe a imagem em `dist-reta-final/og-image.png`. Sem checkout nada disso é gerado e o build padrão do site pessoal não muda.
+
+## Cabeçalhos de segurança do domínio do Reta Final
+Com o checkout ativo, o build do perfil também gera `dist-reta-final/_headers` (X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy, HSTS e CSP restrita), em `scripts/prune-profile.mjs`. A CSP reflete o que as páginas usam hoje (sem script executável, formulário ou recurso externo). Se uma página passar a precisar de algo externo, ajuste a política e rode `npm run test:profile`, que confere a política contra o HTML construído. Sem checkout nada disso é gerado e o build padrão do site pessoal não muda.

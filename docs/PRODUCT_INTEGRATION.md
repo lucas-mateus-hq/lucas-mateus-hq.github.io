@@ -89,6 +89,13 @@ Pendências para o dia da publicação (não resolvidas no PR #29): `canonical` 
 - Com checkout ativo, o `robots.txt` libera o rastreamento e aponta para `https://lucasmateus.app/sitemap.xml`.
 - Endereço para o Google Search Console: `https://lucasmateus.app/sitemap.xml` (no campo "Adicionar um novo sitemap", digitar `sitemap.xml`).
 
+## Cabeçalhos de segurança do domínio do Reta Final
+- Só no build do perfil com checkout ativo, `scripts/prune-profile.mjs` gera `dist-reta-final/_headers` (Cloudflare Pages). Sem checkout não há `_headers` e o build padrão do site pessoal não muda (`dist/` idêntico por hash).
+- Conteúdo: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy` sem câmera, microfone, geolocalização e pagamento, `Strict-Transport-Security: max-age=31536000` e uma CSP restrita (`script-src 'none'`, `form-action 'none'`, `frame-ancestors 'none'`, imagens, fontes e CSS só do próprio domínio; `style-src` mantém `'unsafe-inline'` porque o Astro embute CSS no HTML).
+- O link da Greenn não aparece na CSP: a compra é um link comum, e CSP não limita navegação por link. Se um dia houver formulário, script, imagem ou fonte externa na página, a política precisa ser ampliada em `scripts/prune-profile.mjs`; `npm run test:profile` falha antes disso chegar ao ar.
+- HSTS sem `includeSubDomains` e sem `preload` de propósito: o `preload` é difícil de desfazer e `includeSubDomains` afetaria qualquer subdomínio sem HTTPS. Decisão do proprietário, se quiser endurecer.
+- Se o Cloudflare Web Analytics estiver ligado no projeto, o script dele será bloqueado pela CSP; não está em uso hoje.
+
 ## Camada AEO (llms.txt e JSON-LD) do domínio do Reta Final
 - Só no build do perfil com checkout ativo. Sem checkout: `robots.txt` bloqueia tudo, sem `llms.txt` e sem JSON-LD. O build padrão do site pessoal não muda (`dist/` idêntico por hash).
 - `scripts/aeo-layer.mjs` extrai do HTML construído o nome, a descrição, o preço, o link de checkout, os itens do pacote, as perguntas frequentes, o autor e o contato; se algo não for encontrado, o build para.

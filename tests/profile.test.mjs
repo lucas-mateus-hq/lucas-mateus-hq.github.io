@@ -144,6 +144,32 @@ const pngSize = (buf) => {
   return { w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) };
 };
 
+test('cabeçalhos de segurança: _headers só no build ativo, e a política bate com o que as páginas usam', () => {
+  build('');
+  assert.ok(!existsSync(join(out, '_headers')), 'sem checkout não há _headers');
+  const checkout = 'https://pay.example.test/checkout-secreto';
+  build(checkout);
+  const headers = read('_headers');
+  assert.match(headers, /^\/\*\n(  [A-Za-z-]+: .+\n)+$/, 'um único bloco /*');
+  for (const line of ['X-Frame-Options: DENY', 'X-Content-Type-Options: nosniff', 'Referrer-Policy: strict-origin-when-cross-origin', 'Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()', 'Strict-Transport-Security: max-age=31536000']) assert.ok(headers.includes(`  ${line}\n`), line);
+  assert.ok(!/preload|includeSubDomains/.test(headers), 'HSTS sem preload nem subdomínios');
+  const csp = headers.match(/  Content-Security-Policy: (.+)\n/)[1];
+  for (const d of ["default-src 'self'", "script-src 'none'", "frame-ancestors 'none'", "form-action 'none'", "object-src 'none'", "base-uri 'none'", "connect-src 'none'", "img-src 'self'", "font-src 'self'", "manifest-src 'self'", "style-src 'self' 'unsafe-inline'"]) assert.ok(csp.split('; ').includes(d), d);
+  assert.doesNotMatch(csp, /https?:|\*|data:|unsafe-eval/, 'CSP sem host externo, curinga, data: ou eval');
+  assert.ok(!headers.includes('pay.example.test') && !headers.includes('greenn'), 'o link do checkout não vai para o _headers');
+  // A política só vale se as páginas não precisarem de nada além dela.
+  for (const route of ['index.html', 'privacidade/index.html']) {
+    const html = read(route);
+    const scripts = html.match(/<script\b[^>]*>/g) ?? [];
+    assert.ok(scripts.every((t) => /type="application\/ld\+json"/.test(t)), `${route}: só JSON-LD (dado), nenhum script executável`);
+    assert.doesNotMatch(html, /<form\b|<iframe\b|<object\b|<embed\b|\son[a-z]+=|javascript:| style="/i, `${route}: sem formulário, frame, handler ou style inline`);
+    assert.deepEqual((html.match(/<(?:img|link|source)\b[^>]*\b(?:src|href)="https?:\/\/[^"]+"/g) ?? []).filter((t) => !/rel="canonical"/.test(t)), [], `${route}: nenhum recurso externo carregado`);
+    assert.doesNotMatch(html.replace(/<style[\s\S]*?<\/style>/g, ''), /@import|url\(\s*["']?(https?:|data:)/, route);
+  }
+  for (const file of walk(out).filter((p) => p.endsWith('.css'))) assert.doesNotMatch(readFileSync(file, 'utf8'), /@import|url\(\s*["']?(https?:|data:)/, file);
+  assert.ok(read('index.html').includes(`href="${checkout}"`), 'a compra segue sendo um link comum para o checkout');
+});
+
 test('cartão social com checkout ativo: og:image 1200x630, twitter card, ícones e manifest, sem github.io', async () => {
   build('https://pay.example.com/checkout');
   const origin = 'https://lucasmateus.app';
