@@ -6,14 +6,12 @@
   "scripts": {
     "build": "astro check && astro build",
     "preview": "astro preview --host 127.0.0.1 --port 4321",
-    "test:e2e": "playwright test tests/personal.spec.ts tests/reta-final.spec.ts",
+    "test:e2e": "playwright test tests/personal.spec.ts",
     "test:fresh-eyes": "playwright test tests/fresh-eyes.spec.ts",
     "test:relay": "playwright test tests/relay-zero-cost.spec.ts",
     "test:static": "node --test tests/static.test.mjs",
     "test:intake": "node --test tests/intake.test.mjs",
-    "test:intake-ui": "playwright test tests/intake-ui.spec.ts",
-    "build:reta-final": "PUBLIC_SITE_PROFILE=reta-final astro check && PUBLIC_SITE_PROFILE=reta-final astro build && node scripts/prune-profile.mjs dist-reta-final",
-    "test:profile": "node --test tests/profile.test.mjs"
+    "test:intake-ui": "playwright test tests/intake-ui.spec.ts"
   },
   "engines": {
     "node": ">=22"
