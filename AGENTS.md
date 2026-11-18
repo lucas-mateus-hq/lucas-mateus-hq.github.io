@@ -18,14 +18,5 @@ O padrão editorial obrigatório é [docs/PUBLIC_EXPERIENCE_STANDARD.md](docs/PU
 
 Preservar versões, traduções e conteúdo aprovado; não introduzir complexidade técnica só para descrever o funcionamento. Não usar o portfólio pessoal como painel de governança de outros projetos.
 
-## Sitemap do domínio do Reta Final
-O build do perfil `reta-final` (`npm run build:reta-final`) monta o `sitemap.xml` a partir das páginas construídas, só com o checkout ativo. Sempre que uma rota pública for criada, renomeada ou alterada, declare-a em `scripts/prune-profile.mjs` (campo `sources`, usado no `<lastmod>`) e rode `npm run test:profile`: uma rota sem declaração derruba o build, e uma página `noindex` nunca entra no sitemap.
-
-## Camada AEO do domínio do Reta Final
-Com o checkout ativo, o build do perfil também gera `llms.txt`, o JSON-LD (`Course`, `FAQPage` e `WebPage`) e o `robots.txt` com permissão explícita para crawlers de IA. Tudo é extraído do HTML construído por `scripts/aeo-layer.mjs`, sem digitar dados à mão. Sempre que o conteúdo da oferta, o preço ou as perguntas frequentes do `lucasmateus.app` mudarem, rode `npm run test:profile`: ele confere o `llms.txt` e o JSON-LD contra o texto visível, e o build para se a extração falhar. Sem checkout ativo nada disso é gerado, e o build padrão do site pessoal não muda.
-
-## Cartão social do domínio do Reta Final
-Com o checkout ativo, o build do perfil também gera `og-image.png` (1200×630, abaixo de 300 KB), ícones, `site.webmanifest` e as tags `og:*` e `twitter:*` das duas páginas, por `scripts/generate-og.mjs`. O texto da imagem é extraído do HTML construído; se o título, o subtítulo ou os números da oferta mudarem, rode `npm run test:profile` e olhe a imagem em `dist-reta-final/og-image.png`. Sem checkout nada disso é gerado e o build padrão do site pessoal não muda.
-
-## Cabeçalhos de segurança do domínio do Reta Final
-Com o checkout ativo, o build do perfil também gera `dist-reta-final/_headers` (X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy, HSTS e CSP restrita), em `scripts/prune-profile.mjs`. A CSP reflete o que as páginas usam hoje (sem script executável, formulário ou recurso externo). Se uma página passar a precisar de algo externo, ajuste a política e rode `npm run test:profile`, que confere a política contra o HTML construído. Sem checkout nada disso é gerado e o build padrão do site pessoal não muda.
+## Domínio do Reta Final
+A página de vendas e a privacidade do Reta Final (lucasmateus.app) vivem no repositório `lucas-mateus-hq/lucasmateus-app`, com build, sitemap, camada AEO, cartão social e cabeçalhos próprios. Este repositório não contém mais esse código; as rotas antigas `criacoes/reta-final/` só redirecionam.
