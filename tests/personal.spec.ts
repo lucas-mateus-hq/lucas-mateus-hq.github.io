@@ -34,15 +34,14 @@ test('home presents Lucas and real public destinations without the lab dashboard
   await expect(page.locator('#page-title')).toContainText('Recrutamento');
 });
 
-test('creations show REIA without the retired Reta Final card', async ({ page }) => {
+test('creations show the Reta Final card without REIA or the retired route', async ({ page }) => {
   for (const route of ['./', 'en/']) {
     await page.goto(route);
     await page.locator('.actions a[href="#criacoes"]').click();
     await expect(page).toHaveURL(/#criacoes$/);
     await expect(page.locator('#reta-final, a[href*="criacoes/reta-final"]')).toHaveCount(0);
-    await expect(page.locator('#reia')).toBeVisible();
-    await page.locator('#reia a').click();
-    await expect(page).toHaveURL(/\/renda-extra-com-ia\/$/);
+    await expect(page.locator('#reia, a[href*="renda-extra-com-ia"]')).toHaveCount(0);
+    await expect(page.locator('#reta-final-produto a')).toHaveAttribute('href','https://lucasmateus.app/');
   }
 });
 
@@ -66,8 +65,6 @@ test('keyboard access starts with skip link and works without JavaScript', async
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/#conteudo$/);
   await expect(page.locator('main')).toBeFocused();
-  await page.locator('#reia a').click();
-  await expect(page).toHaveURL(/\/renda-extra-com-ia\/$/);
 
   // Test skip-link on portfolio page
   await page.goto('http://127.0.0.1:4321/portfolio/');
@@ -149,10 +146,10 @@ for (const [pt,en,title] of [['./','en/','People.'],['portfolio/pt/','portfolio/
   });
 }
 
-test('English navigation retains the REIA language cue and portfolio',async({page})=>{
+test('English navigation retains the Reta Final language cue and portfolio',async({page})=>{
   await page.goto('en/');
   await page.getByRole('link',{name:'Explore my creations'}).click();
-  await expect(page.locator('#reia')).toContainText('Available in Portuguese');
+  await expect(page.locator('#reta-final-produto')).toContainText('Available in Portuguese');
   await expect(page.locator('a[href*="criacoes/reta-final"]')).toHaveCount(0);
   await page.getByRole('link',{name:'Explore my work'}).click();
   await expect(page).toHaveURL(/\/portfolio\/$/);
