@@ -5,7 +5,7 @@ import { readFileSync, existsSync, readdirSync } from 'node:fs';
 const prefix = '/';
 const intakeConfigured=Boolean(process.env.PUBLIC_LESSON_API_URL && process.env.PUBLIC_TURNSTILE_SITE_KEY);
 const origin = 'https://lucas-mateus-hq.github.io';
-const routes = ['', 'en/', 'portfolio/', 'portfolio/pt/', 'privacy/', 'privacidade/', 'renda-extra-com-ia/'];
+const routes = ['', 'en/', 'portfolio/', 'portfolio/pt/', 'privacy/', 'privacidade/'];
 const fileFor = (path) => `dist/${path}${path.endsWith('/') || !path ? 'index.html' : ''}`;
 const html = (route) => readFileSync(fileFor(route), 'utf8');
 
@@ -136,12 +136,11 @@ test('locale pairs have reciprocal language links and preserve assets and eviden
 });
 
 
-test('home creations retain REIA and exclude the retired product', () => {
+test('home creations exclude REIA and the retired Reta Final route', () => {
   for(const route of ['', 'en/']) {
     const page = html(route);
     assert.doesNotMatch(page, /id="reta-final"|href="[^"]*criacoes\/reta-final/);
-    assert.match(page, /id="reia"/);
-    assert.ok(page.includes('href="/renda-extra-com-ia/"'));
+    assert.doesNotMatch(page, /id="reia"|renda-extra-com-ia|Renda Extra com IA|pay\.hotmart\.com/);
     assert.doesNotMatch(page, /public-case|case-links|Este portfólio, por dentro|This portfolio, from the inside/);
     assert.doesNotMatch(page, /github\.com\/lucas-mateus-hq\/lucas-capability-os-pages\/pull\/28|actions\/workflows\/pages\.yml/);
     for(const section of ['trabalho', 'criacoes', 'sobre', 'contato']) {
@@ -154,7 +153,7 @@ test('home creations retain REIA and exclude the retired product', () => {
 test('lessons expose existing and one-off offers and keep the owner phone and inactive collection out of public pages',()=>{
  for(const route of ['', 'en/']){
   const page=html(route);
-  for(const content of ['id="aulas"','Business English','id="reia"'])assert.ok(page.includes(content));
+  for(const content of ['id="aulas"','Business English','id="reta-final-produto"'])assert.ok(page.includes(content));
   assert.ok(page.includes(route==='en/'?'<p class="lesson-separation">Lessons involve working directly with me.</p>':'<p class="lesson-separation">Nas aulas, você trabalha diretamente comigo.</p>'));
   assert.doesNotMatch(page.match(/<p class="lesson-separation">.*?<\/p>/)?.[0]??'',/Reta Final|Reta Final toolkit/);
   assert.doesNotMatch(page,/wa\.me|api\.whatsapp\.com|META_ACCESS_TOKEN|WHATSAPP_TO|R\$\s*550/);
@@ -178,52 +177,6 @@ test('portfolio explains AI work to ordinary visitors without internal engineeri
  }
 });
 
-test('reia sales page delivers authentic Hotmart narrative and external checkout without collecting data', () => {
-  const reia = html('renda-extra-com-ia/');
-  assert.match(reia, /lang="pt-BR"/);
-  assert.match(reia, /Renda Extra com IA: Teste, Entregue, Repita/);
-  assert.match(reia, /5 motivos concretos para transformar IA em renda extra/);
-  assert.match(reia, /Fim da paralisia por excesso de teoria/);
-  assert.match(reia, /Diagnóstico ágil do serviço certo para seu perfil/);
-  assert.match(reia, /Abordagem profissional sem parecer amador ou invasivo/);
-  assert.match(reia, /Economia de tempo com templates prontos para o mercado/);
-  assert.match(reia, /Entenda o que está comprando antes de decidir/);
-  assert.match(reia, /Bússola de Renda com IA/);
-  assert.match(reia, /Primeiro Cliente IA/);
-  assert.match(reia, /Dúvidas comuns sobre o REIA/);
-  assert.match(reia, /Confira a oferta antes de comprar/);
-  assert.doesNotMatch(reia, /risco zero|garantia incondicional/i);
-  assert.match(reia, /Lucas Mateus/);
-  assert.match(reia, /src="\/lucas-mateus\.webp"[^>]*alt="Foto de Lucas Mateus"/);
-  assert.doesNotMatch(reia, /Nota de transparência/);
-  assert.doesNotMatch(reia, /Transparência e Entrega|Produto digital registrado sob o código de referência Hotmart/);
-  assert.match(reia, /aria-label="Links do rodapé"/);
-  assert.match(reia, /Política de Privacidade/);
-  assert.match(reia, /Termos Hotmart/);
-
-  // No forms, no data inputs, no embedded payment mechanisms
-  assert.doesNotMatch(reia, /<form\b|<input\b|<textarea\b/);
-
-  // External checkout links exclusively point to Hotmart
-  const ctas = [...reia.matchAll(/href="(https:\/\/pay\.hotmart\.com\/[^"]+)"/g)].map(m => m[1]);
-  assert.ok(ctas.length >= 2, 'Must have at least 2 strategic checkout CTAs');
-  for (const cta of ctas) {
-    assert.equal(cta, 'https://pay.hotmart.com/I108167656O');
-  }
-
-  // Skip link & main container focus
-  assert.match(reia, /href="#reia-main"/);
-  assert.match(reia, /id="reia-main" tabindex="-1"/);
-});
-
-test('REIA sales route is discoverable from both home languages', () => {
-  for (const route of ['', 'en/']) {
-    const page = html(route);
-    assert.match(page, /href="\/renda-extra-com-ia\/"/);
-    assert.match(page, /Renda Extra com IA: Teste, Entregue, Repita/);
-  }
-});
-
 // Retired product URLs stay reachable only as static redirects, never as sales pages.
 test('retired Reta Final routes redirect to their locale home and leave the sitemap and navigation', () => {
   const sitemap = readFileSync('dist/sitemap.xml', 'utf8');
@@ -237,25 +190,6 @@ test('retired Reta Final routes redirect to their locale home and leave the site
     assert.match(redirect, /noindex/);
     for (const activeRoute of routes) assert.ok(!html(activeRoute).includes('/' + route), activeRoute);
   }
-});
-
-test('REIA cover is 1200 square and contains only image data, with no embedded metadata', () => {
-  const cover = readFileSync('dist/images/reia-cover.webp');
-  assert.equal(cover.length, 33896);
-  assert.equal(cover.toString('ascii', 0, 4), 'RIFF');
-  assert.equal(cover.readUInt32LE(4) + 8, cover.length);
-  assert.equal(cover.toString('ascii', 8, 12), 'WEBP');
-  const chunks = [];
-  for (let offset = 12; offset < cover.length;) {
-    chunks.push(cover.toString('ascii', offset, offset + 4));
-    const length = cover.readUInt32LE(offset + 4);
-    offset += 8 + length + (length % 2);
-    assert.ok(offset <= cover.length);
-  }
-  assert.deepEqual(chunks, ['VP8 ']);
-  assert.equal(cover.toString('hex', 23, 26), '9d012a');
-  assert.equal(cover.readUInt16LE(26) & 0x3fff, 1200);
-  assert.equal(cover.readUInt16LE(28) & 0x3fff, 1200);
 });
 
 // The Reta Final sales page moved to its own repository and domain; this site no longer publishes it.
@@ -277,4 +211,11 @@ test('home shows the Reta Final card linking to its own domain, in both language
     assert.doesNotMatch(card, /criacoes\/reta-final|Hotmart|pay\.|greenn|R\$|Lançamento em breve|Coming soon/i, route + ': sem preço, checkout nem estado antigo');
     assert.doesNotMatch(page, /id="reta-final"|href="[^"]*criacoes\/reta-final/, route + ': a rota antiga segue aposentada');
   }
+});
+
+// REIA saiu do site em 21/11/2026: a página de vendas dele volta a ser a da Hotmart.
+test('REIA is not published by the personal site', () => {
+  assert.equal(existsSync('dist/renda-extra-com-ia/index.html'), false);
+  assert.equal(existsSync('dist/images/reia-cover.webp'), false);
+  assert.doesNotMatch(readFileSync('dist/sitemap.xml', 'utf8'), /renda-extra-com-ia/);
 });

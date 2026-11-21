@@ -44,8 +44,7 @@ for attempt in range(12):
 
 checks = []
 for route, lang in [('', 'pt-BR'), ('en/', 'en-US'), ('portfolio/pt/', 'pt-BR'),
-                    ('portfolio/', 'en-US'), ('privacidade/', 'pt-BR'), ('privacy/', 'en-US'),
-                    ('renda-extra-com-ia/', 'pt-BR')]:
+                    ('portfolio/', 'en-US'), ('privacidade/', 'pt-BR'), ('privacy/', 'en-US')]:
     status, body = fetch(route)
     html = body.decode('utf-8')
     assert status == 200 and f'<html lang="{lang}"' in html, route
@@ -55,10 +54,6 @@ for route, lang in [('', 'pt-BR'), ('en/', 'en-US'), ('portfolio/pt/', 'pt-BR'),
         assert 'id="criacoes"' in html and 'id="contato"' in html, route
     if route in ('privacy/', 'privacidade/'):
         assert 'id="hosting"' in html and 'id="rights"' in html, route
-    if route == 'renda-extra-com-ia/':
-        assert 'Renda Extra com IA' in html, route
-        assert 'https://pay.hotmart.com/I108167656O' in html, route
-        assert 'risco zero' not in html.lower() and 'garantia incondicional' not in html.lower(), route
     checks.append({'path':route, 'status':status, 'language':lang})
 for route, destination in [('criacoes/reta-final/', '/'), ('en/criacoes/reta-final/', '/en/')]:
     status, body = fetch(route)
