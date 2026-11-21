@@ -269,3 +269,17 @@ test('Reta Final sales route is not published by the personal site', () => {
   assert.equal(existsSync('dist/perfil-reta-final'), false);
   assert.doesNotMatch(readFileSync('dist/sitemap.xml', 'utf8'), /reta-final/);
 });
+
+// Card do Reta Final na home: aponta para o domínio próprio do produto (lucasmateus.app), não para a rota antiga aposentada.
+test('home shows the Reta Final card linking to its own domain, in both languages', () => {
+  for (const route of ['', 'en/']) {
+    const page = html(route);
+    const card = page.match(/<article class="reia-feature" id="reta-final-produto".*?<\/article>/s)?.[0] ?? '';
+    assert.ok(card, route + ': card do Reta Final presente');
+    assert.ok(card.includes('href="https://lucasmateus.app/"'), route + ': link para lucasmateus.app');
+    assert.match(card, /Reta Final/);
+    assert.match(card, /Lucas Mateus/);
+    assert.doesNotMatch(card, /criacoes\/reta-final|Hotmart|pay\.|greenn|R\$|Lançamento em breve|Coming soon/i, route + ': sem preço, checkout nem estado antigo');
+    assert.doesNotMatch(page, /id="reta-final"|href="[^"]*criacoes\/reta-final/, route + ': a rota antiga segue aposentada');
+  }
+});
