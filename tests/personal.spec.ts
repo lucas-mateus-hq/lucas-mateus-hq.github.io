@@ -202,29 +202,24 @@ test('portfolio title has a readable scale and reduced motion suppresses transit
 
 
 test('English lessons are discoverable in both languages without collecting data before activation',async({page})=>{
- for(const [route,label,title] of [['./','Aulas','Treine sua próxima entrevista em inglês'],['en/','Lessons','Practice your next job interview in English']] as const){
+ for(const [route,label,title] of [['./','Aulas','Aulas de inglês para entrevistas'],['en/','Lessons','English lessons for interviews']] as const){
   await page.goto(route);
   await page.locator('.primary-navigation').getByRole('link',{name:label,exact:true}).click();
   await expect(page).toHaveURL(/#aulas$/);
   await expect(page.locator('#aulas')).toContainText(title);
   await expect(page.locator('#aulas .lesson-separation')).toHaveText(route==='./'?'Nas aulas, você trabalha diretamente comigo.':'Lessons involve working directly with me.');
   const active=Boolean(process.env.PUBLIC_LESSON_API_URL && process.env.PUBLIC_TURNSTILE_SITE_KEY);
-  await expect(page.locator('#aulas form')).toHaveCount(active?2:0);
-  await expect(page.locator('#aulas .mock-offer a.button')).toHaveAttribute('href','#pedido-simulacao');
-  await expect(page.locator('#pedido-simulacao')).toContainText(active?(route==='./'?'Conte qual cargo você busca':'Tell me the role you are targeting'):(route==='./'?'Agendamento online em preparação':'Online booking is being prepared'));
+  await expect(page.locator('#aulas form')).toHaveCount(active?1:0);
   await expect(page.locator('#aulas .lesson-next a.button')).toHaveAttribute('href',active?'#pedido-aulas':'https://www.linkedin.com/in/lucasmateus/');
  }
 });
 
 
-test('offline mock interview is explicitly unavailable until private intake is verified',async({page})=>{
-  await page.goto('./#pedido-simulacao');
-  await expect(page.locator('.mock-offer')).toContainText('R$ 80');
-  await expect(page.locator('.mock-offer')).toContainText('1 hora');
-  await expect(page.locator('.mock-offer')).toContainText('relatório escrito por e-mail em até 2 horas após a sessão');
-  await expect(page.locator('#pedido-simulacao form')).toHaveCount(0);
-  await expect(page.locator('#pedido-simulacao')).toContainText('Esta página ainda não recebe pedidos.');
-  await expect(page.locator('#pedido-simulacao a[href*="linkedin.com"]')).toHaveCount(0);
-  await expect(page.locator('.mock-offer a.button')).toContainText('Agendamento em breve');
-  expect(await page.evaluate(()=>localStorage.length+sessionStorage.length)).toBe(0);
+test('the R$ 80 mock interview offer is no longer on the public home',async({page})=>{
+  for(const route of ['./','en/']){
+    await page.goto(route);
+    await expect(page.locator('#aulas')).toBeVisible();
+    await expect(page.locator('.mock-offer, #pedido-simulacao, [data-mock-form]')).toHaveCount(0);
+    await expect(page.locator('body')).not.toContainText(/R\$ ?80\b/);
+  }
 });

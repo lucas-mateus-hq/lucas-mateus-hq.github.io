@@ -61,37 +61,3 @@ test('screening controls fit at 320px and 1440px; language switch preserves the 
  await page.getByRole('link',{name:'English (United States)',exact:true}).click();await expect(page).toHaveURL(/\/en\/#pedido-aulas$/);
  await expect(page.locator('#lesson-goal')).toContainText('Job interview preparation');
 });
-
-
-test('mock interview submits via the unchanged secure lesson endpoint only after confirmation',async({page})=>{
-  const submissions:any[]=[];
-  await page.route(endpoint,async route=>{
-    const body=route.request().postDataJSON();
-    submissions.push(body);
-    await route.fulfill({status:201,headers:{'Access-Control-Allow-Origin':'*'},contentType:'application/json',body:JSON.stringify({accepted:true,requestId:body.requestId})});
-  });
-  await page.route('https://challenges.cloudflare.com/turnstile/v0/api.js*',route=>route.fulfill({contentType:'application/javascript',body:syntheticChallenge}));
-  await page.goto('./#pedido-simulacao');
-  await page.locator('#mock-name').fill('Synthetic Visitor');
-  await expect.poll(()=>page.evaluate(()=>Boolean((window as any).turnstile))).toBe(true);
-  await page.locator('#mock-email').fill('visitor@example.invalid');
-  await page.locator('#mock-role').fill('Recruiting Specialist');
-  await page.locator('#mock-availability').fill('Tuesday evening, Brasília time');
-  await page.locator('#mock-notes').fill('Interview with an international team.');
-  await expect(page.locator('#mock-notes-hint')).toContainText(/\(\d+\/320\)/);
-  await page.locator('.mock-form [name=privacyAcknowledged]').check();
-  await page.locator('.mock-form').getByRole('button',{name:'Enviar solicitação'}).click();
-  await expect(page.locator('[data-mock-status]')).toContainText('Solicitação recebida');
-  expect(submissions).toHaveLength(1);
-  expect(submissions[0].goal).toBe('interview');
-  expect(submissions[0].speaking).toBe('not_provided');
-  expect(submissions[0].timeframe).toBe('not_provided');
-  expect(submissions[0].availability).toBe('Tuesday evening, Brasília time');
-  expect(submissions[0].context).toMatch(/Service: 60-minute mock interview \(BRL 80\)/);
-  expect(submissions[0].context).toContain('Recruiting Specialist');
-  expect(submissions[0].context).toContain('personalized written report within 2h after session');
-  expect(submissions[0].turnstileToken).toBe('synthetic-no-real-provider');
-  await expect(page.locator('#mock-name')).toBeDisabled();
-  await expect(page.locator('#mock-notes-hint')).toContainText('(0/320)');
-  expect(await page.locator('.mock-form a[href*="linkedin.com"]').count()).toBe(0);
-});
