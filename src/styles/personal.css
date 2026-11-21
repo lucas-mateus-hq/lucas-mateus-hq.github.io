@@ -42,35 +42,3 @@ html{scroll-padding-top:0}
 @media(max-width:700px){.lesson-options,.form-grid{grid-template-columns:minmax(0,1fr)}.lesson-option{padding:26px}.lesson-next{gap:20px}.lesson-option h3,.lesson-next h3,.lesson-request h3{font-size:26px}.lessons-intro{font-size:18px}.lesson-form select{font-size:16px}.form-wide{grid-column:auto}}
 
 /* One-off English interview offer: distinct from ongoing lessons and Reta Final. */
-.mock-offer{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(220px,.75fr);gap:32px;padding:32px;margin:0 0 36px;border:1px solid var(--gold);border-radius:var(--card-radius);background:linear-gradient(135deg,#123438,#0b262b)}
-.mock-offer-content,.mock-offer-action{min-width:0}
-.mock-offer .label{margin:0 0 12px}
-.mock-offer h3{font-size:clamp(26px,3vw,36px);line-height:1.19;letter-spacing:-.03em;margin:0 0 16px}
-.mock-offer-content>p:not(.label){font-size:18px;line-height:1.65;color:var(--ink);margin:0 0 12px}
-.mock-offer .mock-offer-small{font-size:14px!important;color:var(--muted)!important}
-.mock-steps{padding-left:22px;margin:18px 0 16px;color:var(--ink)}
-.mock-steps li{font-size:16px;line-height:1.6;padding-left:3px}
-.mock-steps li+li{margin-top:10px}
-.mock-steps li::marker{color:var(--mint)}
-.mock-offer-action{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:16px}
-.mock-offer-action .button{max-width:100%;text-align:center}
-.mock-price{display:flex;flex-direction:column;margin:0;gap:4px}
-.mock-price strong{font-size:clamp(34px,5vw,46px);line-height:1;font-weight:700;color:var(--ink)}
-.mock-price span{font-size:15px;color:var(--muted)}
-.lesson-alternatives{font-size:17px;line-height:1.5;margin:0 0 18px;color:var(--muted)}
-.mock-intake{margin-top:42px;padding:32px;border:1px solid var(--card-border);border-radius:var(--card-radius);background:var(--card-bg)}
-.mock-intake-heading{max-width:74ch}
-.mock-intake-heading .label{margin:0 0 8px}
-.mock-intake h3{font-size:clamp(26px,3vw,34px);line-height:1.25;margin:0 0 12px}
-.mock-intake-heading>p:not(.label){font-size:16px;line-height:1.65;color:var(--muted);margin:0 0 12px}
-.mock-intake-heading .mock-notice{border-left:3px solid var(--gold);padding:10px 14px;background:rgba(255,255,255,.04);color:var(--ink)!important}
-.mock-direct{display:flex;flex-wrap:wrap;align-items:center;gap:16px 24px;margin-top:20px}
-.mock-direct .button{flex:none;max-width:100%}
-.mock-direct p{flex:1 1 220px;font-size:14px;line-height:1.55;color:var(--muted);margin:0}
-.mock-intake .lesson-form{margin-top:22px}
-.mock-handoff{padding:24px;margin-top:24px;border:1px solid var(--gold);border-radius:12px;background:#123438}
-.mock-handoff[hidden]{display:none}
-.mock-handoff>label{display:block;font-weight:600;margin-bottom:12px}
-.mock-handoff textarea{width:100%;min-height:175px}
-.mock-handoff-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
-@media(max-width:700px){.mock-offer{grid-template-columns:minmax(0,1fr);padding:24px;gap:14px}.mock-intake{padding:22px}.mock-offer-action{gap:12px}.mock-handoff{padding:16px}}
